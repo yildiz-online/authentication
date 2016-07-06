@@ -10,10 +10,11 @@
 
   <packaging>jar</packaging>
   <inceptionYear>2014</inceptionYear>
-  <issueManagement>
-    <system>JIRA</system>
-    <url>https://yildiz.atlassian.net</url>
-  </issueManagement>
+  <scm>
+    <connection>scm:git:https://bitbucket.org/yildiz-engine-team/authentication</connection>
+    <developerConnection>scm:git:https://bitbucket.org/yildiz-engine-team/authentication</developerConnection>
+    <url>https://bitbucket.org/yildiz-engine-team/authentication</url>
+  </scm>
   <parent>
     <groupId>be.yildiz-games</groupId>
     <artifactId>parent</artifactId>
