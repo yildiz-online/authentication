@@ -54,7 +54,7 @@ In your maven project, add the dependency
 ```xml
 <dependency>
     <groupId>be.yildiz-games</groupId>
-    <artifactId>authentcation</artifactId>
+    <artifactId>authentication</artifactId>
     <version>1.0.0-0-SNAPSHOT</version>
 </dependency>
 ```
