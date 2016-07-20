@@ -60,7 +60,7 @@ public final class EntryPoint {
         try {
             Logger.setFile("authentication-server.log");
             Logger.setLevelInfo();
-            if (args.length == 0) {
+            if (args.length == 0 || !new File(args[0]).exists()) {
                 throw new IllegalArgumentException("Please pass the property file as an argument when starting application");
             }
             Logger.info("Reading property file...");
