@@ -58,7 +58,7 @@ class AuthenticationHandler extends AbstractHandler {
      * the request.
      * </ul>
      *
-     * @param Session Session sending the request.
+     * @param session Session sending the request.
      * @param message Message received, can only be an AuthenticationRequest or a TokenVerificationRequest, otherwise, session will be closed.
      * @Requires (session != null).
      * @Requires (message != null).
@@ -70,6 +70,7 @@ class AuthenticationHandler extends AbstractHandler {
             if (command == Commands.AUTHENTICATION_REQUEST) {
                 AuthenticationRequest r = new AuthenticationRequest(message);
                 Token token = this.manager.authenticate(r);
+                Logger.debug("Send authentication response message to " + session.getPlayer() + " : " + token.getStatus());
                 session.sendMessage(new AuthenticationResponse(token));
             } else if (command == Commands.TOKEN_VERIFICATION_REQUEST) {
                 TokenVerficationRequest r = new TokenVerficationRequest(message);

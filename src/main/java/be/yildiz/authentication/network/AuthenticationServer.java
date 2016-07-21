@@ -26,7 +26,7 @@
 package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AuthenticationManager;
-import be.yildiz.module.network.netty.NettyChannelInitializer.DecoderEncoder;
+import be.yildiz.module.network.netty.DecoderEncoder;
 import be.yildiz.module.network.netty.factory.NettyFactory;
 import be.yildiz.module.network.netty.server.ServerNetty;
 
@@ -53,11 +53,11 @@ public final class AuthenticationServer {
      */
     public AuthenticationServer(final String address, final int port, final AuthenticationManager manager) {
         super();
-        this.server = NettyFactory.createServerNetty(address, port, DecoderEncoder.STRING, new AuthenticationHandlerFactory(manager));
+        this.server = NettyFactory.createServerNetty(address, port, new AuthenticationHandlerFactory(manager, DecoderEncoder.WEBSOCKET));
     }
 
     /**
-     * Start listening for incomming requests.
+     * Start listening for incoming requests.
      */
     public void startServer() {
         this.server.startServer();

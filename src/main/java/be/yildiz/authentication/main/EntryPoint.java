@@ -59,7 +59,8 @@ public final class EntryPoint {
         int status = 0;
         try {
             Logger.setFile("authentication-server.log");
-            Logger.setLevelInfo();
+            Logger.setLevelDebug();
+            Logger.debug("Debug logger level enabled.");
             if (args.length == 0 || !new File(args[0]).exists()) {
                 throw new IllegalArgumentException("Please pass the property file as an argument when starting application");
             }
