@@ -68,5 +68,10 @@ public final class AuthenticationHandlerFactory implements HandlerFactory {
         return this.codec;
     }
 
+    @Override
+    public boolean isServer() {
+        return true;
+    }
+
 
 }
