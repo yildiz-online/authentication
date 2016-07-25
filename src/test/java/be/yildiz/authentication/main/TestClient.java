@@ -78,6 +78,5 @@ public class TestClient implements NetworkListener {
     @Override
     public void connected() {
         System.out.println("connected");
-
     }
 }
