@@ -69,8 +69,12 @@ public interface Authenticator {
          */
         public final PlayerId playerId;
 
-
-        public AuthenticationResult(boolean authenticated, PlayerId playerId) {
+        /**
+         * Build a new AuthenticationResult.
+         * @param authenticated <code>true</code> if the player is successfully autenticated.
+         * @param playerId Authenticated player's id.
+         */
+        public AuthenticationResult(final boolean authenticated, final PlayerId playerId) {
             this.authenticated = authenticated;
             this.playerId = playerId;
         }
