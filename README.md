@@ -44,18 +44,13 @@ This will compile the source code, then run the unit tests, and finally build a 
 
 ## Usage
 
-To use the snapshot versions, please add the following repository
-https://oss.sonatype.org/content/repositories/snapshots/
-
-Released version are retrieved from maven central.
-
 In your maven project, add the dependency
 
 ```xml
 <dependency>
     <groupId>be.yildiz-games</groupId>
     <artifactId>authentication</artifactId>
-    <version>1.0.0-0-SNAPSHOT</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
