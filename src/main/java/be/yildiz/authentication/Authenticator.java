@@ -25,7 +25,6 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.authentication.AuthenticationChecker;
 import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
@@ -46,16 +45,15 @@ public interface Authenticator {
      * @return The authentication result with <code>true</code> if the password is correct for the userName.
      * @throws TechnicalException If something went wrong while trying to check the credentials.
      * @throws NotFoundException  If the credentials login does not exists.
-     * @Requires credentials != null
-     * @Requires credentials to have been checked with an {@link AuthenticationChecker} to ensure no dangerous input is passed to the authenticator.
      */
+    //@Requires credentials != null
+    //@Requires credentials to have been checked with an {@link AuthenticationChecker} to ensure no dangerous input is passed to the authenticator.
     AuthenticationResult getPasswordForUser(Credentials credentials) throws NotFoundException;
 
     /**
      * Provide the result of the authentication and the player id.
      *
      * @author Van den Borre Grégory
-     * @immutable
      */
     final class AuthenticationResult {
 

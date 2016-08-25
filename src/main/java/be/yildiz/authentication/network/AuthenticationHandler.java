@@ -30,14 +30,12 @@ import be.yildiz.common.Token;
 import be.yildiz.common.log.Logger;
 import be.yildiz.module.network.AbstractHandler;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
-import be.yildiz.module.network.protocol.*;
 import be.yildiz.module.network.server.Session;
 
 /**
  * Handle the reception of authentication request and token verification request, call authentication logic and send the authentication response.
  *
  * @author Grégory Van den Borre
- * @immutable
  */
 class AuthenticationHandler extends AbstractHandler {
 
@@ -60,9 +58,9 @@ class AuthenticationHandler extends AbstractHandler {
      *
      * @param session Session sending the request.
      * @param message Message received, can only be an AuthenticationRequest or a TokenVerificationRequest, otherwise, session will be closed.
-     * @Requires (session != null).
-     * @Requires (message != null).
      */
+    //@Requires (session != null)
+    //@Requires (message != null)
     @Override
     public void messageReceivedImpl(final Session session, final MessageWrapper message) {
         try {

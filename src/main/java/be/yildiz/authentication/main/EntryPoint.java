@@ -82,7 +82,7 @@ public final class EntryPoint {
             Logger.info("Server open on " + server.getHost() + ":" + server.getPort());
             server.startServer();
         } catch (Exception e) {
-            Logger.error("An error occured, closing the server...");
+            Logger.error("An error occurred, closing the server...");
             Logger.error(e);
             status = -1;
             Logger.info("Server closed.");

@@ -93,8 +93,6 @@ public class AuthenticationManager {
      * @param request Received AuthenticationRequest.
      * @return A token with the authentication state.
      * @throws NullPointerException If request is null.
-     * @modifies this
-     * @effect
      */
     public final Token authenticate(final AuthenticationRequest request) {
         this.checkIfToBeBanned(request.getLogin());
@@ -123,9 +121,9 @@ public class AuthenticationManager {
      *
      * @param id Player id.
      * @return A token for tha player.
-     * @Requires id != null
-     * @Ensures return a valid token or not found if the id does not match any registered player
      */
+    //@Requires id != null
+    //@Ensures return a valid token or not found if the id does not match any registered player
     public final Token getAuthenticated(final PlayerId id) {
         return this.authenticatedPlayers.getOrDefault(id, Token.notFound());
     }
@@ -173,8 +171,8 @@ public class AuthenticationManager {
      * Increase the number of authentication failure for a player.
      *
      * @param login Login of the player.
-     * @requires login != null
      */
+    //@requires login != null
     private void addConnectionFailure(final String login) {
         int value = this.failedAuthentication.getOrDefault(login, 0);
         value++;
@@ -185,10 +183,9 @@ public class AuthenticationManager {
      * Reset to 0 the number of authentication failure for a player.
      *
      * @param name Name of the player.
-     * @requires name != null
-     * @affect this
-     * @ensures failedAuthentication.get(name) == 0
      */
+    //@requires name != null
+    //@ensures failedAuthentication.get(name) == 0
     private void resetConnectionFailure(final String name) {
         this.failedAuthentication.put(name, 0);
     }

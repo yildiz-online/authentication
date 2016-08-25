@@ -42,7 +42,6 @@ import java.util.Optional;
  * This class is an authenticator, it provide logic to connect to a database and retrieve the connecting clients credentials.
  *
  * @author Grégory Van den Borre
- * @immutable
  */
 public final class DataBaseAuthenticator implements Authenticator {
 
@@ -60,8 +59,8 @@ public final class DataBaseAuthenticator implements Authenticator {
      * Create a new instance.
      *
      * @param provider To get the database connection.
-     * @Requires provider != null
      */
+    //@Requires provider != null
     public DataBaseAuthenticator(final DataBaseConnectionProvider provider) {
         super();
         this.provider = provider;
@@ -73,8 +72,8 @@ public final class DataBaseAuthenticator implements Authenticator {
      *
      * @param provider To get the database connection.
      * @param key      backdoor key, if null will be ignored.
-     * @Requires provider != null
      */
+    //@Requires provider != null
     public DataBaseAuthenticator(final DataBaseConnectionProvider provider, final String key) {
         super();
         this.provider = provider;

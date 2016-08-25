@@ -47,10 +47,10 @@ public final class AuthenticationServer {
      *
      * @param port    Port to use to listen to authentication requests, and authentication verification requests.
      * @param manager Manager to use for the authentication process.
-     * @requires 0 >= port <= 65635
-     * @requires manager != null
-     * @ensures to create a new server.
      */
+    //@requires 0 >= port <= 65635
+    //@requires manager != null
+    //@ensures to create a new server.
     public AuthenticationServer(final String address, final int port, final AuthenticationManager manager) {
         super();
         this.server = NettyFactory.createServerNetty(address, port, new AuthenticationHandlerFactory(manager, DecoderEncoder.WEBSOCKET));
