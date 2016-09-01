@@ -4,9 +4,8 @@
   <name>Yildiz Authentication</name>
   <description>Yildiz authentication application.</description>
 
-  <groupId>be.yildiz-games</groupId>
   <artifactId>authentication</artifactId>
-  <version>1.0.0-0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
@@ -21,14 +20,13 @@
   <parent>
     <groupId>be.yildiz-games</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.0-0-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
   </parent>
 
   <properties>
-    <version.bom-junit>1.0.0-0-SNAPSHOT</version.bom-junit>
-    <version.module-netty>1.0.0-0-SNAPSHOT</version.module-netty>
-    <version.module-database>1.0.0-0-SNAPSHOT</version.module-database>
-    <version.plugin.docker>0.3.5</version.plugin.docker>
+    <version.bom-junit>1.0.0</version.bom-junit>
+    <version.module-netty>1.0.0</version.module-netty>
+    <version.module-database>1.0.0</version.module-database>
   </properties>
 
   <dependencyManagement>
@@ -69,7 +67,7 @@
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
-        <version>${version.plugin.docker}</version>
+        <version>${maven.plugin.docker.version}</version>
         <configuration>
           <imageName>yildiz-authentication</imageName>
           <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
@@ -109,12 +107,5 @@
       </plugin>
     </plugins>
   </build>
-  
-  <repositories>
-    <repository>
-      <id>ossrh</id>
-      <name>OSS repository snapshot</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
+
 </project>
