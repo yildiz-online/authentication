@@ -20,13 +20,13 @@
   <parent>
     <groupId>be.yildiz-games</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.5-SNAPSHOT</version>
+    <version>1.0.6-SNAPSHOT</version>
   </parent>
 
   <properties>
-    <version.bom-junit>1.0.0</version.bom-junit>
-    <version.module-netty>1.0.0</version.module-netty>
-    <version.module-database>1.0.0</version.module-database>
+    <version.bom-junit>1.0.2-SNAPSHOT</version.bom-junit>
+    <version.module-netty>1.0.1-SNAPSHOT</version.module-netty>
+    <version.module-database>1.0.1-SNAPSHOT</version.module-database>
   </properties>
 
   <dependencyManagement>
@@ -64,22 +64,6 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>com.spotify</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>${maven.plugin.docker.version}</version>
-        <configuration>
-          <imageName>yildiz-authentication</imageName>
-          <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
-          <dockerHost>https://192.168.99.100:2376</dockerHost>
-          <resources>
-            <resource>
-              <directory>${project.build.directory}</directory>
-              <include>${project.build.finalName}.jar</include>
-            </resource>
-          </resources>
-        </configuration>
-      </plugin>
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
