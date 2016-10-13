@@ -45,6 +45,7 @@ public final class AuthenticationServer {
     /**
      * Create a new server, with a given port.
      *
+     * @param address Address to bind.
      * @param port    Port to use to listen to authentication requests, and authentication verification requests.
      * @param manager Manager to use for the authentication process.
      */
