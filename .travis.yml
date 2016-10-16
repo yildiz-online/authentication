@@ -1,4 +1,20 @@
+env:
+  global:
+    - secure: "JsTWTxyJn2exumB9qG2o0Fdig3tImjNmJxlsVUVPoWpG553hQ+hRAzt7okkPaBl3+ex7VpDuNWoTd5ur55BU1r3gKGYNDm0yEVpuhgTOxJqhCa623VtFUZjlxBZBFcOX28miZAFjXXT8MhtQwQBr1cWsDrkjEdBYGDiNJ9TLYrLRWq/MvcbpuPDXcPG2r6bOz6UsVWtQJQ8lkprzqIAKji/RovFF7eLvi7oias2R9X/RWcYWwfh/7MlOep27CjwdA8GJb+XGIduUDKaJGLIq4o7K9IuhiMJibVrenmcEBWWi96iJczI20dQKlexGE5stxbmRiLTbxUsF2yAlFvi0E/I8FCjea6C5eFjhbOgrvZVu2LxG1m+Et85BnSxTZmWG0BWNrUg7AHZgNlFBhu4Mf/bzIp0HRF+iAQv8hu+XwDjX5P9K086X/t83biAxP/i5E459el+um6k64bPoRbLMmGdUsOC/4q2mt0LuSGM0Quw5gxEjK1B2TziWjycXK0Tr3Dzfj0WEIXv93bgweZKJNCYgvrB9xJG0BmQYkwtvlj64jJ4bvjb9FXg6Zd379lDSf7S+0er+duQRevfdE50rzHsw7ABfUd0PTDSDFGGGOlVgaZ0Vm24xr9yuXeZu2COIQ+0+qrJ9YHur0dTV00SLah7KQiHOjowBnqqlVd4JmEQ="
+
+
 language: java
 jdk:
   - oraclejdk8
+
+addons:
+  coverity_scan:
+    project:
+      name: "yildiz-online/authentication"
+      description: "Build submitted via Travis CI"
+    notification_email: vandenborre.gregory@hotmail.fr
+    build_command_prepend: "mvn clean"
+    build_command:   "mvn -DskipTests=true compile -s settings.xml"
+    branch_pattern: master
+
 script: mvn clean install -s settings.xml
