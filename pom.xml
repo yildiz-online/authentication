@@ -20,11 +20,11 @@
   <parent>
     <groupId>be.yildiz-games</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8-SNAPSHOT</version>
   </parent>
 
   <properties>
-    <version.bom-junit>1.0.3</version.bom-junit>
+    <version.bom-junit>1.0.4-SNAPSHOT</version.bom-junit>
     <version.module-netty>1.0.2-SNAPSHOT</version.module-netty>
     <version.module-database>1.0.3-SNAPSHOT</version.module-database>
   </properties>
@@ -64,7 +64,6 @@
 
   <build>
     <plugins>
-
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
