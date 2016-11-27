@@ -7,7 +7,7 @@
     </server>
   <server>
     <id>docker-hub</id>
-    <username>${env.DOCKERHUB_USER_TOKEN}</username>
+    <username>moussavdb</username>
     <password>${env.DOCKERHUB_PWD_TOKEN}</password>
     <configuration>
       <email>${env.DOCKERHUB_EMAIL}</email>
