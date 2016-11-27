@@ -5,6 +5,14 @@
       <username>${env.OSSRH_USER_TOKEN}</username>
       <password>${env.OSSRH_PWD_TOKEN}</password>
     </server>
+  <server>
+    <id>docker-hub</id>
+    <username>${env.DOCKERHUB_USER_TOKEN}</username>
+    <password>${env.DOCKERHUB_PWD_TOKEN}</password>
+    <configuration>
+      <email>${env.DOCKERHUB_EMAIL}</email>
+    </configuration>
+  </server>
   </servers>
   <profiles>
     <profile>
