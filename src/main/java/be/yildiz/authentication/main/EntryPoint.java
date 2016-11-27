@@ -56,9 +56,8 @@ public final class EntryPoint {
      * @param args Unused.
      */
     public static void main(String[] args) {
-        int status = 0;
         try {
-            Logger.setFile("authentication-server.log");
+            Logger.setFile("/yildiz/authentication-server.log");
             Logger.setLevelDebug();
             Logger.debug("Debug logger level enabled.");
             if (args.length == 0 || !new File(args[0]).exists()) {
@@ -84,9 +83,8 @@ public final class EntryPoint {
         } catch (Exception e) {
             Logger.error("An error occurred, closing the server...");
             Logger.error(e);
-            status = -1;
             Logger.info("Server closed.");
-            System.exit(status);
+            System.exit(-1);
         }
 
     }

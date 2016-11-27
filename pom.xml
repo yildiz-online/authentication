@@ -95,7 +95,12 @@
           <serverId>docker-hub</serverId>
           <imageName>moussavdb/yildiz-authentication:latest</imageName>
           <baseImage>openjdk</baseImage>
-          <entryPoint>["java", "-jar", "/authentication-server.jar"]</entryPoint>
+          <runs>
+            <run>
+              mkdir /yildiz
+            </run>
+          </runs>
+          <entryPoint>["java", "-jar", "/authentication-server.jar", "/yildiz/authentication.properties"]</entryPoint>
           <forceTags>true</forceTags>
           <imageTags>
            <imageTag>${project.version}</imageTag>
