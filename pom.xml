@@ -63,6 +63,7 @@
   </dependencies>
 
   <build>
+    <finalName>authentication-server</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -75,7 +76,6 @@
               <mainClass>be.yildiz.authentication.main.EntryPoint</mainClass>
             </manifest>
           </archive>
-          <finalName>authentication-server</finalName>
           <appendAssemblyId>false</appendAssemblyId>
         </configuration>
         <executions>
