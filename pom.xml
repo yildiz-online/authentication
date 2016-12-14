@@ -53,6 +53,11 @@
       <version>${version.module-database}</version>
     </dependency>
     <dependency>
+      <groupId>de.svenkubiak</groupId>
+      <artifactId>jBCrypt</artifactId>
+      <version>0.4.1</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
@@ -88,50 +93,60 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>com.spotify</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <configuration>
-          <serverId>docker-hub</serverId>
-          <imageName>moussavdb/yildiz-authentication:latest</imageName>
-          <baseImage>openjdk</baseImage>
-          <runs>
-            <run>
-              mkdir /yildiz
-            </run>
-          </runs>
-          <entryPoint>["java", "-jar", "/authentication-server.jar", "/yildiz/authentication.properties"]</entryPoint>
-          <forceTags>true</forceTags>
-          <imageTags>
-           <imageTag>${project.version}</imageTag>
-           <imageTag>latest</imageTag>
-          </imageTags>
-          <resources>
-            <resource>
-              <targetPath>/</targetPath>
-              <directory>${project.build.directory}</directory>
-              <include>authentication-server.jar</include>
-            </resource>
-          </resources>
-        </configuration>
-        <executions>
-          <execution>
-            <id>build-image</id>
-            <phase>package</phase>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>deploy-image</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>push</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
+
+  <profiles>
+    <profile>
+      <id>docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>docker-maven-plugin</artifactId>
+            <configuration>
+              <serverId>docker-hub</serverId>
+              <imageName>moussavdb/yildiz-authentication:latest</imageName>
+              <baseImage>openjdk</baseImage>
+              <runs>
+                <run>
+                  mkdir /yildiz
+                </run>
+              </runs>
+              <entryPoint>["java", "-jar", "/authentication-server.jar", "/yildiz/authentication.properties"]</entryPoint>
+              <forceTags>true</forceTags>
+              <imageTags>
+                <imageTag>${project.version}</imageTag>
+                <imageTag>latest</imageTag>
+              </imageTags>
+              <resources>
+                <resource>
+                  <targetPath>/</targetPath>
+                  <directory>${project.build.directory}</directory>
+                  <include>authentication-server.jar</include>
+                </resource>
+              </resources>
+            </configuration>
+            <executions>
+              <execution>
+                <id>build-image</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>deploy-image</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>push</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>

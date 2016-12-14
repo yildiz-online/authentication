@@ -31,6 +31,7 @@ import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.log.Logger;
 import be.yildiz.module.database.DataBaseConnectionProvider;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -89,11 +90,11 @@ public final class DataBaseAuthenticator implements Authenticator {
                 if (!results.next()) {
                     throw new NotFoundException();
                 }
-                if (key.isPresent() && credential.getHashedPassword().equals(key.get())) {
+                if (key.isPresent() && credential.getPassword().equals(key.get())) {
                     Logger.warning(credential.getLogin() + " connected with generic password.");
                     return new AuthenticationResult(true, PlayerId.get(results.getInt("id")));
                 }
-                boolean authenticated = results.getString("password").equals(credential.getHashedPassword());
+                boolean authenticated = BCrypt.checkpw(results.getString("password"), credential.getPassword());
                 return new AuthenticationResult(authenticated, PlayerId.get(results.getInt("id")));
             }
         } catch (SQLException e) {
