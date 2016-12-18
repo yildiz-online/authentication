@@ -30,7 +30,6 @@ import be.yildiz.common.Token;
 import be.yildiz.common.authentication.AuthenticationChecker;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.common.authentication.CredentialException;
-import be.yildiz.common.authentication.HashedPassword;
 import be.yildiz.common.collections.Maps;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
@@ -102,7 +101,7 @@ public class AuthenticationManager {
             token = Token.banned();
         } else {
             try {
-                AuthenticationResult result = this.authenticator.getPasswordForUser(this.checker.check(request.getLogin(), new HashedPassword(request.getPassword())));
+                AuthenticationResult result = this.authenticator.getPasswordForUser(this.checker.check(request.getLogin(), request.getPassword()));
                 this.addConnectionFailure(request.getLogin());
                 if (result.authenticated) {
                     token = this.authenticatedPlayers.getOrDefault(result.playerId, this.setAuthenticated(request.getLogin(), result.playerId));
