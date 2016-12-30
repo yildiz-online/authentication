@@ -41,19 +41,19 @@ public class AuthenticationManagerTest {
 
     @Test
     public void testAuthenticate() {
-        Token result = this.givenAuthenticatedResult("test", "test");
+        Token result = this.givenAuthenticatedResult("test", "test1");
         this.thenResultIsAuthenticated(result);
     }
 
     @Test
     public void testAuthenticateNot() {
-        Token result = this.givenNotAuthenticatedResult("test", "test");
+        Token result = this.givenNotAuthenticatedResult("test", "test1");
         this.thenResultIsNotAuthenticated(result);
     }
 
     @Test
     public void testAuthenticateNotFound() {
-        Token result = this.givenNotFoundResult("test", "test");
+        Token result = this.givenNotFoundResult("test", "test1");
         this.thenResultIsNotFound(result);
     }
 
@@ -68,13 +68,13 @@ public class AuthenticationManagerTest {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 5; i++) {
-            Token result = m.authenticate(new AuthenticationRequest("test", "test"));
+            Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
             this.thenResultIsNotAuthenticated(result);
         }
-        Token result = m.authenticate(new AuthenticationRequest("test", "test"));
+        Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
         this.thenResultIsBanned(result);
         mock.toReturn = true;
-        result = m.authenticate(new AuthenticationRequest("test", "test"));
+        result = m.authenticate(new AuthenticationRequest("test", "test1"));
         this.thenResultIsBanned(result);
     }
 
@@ -83,15 +83,15 @@ public class AuthenticationManagerTest {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 4; i++) {
-            Token result = m.authenticate(new AuthenticationRequest("test", "test"));
+            Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
             this.thenResultIsNotAuthenticated(result);
         }
         mock.toReturn = true;
-        Token result = m.authenticate(new AuthenticationRequest("test", "test"));
+        Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
         this.thenResultIsAuthenticated(result);
         mock.toReturn = false;
         for (int i = 0; i < 5; i++) {
-            result = m.authenticate(new AuthenticationRequest("test", "test"));
+            result = m.authenticate(new AuthenticationRequest("test", "test1"));
             this.thenResultIsNotAuthenticated(result);
         }
     }
