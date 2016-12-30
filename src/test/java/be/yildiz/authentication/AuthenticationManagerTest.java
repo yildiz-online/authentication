@@ -108,12 +108,12 @@ public class AuthenticationManagerTest {
 
     private Token givenNotAuthenticatedResult(final String login, final String pwd) {
         AuthenticationManager m = new AuthenticationManager(new AuthenticatorMock(false, false));
-        return m.authenticate(new AuthenticationRequest("test", "test"));
+        return m.authenticate(new AuthenticationRequest("test", "test1"));
     }
 
     private Token givenNotFoundResult(final String login, final String pwd) {
         AuthenticationManager m = new AuthenticationManager(new AuthenticatorMock(true, true));
-        return m.authenticate(new AuthenticationRequest("test", "test"));
+        return m.authenticate(new AuthenticationRequest("test", "test1"));
     }
 
     private void thenResultIsNotFound(final Token result) {
