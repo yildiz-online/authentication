@@ -17,4 +17,7 @@ addons:
     build_command:   "mvn -DskipTests=true compile -s settings.xml"
     branch_pattern: master
 
-script: mvn clean install -s settings.xml
+script:
+  - mvn -V -B -s settings.xml test
+install:
+  - mvn -V -B -s settings.xml clean install
