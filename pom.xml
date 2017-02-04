@@ -111,7 +111,7 @@
             <artifactId>docker-maven-plugin</artifactId>
             <configuration>
               <serverId>docker-hub</serverId>
-              <imageName>moussavdb/yildiz-authentication:latest</imageName>
+              <imageName>moussavdb/yildiz-authentication:${project.version}</imageName>
               <baseImage>openjdk</baseImage>
               <runs>
                 <run>
@@ -142,7 +142,7 @@
               </execution>
               <execution>
                 <id>deploy-image</id>
-                <phase>deploy</phase>
+                <phase>install</phase>
                 <goals>
                   <goal>push</goal>
                 </goals>
