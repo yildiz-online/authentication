@@ -81,7 +81,7 @@ public final class DataBaseAuthenticator implements Authenticator {
 
     @Override
     public AuthenticationResult getPasswordForUser(final Credentials credential) throws NotFoundException {
-        String query = "SELECT id, password FROM account WHERE username = ?";
+        String query = "SELECT id, password FROM ACCOUNTS WHERE username = ?";
         try (Connection c = this.provider.getConnection(); PreparedStatement stmt = c.prepareStatement(query)) {
             stmt.setString(1, credential.getLogin());
             try (ResultSet results = stmt.executeQuery()) {
