@@ -42,6 +42,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
     private final int dbPort;
     private final int port;
     private final String address;
+    private final String system;
 
     public Configuration(Properties properties) {
         super();
@@ -52,6 +53,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
         this.dbPort = PropertiesHelper.getIntValue(properties, "database.port");
         this.port = PropertiesHelper.getIntValue(properties, "network.port");
         this.address = properties.getProperty("network.host");
+        this.system = properties.getProperty("database.system");
     }
 
     @Override
@@ -87,5 +89,10 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
     @Override
     public int getAuthenticationPort() {
         return this.port;
+    }
+
+    @Override
+    public String getSystem() {
+        return this.system;
     }
 }
