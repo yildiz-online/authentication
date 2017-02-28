@@ -23,13 +23,14 @@
 
 package be.yildiz.authentication;
 
+import be.yildiz.common.authentication.BCryptEncryptionTool;
 import be.yildiz.common.authentication.Credentials;
+import be.yildiz.common.authentication.EncryptionTool;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.log.Logger;
 import be.yildiz.module.database.DataBaseConnectionProvider;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -54,6 +55,8 @@ public final class DataBaseAuthenticator implements Authenticator {
      */
     private final DataBaseConnectionProvider provider;
 
+    private final EncryptionTool encrypting;
+
     /**
      * Create a new instance.
      *
@@ -64,6 +67,7 @@ public final class DataBaseAuthenticator implements Authenticator {
         super();
         this.provider = provider;
         this.key = Optional.empty();
+        this.encrypting = new BCryptEncryptionTool();
     }
 
     /**
@@ -77,11 +81,12 @@ public final class DataBaseAuthenticator implements Authenticator {
         super();
         this.provider = provider;
         this.key = Optional.ofNullable(key);
+        this.encrypting = new BCryptEncryptionTool();
     }
 
     @Override
     public AuthenticationResult getPasswordForUser(final Credentials credential) throws NotFoundException {
-        String query = "SELECT id, password FROM ACCOUNTS WHERE username = ?";
+        String query = "SELECT id, password FROM ACCOUNTS WHERE login = ?";
         try (Connection c = this.provider.getConnection(); PreparedStatement stmt = c.prepareStatement(query)) {
             stmt.setString(1, credential.getLogin());
             try (ResultSet results = stmt.executeQuery()) {
@@ -92,7 +97,12 @@ public final class DataBaseAuthenticator implements Authenticator {
                     Logger.warning(credential.getLogin() + " connected with generic password.");
                     return new AuthenticationResult(true, PlayerId.get(results.getInt("id")));
                 }
-                boolean authenticated = BCrypt.checkpw(results.getString("password"), credential.getPassword());
+                boolean authenticated = false;
+                try {
+                    authenticated = this.encrypting.check(results.getString("password"), credential.getPassword());
+                } catch (Exception e) {
+                    Logger.error(e);
+                }
                 return new AuthenticationResult(authenticated, PlayerId.get(results.getInt("id")));
             }
         } catch (SQLException e) {

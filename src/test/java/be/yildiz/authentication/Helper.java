@@ -21,43 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  SOFTWARE.
  */
 
-package be.yildiz.authentication.network;
+package be.yildiz.authentication;
 
+import be.yildiz.common.id.PlayerId;
 import org.junit.Test;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * @author Grégory Van den Borre
  */
-public final class AuthentictionHandlerTest {
+public class Helper {
 
     @Test
-    public void messageReceivedImplAuthenticationRequest() throws Exception {
-//        Authenticator auth = Mockito.mock(Authenticator.class);
-//        Mockito.when(auth.getPasswordForUser(Mockito.any())).thenReturn(new AuthenticationResult(true, PlayerId.get(5)));
-//        AuthenticationManager manager = new AuthenticationManager(auth);
-//        Token token = Token.setAuthenticated(PlayerId.get(5), 200L, 123);
-//        AuthenticationRequest request = new AuthenticationRequest("abc", "abcde");
-//        Mockito.when(manager.authenticate(request)).thenReturn(token);
-//        AuthenticationHandler handler = new AuthenticationHandler(manager);
-//        Session session = Mockito.mock(Session.class);
-//        handler.messageReceivedImpl(session, new MessageWrapper(request.buildMessage()));
-//        
-//        Mockito.verify(session).sendMessage(new AuthenticationResponse(token));
+    public void t() {
+        System.out.println(BCrypt.hashpw("testtest", BCrypt.gensalt()));
     }
 
-    @Test
-    public void messageReceivedImplTokenVerificationRequest() {
-//        Assert.fail();
+    public static Authenticator.AuthenticationResult givenAnAuthenticatedResult(PlayerId id) {
+        return new Authenticator.AuthenticationResult(true, id);
     }
-
-    @Test
-    public void messageReceivedImplOtherRequest() {
-//        Assert.fail();
-    }
-
-    @Test
-    public void messageReceivedImplInvalidMessage() {
-//        Assert.fail();
-    }
-
 }

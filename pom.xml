@@ -29,7 +29,7 @@
   <url>https://bitbucket.org/yildiz-engine-team/authentication</url>
 
   <artifactId>authentication</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 
   <packaging>jar</packaging>
   <inceptionYear>2014</inceptionYear>
@@ -43,7 +43,7 @@
   <parent>
     <groupId>be.yildiz-games</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
   </parent>
 
 
@@ -55,10 +55,6 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>de.svenkubiak</groupId>
-      <artifactId>jBCrypt</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

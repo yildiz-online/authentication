@@ -67,7 +67,7 @@ class AuthenticationHandler extends AbstractHandler {
             if (command == Commands.AUTHENTICATION_REQUEST) {
                 AuthenticationRequest r = new AuthenticationRequest(message);
                 Token token = this.manager.authenticate(r);
-                Logger.debug("Send authentication response message to " + session.getPlayer() + " : " + token.getStatus());
+                Logger.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
                 session.sendMessage(new AuthenticationResponse(token));
             } else if (command == Commands.TOKEN_VERIFICATION_REQUEST) {
                 TokenVerificationRequest r = new TokenVerificationRequest(message);

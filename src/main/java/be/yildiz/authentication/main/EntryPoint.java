@@ -29,9 +29,8 @@ import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.common.log.Logger;
 import be.yildiz.common.resource.PropertiesHelper;
-import be.yildiz.module.database.C3P0ConnectionProvider;
 import be.yildiz.module.database.DataBaseConnectionProvider;
-import be.yildiz.module.database.DataBaseConnectionProvider.DBSystem;
+import be.yildiz.module.database.DatabaseConnectionProviderFactory;
 import be.yildiz.module.network.server.SanityServer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -68,7 +67,7 @@ public final class EntryPoint {
 
             Logger.info("Preparing the database connection...");
 
-            DataBaseConnectionProvider provider = new C3P0ConnectionProvider(DBSystem.MYSQL, config);
+            DataBaseConnectionProvider provider = new DatabaseConnectionProviderFactory().create(config);
             AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
             provider.sanity();
             Logger.info("Database connection ready.");
