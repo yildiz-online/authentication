@@ -43,8 +43,11 @@ import java.util.Properties;
  *
  * @author Grégory Van den Borre
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class EntryPoint {
+
+    private EntryPoint() {
+        super();
+    }
 
     /**
      * Register a new log file, the connection properties to the database from a property file, launch the 2 network servers, authentication server, and token validation server, and start listening
