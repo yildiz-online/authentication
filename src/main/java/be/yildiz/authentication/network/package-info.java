@@ -22,6 +22,7 @@
  */
 
 /**
+ * Contains  all the network related logic.
  * @author Grégory Van den Borre
  */
 package be.yildiz.authentication.network;

@@ -22,7 +22,9 @@
  */
 
 /**
- * Contains the main logic to handle the authentication.
+ * Contains the application configuration logic.
+ *
  * @author Grégory Van den Borre
  */
-package be.yildiz.authentication;
+package be.yildiz.authentication.configuration;
+

@@ -28,13 +28,9 @@ import be.yildiz.authentication.DataBaseAuthenticator;
 import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.common.log.Logger;
-import be.yildiz.common.resource.PropertiesHelper;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
 import be.yildiz.module.network.server.SanityServer;
-
-import java.io.File;
-import java.util.Properties;
 
 /**
  * Application entry point, contains the main method.
@@ -58,13 +54,8 @@ public final class EntryPoint {
             Logger.setFile("/yildiz/authentication-server.log");
             Logger.setLevelDebug();
             Logger.debug("Debug logger level enabled.");
-            if (args.length == 0 || !new File(args[0]).exists()) {
-                throw new IllegalArgumentException("Please pass the property file as an argument when starting application");
-            }
-            Logger.info("Reading property file...");
-            Properties properties = PropertiesHelper.getPropertiesFromFile(new File(args[0]));
-            Configuration config = new Configuration(properties);
-            Logger.info("Property file loaded.");
+
+            Configuration config = Configuration.fromAppArgs(args);
 
             Logger.info("Preparing the database connection...");
 
