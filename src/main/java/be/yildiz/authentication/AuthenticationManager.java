@@ -80,6 +80,7 @@ public class AuthenticationManager {
     private final Authenticator authenticator;
 
     public AuthenticationManager(Authenticator authenticator) {
+        assert authenticator != null;
         this.authenticator = authenticator;
     }
 
@@ -128,9 +129,9 @@ public class AuthenticationManager {
     /**
      * Set a player as setAuthenticated, reset its connections failures and provide the proper token.
      *
-     * @param login
-     * @param id
-     * @return
+     * @param login Login of the authenticated user.
+     * @param id Id of the authenticated user.
+     * @return The authentication token for the user.
      */
     private Token setAuthenticated(final String login, final PlayerId id) {
         int key = Util.getRandom();
@@ -155,9 +156,9 @@ public class AuthenticationManager {
      * Check if a player has too many time entered a wrong password, if so it will be added to the banned list for a limited amount of time.
      *
      * @param login Login of the player.
-     * @requires login != null
-     * @ensures if(this.failedAuthentication.getOr(login, 0) == AUTHENTICATION_MAXIMUM_FAILURE) {this.banned.contains(login)}
      */
+    //@requires login != null
+    //@ensures if(this.failedAuthentication.getOr(login, 0) == AUTHENTICATION_MAXIMUM_FAILURE) {this.banned.contains(login)}
     private void checkIfToBeBanned(final String login) {
         if (this.failedAuthentication.getOrDefault(login, 0).equals(AUTHENTICATION_MAXIMUM_FAILURE)) {
             this.banned.put(login, AUTHENTICATION_FAILURE_BAN_TIME.addNow());

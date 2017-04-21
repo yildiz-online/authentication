@@ -37,6 +37,11 @@ import org.junit.Test;
 public class AuthenticationManagerTest {
 
 
+    @Test(expected = AssertionError.class)
+    public void withNullAuthenticator() {
+        new AuthenticationManager(null);
+    }
+
     @Test
     public void testAuthenticate() {
         Token result = this.givenAuthenticatedResult("test", "test1");

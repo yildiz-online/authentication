@@ -25,7 +25,10 @@ package be.yildiz.authentication;
 
 import be.yildiz.common.authentication.CredentialException;
 import be.yildiz.common.exeption.NotFoundException;
+import be.yildiz.module.database.C3P0ConnectionProvider;
+import be.yildiz.module.database.DataBaseConnectionProvider;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.sql.SQLException;
 
@@ -33,6 +36,26 @@ import java.sql.SQLException;
  * @author Grégory Van den Borre
  */
 public class DatabaseAuthenticatorTest {
+
+    @Test(expected = AssertionError.class)
+    public void withNullProvider() {
+        new DataBaseAuthenticator(null);
+    }
+
+    @Test(expected = AssertionError.class)
+    public void withKeyNullProvider() {
+        new DataBaseAuthenticator(null, "ok");
+    }
+
+    @Test(expected = AssertionError.class)
+    public void withNullKey() {
+        new DataBaseAuthenticator(Mockito.mock(DataBaseConnectionProvider.class), null);
+    }
+
+    @Test
+    public void happyFlow() {
+        new DataBaseAuthenticator(Mockito.mock(DataBaseConnectionProvider.class), "ok");
+    }
 
     @Test
     public void testGetPasswordForUser() throws SQLException, NotFoundException, CredentialException {
