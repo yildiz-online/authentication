@@ -73,7 +73,7 @@ class AuthenticationHandler extends AbstractHandler {
                 TokenVerificationRequest r = new TokenVerificationRequest(message);
                 Token t = this.manager.getAuthenticated(r.getToken().getId());
                 boolean authenticated = t.isAuthenticated() && t.getKey() == r.getToken().getKey();
-                session.sendMessage(new TokenVerificationResponse(r.getToken().getId(), authenticated));
+                session.sendMessage(new TokenVerificationResponse(new TokenVerification(r.getToken().getId(), authenticated)));
             } else {
                 Logger.warning("Invalid message:" + message + " from " + session);
                 session.disconnect();
