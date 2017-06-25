@@ -24,13 +24,9 @@
 package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AuthenticationManager;
-import be.yildiz.common.Token;
 import be.yildiz.module.network.netty.DecoderEncoder;
 import be.yildiz.module.network.netty.factory.NettyFactory;
 import be.yildiz.module.network.netty.server.ServerNetty;
-import be.yildiz.module.network.protocol.Authentication;
-import be.yildiz.module.network.protocol.NetworkMessage;
-import be.yildiz.module.network.protocol.mapper.*;
 
 /**
  * Create a server using authentication handlers.
@@ -56,11 +52,6 @@ public final class AuthenticationServer {
     //@ensures to create a new server.
     public AuthenticationServer(final String address, final int port, final AuthenticationManager manager) {
         super();
-        IntegerMapper integerMapper = new IntegerMapper();
-        PlayerIdMapper playerIdMapper = new PlayerIdMapper();
-        TokenStatusMapper tokenStatusMapper = new TokenStatusMapper(integerMapper);
-        NetworkMessage.registerMapper(Token.class, new TokenMapper(playerIdMapper, integerMapper, tokenStatusMapper));
-        NetworkMessage.registerMapper(Authentication.class, new AuthenticationMapper());
         this.server = NettyFactory.createServerNetty(address, port, new AuthenticationHandlerFactory(manager, DecoderEncoder.WEBSOCKET));
     }
 
