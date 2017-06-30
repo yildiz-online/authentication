@@ -33,7 +33,6 @@ import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.util.Time;
 import be.yildiz.common.util.Util;
-import be.yildiz.module.network.protocol.AuthenticationRequest;
 
 import java.util.Map;
 

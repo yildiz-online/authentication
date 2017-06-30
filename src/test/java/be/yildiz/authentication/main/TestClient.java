@@ -27,8 +27,6 @@ import be.yildiz.module.network.client.NetworkListener;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.netty.client.ClientNetty;
 import be.yildiz.module.network.netty.factory.NettyFactory;
-import be.yildiz.module.network.protocol.AuthenticationRequest;
-import be.yildiz.module.network.protocol.AuthenticationResponse;
 import be.yildiz.module.network.protocol.MessageWrapper;
 
 /**

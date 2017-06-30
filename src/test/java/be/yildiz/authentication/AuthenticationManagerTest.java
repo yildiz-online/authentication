@@ -27,7 +27,6 @@ import be.yildiz.common.Token;
 import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
-import be.yildiz.module.network.protocol.AuthenticationRequest;
 import org.junit.Assert;
 import org.junit.Test;
 
