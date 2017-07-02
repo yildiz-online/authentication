@@ -33,6 +33,7 @@ import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.util.Time;
 import be.yildiz.common.util.Util;
+import be.yildiz.module.network.protocol.Authentication;
 
 import java.util.Map;
 
@@ -87,22 +88,22 @@ public class AuthenticationManager {
      * Check if the authentication request is valid and notify the listeners if it is. If the authentication fails, a value is incremented for the player trying to connect, if the value reaches 5, the
      * player will not be able to connect for 5 minutes.
      *
-     * @param request Received AuthenticationRequest.
+     * @param auth Received authentication data.
      * @return A token with the authentication state.
      * @throws NullPointerException If request is null.
      */
-    public final Token authenticate(final AuthenticationRequest request) {
-        this.checkIfToBeBanned(request.getLogin());
+    public final Token authenticate(final Authentication auth) {
+        this.checkIfToBeBanned(auth.login);
         Token token;
-        if (this.isBanned(request.getLogin())) {
-            this.resetConnectionFailure(request.getLogin());
+        if (this.isBanned(auth.login)) {
+            this.resetConnectionFailure(auth.login);
             token = Token.banned();
         } else {
             try {
-                AuthenticationResult result = this.authenticator.getPasswordForUser(this.checker.check(request.getLogin(), request.getPassword()));
-                this.addConnectionFailure(request.getLogin());
+                AuthenticationResult result = this.authenticator.getPasswordForUser(this.checker.check(auth.login, auth.password));
+                this.addConnectionFailure(auth.login);
                 if (result.authenticated) {
-                    token = this.authenticatedPlayers.getOrDefault(result.playerId, this.setAuthenticated(request.getLogin(), result.playerId));
+                    token = this.authenticatedPlayers.getOrDefault(result.playerId, this.setAuthenticated(auth.login, result.playerId));
                 } else {
                     token = Token.authenticationFailed();
                 }

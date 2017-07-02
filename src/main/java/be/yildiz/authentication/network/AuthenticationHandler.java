@@ -43,6 +43,8 @@ class AuthenticationHandler extends AbstractHandler {
      */
     private final AuthenticationManager manager;
 
+    private final NetworkMessageFactory factory = new NetworkMessageFactory();
+
     AuthenticationHandler(AuthenticationManager manager) {
         this.manager = manager;
     }
@@ -65,15 +67,15 @@ class AuthenticationHandler extends AbstractHandler {
         try {
             int command = NetworkMessage.getCommandFromMessage(message);
             if (command == Commands.AUTHENTICATION_REQUEST) {
-                AuthenticationRequest r = new AuthenticationRequest(message);
+                Authentication r = factory.authenticationRequest(message);
                 Token token = this.manager.authenticate(r);
                 Logger.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
-                session.sendMessage(new AuthenticationResponse(token));
+                session.sendMessage(factory.authenticationResponse(token));
             } else if (command == Commands.TOKEN_VERIFICATION_REQUEST) {
-                TokenVerificationRequest r = new TokenVerificationRequest(message);
-                Token t = this.manager.getAuthenticated(r.getToken().getId());
-                boolean authenticated = t.isAuthenticated() && t.getKey() == r.getToken().getKey();
-                session.sendMessage(new TokenVerificationResponse(new TokenVerification(r.getToken().getId(), authenticated)));
+                Token r = factory.tokenVerification(message);
+                Token t = this.manager.getAuthenticated(r.getId());
+                boolean authenticated = t.isAuthenticated() && t.getKey() == r.getKey();
+                session.sendMessage(factory.tokenVerified(new TokenVerification(r.getId(), authenticated)));
             } else {
                 Logger.warning("Invalid message:" + message + " from " + session);
                 session.disconnect();
