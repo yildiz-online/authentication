@@ -27,6 +27,7 @@ import be.yildiz.common.Token;
 import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
+import be.yildiz.module.network.protocol.Authentication;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -70,13 +71,13 @@ public class AuthenticationManagerTest {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 5; i++) {
-            Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
+            Token result = m.authenticate(new Authentication("test", "test1"));
             this.thenResultIsNotAuthenticated(result);
         }
-        Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
+        Token result = m.authenticate(new Authentication("test", "test1"));
         this.thenResultIsBanned(result);
         mock.toReturn = true;
-        result = m.authenticate(new AuthenticationRequest("test", "test1"));
+        result = m.authenticate(new Authentication("test", "test1"));
         this.thenResultIsBanned(result);
     }
 
@@ -85,15 +86,15 @@ public class AuthenticationManagerTest {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 4; i++) {
-            Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
+            Token result = m.authenticate(new Authentication("test", "test1"));
             this.thenResultIsNotAuthenticated(result);
         }
         mock.toReturn = true;
-        Token result = m.authenticate(new AuthenticationRequest("test", "test1"));
+        Token result = m.authenticate(new Authentication("test", "test1"));
         this.thenResultIsAuthenticated(result);
         mock.toReturn = false;
         for (int i = 0; i < 5; i++) {
-            result = m.authenticate(new AuthenticationRequest("test", "test1"));
+            result = m.authenticate(new Authentication("test", "test1"));
             this.thenResultIsNotAuthenticated(result);
         }
     }
@@ -105,17 +106,17 @@ public class AuthenticationManagerTest {
 
     private Token givenAuthenticatedResult(final String login, final String pwd) {
         AuthenticationManager m = new AuthenticationManager(new AuthenticatorMock(true, false));
-        return m.authenticate(new AuthenticationRequest(login, pwd));
+        return m.authenticate(new Authentication(login, pwd));
     }
 
     private Token givenNotAuthenticatedResult(final String login, final String pwd) {
         AuthenticationManager m = new AuthenticationManager(new AuthenticatorMock(false, false));
-        return m.authenticate(new AuthenticationRequest("test", "test1"));
+        return m.authenticate(new Authentication("test", "test1"));
     }
 
     private Token givenNotFoundResult(final String login, final String pwd) {
         AuthenticationManager m = new AuthenticationManager(new AuthenticatorMock(true, true));
-        return m.authenticate(new AuthenticationRequest("test", "test1"));
+        return m.authenticate(new Authentication("test", "test1"));
     }
 
     private void thenResultIsNotFound(final Token result) {
