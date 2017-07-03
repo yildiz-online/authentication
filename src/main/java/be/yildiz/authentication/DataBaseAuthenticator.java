@@ -96,7 +96,7 @@ public final class DataBaseAuthenticator implements Authenticator {
                 }
                 if (key.isPresent() && credential.getPassword().equals(key.get())) {
                     Logger.warning(credential.getLogin() + " connected with generic password.");
-                    return new AuthenticationResult(true, PlayerId.get(results.getInt("id")));
+                    return new AuthenticationResult(true, PlayerId.valueOf(results.getInt("id")));
                 }
                 boolean authenticated = false;
                 try {
@@ -104,7 +104,7 @@ public final class DataBaseAuthenticator implements Authenticator {
                 } catch (Exception e) {
                     Logger.error(e);
                 }
-                return new AuthenticationResult(authenticated, PlayerId.get(results.getInt("id")));
+                return new AuthenticationResult(authenticated, PlayerId.valueOf(results.getInt("id")));
             }
         } catch (SQLException e) {
             throw new TechnicalException(e);
