@@ -1,4 +1,4 @@
-image: maven:3.5.0-jdk-8
+image: moussavdb/yildiz-build-image
 
 pipelines:
   default:
