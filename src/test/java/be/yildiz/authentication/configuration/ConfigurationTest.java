@@ -24,7 +24,9 @@
 package be.yildiz.authentication.configuration;
 
 import be.yildiz.common.exeption.ResourceMissingException;
+import be.yildiz.common.log.Logger;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -38,6 +40,11 @@ import java.io.File;
 public class ConfigurationTest {
 
     public static class FromArgs {
+
+        @Before
+        public void init() {
+            Logger.disable();
+        }
 
         @Test
         public void happyFlow() {
@@ -66,6 +73,11 @@ public class ConfigurationTest {
     }
 
     public static class Getter  {
+
+        @Before
+        public void init() {
+            Logger.disable();
+        }
 
         Configuration c = Configuration.fromAppArgs(new String[] {getFile("test-happyflow.properties").getAbsolutePath()});
 
@@ -112,6 +124,7 @@ public class ConfigurationTest {
     }
 
     private static File getFile(String name) {
+        Logger.disable();
         return new File(Configuration.class.getClassLoader().getResource(name).getFile()).getAbsoluteFile();
     }
 }

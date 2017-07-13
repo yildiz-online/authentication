@@ -25,6 +25,7 @@ package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.common.Token;
+import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.log.Logger;
 import be.yildiz.module.network.AbstractHandler;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
@@ -67,17 +68,17 @@ class AuthenticationHandler extends AbstractHandler {
         try {
             int command = NetworkMessage.getCommandFromMessage(message);
             if (command == Commands.AUTHENTICATION_REQUEST) {
-                Authentication r = factory.authenticationRequest(message);
+                Credentials r = this.factory.authenticationRequest(message);
                 Token token = this.manager.authenticate(r);
                 Logger.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
-                session.sendMessage(factory.authenticationResponse(token));
+                session.sendMessage(this.factory.authenticationResponse(token));
             } else if (command == Commands.TOKEN_VERIFICATION_REQUEST) {
-                Token r = factory.tokenVerification(message);
+                Token r = this.factory.tokenVerification(message);
                 Token t = this.manager.getAuthenticated(r.getId());
                 boolean authenticated = t.isAuthenticated() && t.getKey() == r.getKey();
-                session.sendMessage(factory.tokenVerified(new TokenVerification(r.getId(), authenticated)));
+                session.sendMessage(this.factory.tokenVerified(new TokenVerification(r.getId(), authenticated)));
             } else {
-                Logger.warning("Invalid message:" + message + " from " + session);
+                Logger.warning("Invalid command:" + message + " from " + session);
                 session.disconnect();
             }
         } catch (InvalidNetworkMessage ex) {

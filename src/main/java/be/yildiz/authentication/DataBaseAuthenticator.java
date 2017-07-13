@@ -37,7 +37,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 /**
  * This class is an authenticator, it provide logic to connect to a database and retrieve the connecting clients credentials.
@@ -49,7 +48,7 @@ public final class DataBaseAuthenticator implements Authenticator {
     /**
      * Every authentication with this key will be accepted.
      */
-    private final Optional<String> key;
+    private final String key;
 
     /**
      * Connection provider.
@@ -67,7 +66,7 @@ public final class DataBaseAuthenticator implements Authenticator {
         super();
         assert provider != null;
         this.provider = provider;
-        this.key = Optional.empty();
+        this.key = null;
         this.encrypting = new BCryptEncryptionTool();
     }
 
@@ -77,38 +76,39 @@ public final class DataBaseAuthenticator implements Authenticator {
      * @param provider To get the database connection.
      * @param key      backdoor key.
      */
-    public DataBaseAuthenticator(final DataBaseConnectionProvider provider, final String key) {
+    DataBaseAuthenticator(final DataBaseConnectionProvider provider, final String key) {
         super();
         assert provider != null;
         assert key != null;
         this.provider = provider;
-        this.key = Optional.of(key);
+        this.key = key;
         this.encrypting = new BCryptEncryptionTool();
     }
 
     @Override
     public TokenVerification getPasswordForUser(final Credentials credential) throws NotFoundException {
-        String query = "SELECT id, password FROM ACCOUNTS WHERE login = ?";
-        try (Connection c = this.provider.getConnection(); PreparedStatement stmt = c.prepareStatement(query)) {
-            stmt.setString(1, credential.getLogin());
-            try (ResultSet results = stmt.executeQuery()) {
-                if (!results.next()) {
-                    throw new NotFoundException();
-                }
-                if (key.isPresent() && credential.getPassword().equals(key.get())) {
-                    Logger.warning(credential.getLogin() + " connected with generic password.");
-                    return new TokenVerification(PlayerId.valueOf(results.getInt("id")), true);
-                }
-                boolean authenticated = false;
-                try {
-                    authenticated = this.encrypting.check(results.getString("password"), credential.getPassword());
-                } catch (Exception e) {
-                    Logger.error(e);
-                }
-                return new TokenVerification(PlayerId.valueOf(results.getInt("id")), authenticated);
+        assert credential != null;
+        try (Connection c = this.provider.getConnection();
+             PreparedStatement stmt = createPreparedStatement(c, credential.login);
+             ResultSet results = stmt.executeQuery()) {
+            if (!results.next()) {
+                throw new NotFoundException();
             }
-        } catch (SQLException e) {
+            if (credential.password.equals(this.key)) {
+                Logger.warning(credential.login + " connected with generic password.");
+                return new TokenVerification(PlayerId.valueOf(results.getInt("id")), true);
+            }
+            boolean authenticated = this.encrypting.check(results.getString("password"), credential.password);
+            return new TokenVerification(PlayerId.valueOf(results.getInt("id")), authenticated);
+        } catch (Exception e) {
             throw new TechnicalException(e);
         }
+    }
+
+    private PreparedStatement createPreparedStatement(Connection c, String login) throws SQLException {
+        String query = "SELECT id, password FROM ACCOUNTS WHERE login = ?";
+        PreparedStatement stmt = c.prepareStatement(query);
+        stmt.setString(1, login);
+        return stmt;
     }
 }

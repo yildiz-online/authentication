@@ -24,12 +24,18 @@
 package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AuthenticationManager;
-import be.yildiz.authentication.Authenticator;
 import be.yildiz.common.Token;
+import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.id.PlayerId;
-import be.yildiz.module.network.protocol.*;
+import be.yildiz.common.log.Logger;
+import be.yildiz.module.network.protocol.NetworkMessage;
+import be.yildiz.module.network.protocol.NetworkMessageFactory;
+import be.yildiz.module.network.protocol.TokenVerification;
+import be.yildiz.module.network.protocol.mapper.IntegerMapper;
 import be.yildiz.module.network.server.Session;
+import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 /**
@@ -39,45 +45,71 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplAuthenticationRequest() throws Exception {
+        Logger.disable();
         NetworkMessageFactory f = new NetworkMessageFactory();
-        Authenticator auth = Mockito.mock(Authenticator.class);
-        Mockito
-                .when(auth.getPasswordForUser(Mockito.any()))
-                .thenReturn(new TokenVerification(PlayerId.valueOf(5), true));
-        AuthenticationManager manager = new AuthenticationManager(auth);
-        Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
-        NetworkMessage<Authentication> request = f.authenticationRequest(new Authentication("abc", "abcde"));
-        Mockito
-                .when(manager.authenticate(request.getDto()))
-                .thenReturn(token);
+        AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationHandler handler = new AuthenticationHandler(manager);
         Session session = Mockito.mock(Session.class);
-        handler.messageReceivedImpl(session, new MessageWrapper(request.buildMessage()));
-
-        Mockito.verify(session).sendMessage(f.authenticationResponse(token));
+        NetworkMessage<Credentials> request = f.authenticationRequest(Credentials.unchecked("abc", "abcde"));
+        handler.processMessages(session, request.buildMessage());
+        ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
+        Mockito.verify(session, Mockito.times(1)).sendMessage(ac.capture());
+        Assert.assertTrue(ac.getValue().startsWith("&99_5@") && ac.getValue().endsWith("@0#"));
     }
 
     @Test
     public void messageReceivedImplTokenVerificationRequest() {
+        Logger.disable();
         NetworkMessageFactory f = new NetworkMessageFactory();
-        Authenticator auth = Mockito.mock(Authenticator.class);
-        AuthenticationManager manager = new AuthenticationManager(auth);
+        AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
-        NetworkMessage<Token> request = f.tokenVerification(token);
         AuthenticationHandler handler = new AuthenticationHandler(manager);
         Session session = Mockito.mock(Session.class);
-        handler.messageReceivedImpl(session, new MessageWrapper(request.buildMessage()));
-        Mockito.verify(session).sendMessage(f.tokenVerified(new TokenVerification(PlayerId.valueOf(5), true)));
+        NetworkMessage<Token> request = f.tokenVerification(token);
+        handler.processMessages(session, request.buildMessage());
+        // not authenticated before, so token verification is false
+        Mockito.verify(session, Mockito.times(1)).sendMessage(f.tokenVerified(new TokenVerification(PlayerId.valueOf(5), false)));
     }
 
     @Test
     public void messageReceivedImplOtherRequest() {
-//        Assert.fail();
+        Logger.disable();
+        AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
+        AuthenticationHandler handler = new AuthenticationHandler(manager);
+        SessionMock session = new SessionMock(PlayerId.valueOf(5));
+        NetworkMessage<Integer> request = new NetworkMessage<>(7, IntegerMapper.getInstance(), 45);
+        handler.processMessages(session, request.buildMessage());
+        Assert.assertEquals(0, session.invocation);
+        Assert.assertFalse(session.isConnected());
     }
 
     @Test
     public void messageReceivedImplInvalidMessage() {
 //        Assert.fail();
+    }
+
+    private static class SessionMock extends Session  {
+
+        private int invocation;
+
+        /**
+         * Full constructor.
+         *
+         * @param player Player associated to this session.
+         */
+        private SessionMock(PlayerId player) {
+            super(player);
+        }
+
+        @Override
+        protected void closeSession() {
+
+        }
+
+        @Override
+        public void sendMessage(String message) {
+            invocation++;
+        }
     }
 
 }

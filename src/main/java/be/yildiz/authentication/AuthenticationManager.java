@@ -27,12 +27,12 @@ import be.yildiz.common.Token;
 import be.yildiz.common.authentication.AuthenticationChecker;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.common.authentication.CredentialException;
+import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.collections.Maps;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.util.Time;
 import be.yildiz.common.util.Util;
-import be.yildiz.module.network.protocol.Authentication;
 import be.yildiz.module.network.protocol.TokenVerification;
 
 import java.util.Map;
@@ -92,7 +92,7 @@ public class AuthenticationManager {
      * @return A token with the authentication state.
      * @throws NullPointerException If request is null.
      */
-    public final Token authenticate(final Authentication auth) {
+    public final Token authenticate(final Credentials auth) {
         this.checkIfToBeBanned(auth.login);
         Token token;
         if (this.isBanned(auth.login)) {

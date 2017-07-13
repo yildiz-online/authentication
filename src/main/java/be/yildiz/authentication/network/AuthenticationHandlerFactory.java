@@ -44,6 +44,8 @@ public final class AuthenticationHandlerFactory implements HandlerFactory {
     private final DecoderEncoder codec;
 
     public AuthenticationHandlerFactory(AuthenticationManager manager, DecoderEncoder codec) {
+        assert manager != null;
+        assert codec != null;
         this.manager = manager;
         this.codec = codec;
     }

@@ -25,8 +25,10 @@ package be.yildiz.authentication;
 
 import be.yildiz.common.authentication.CredentialException;
 import be.yildiz.common.exeption.NotFoundException;
+import be.yildiz.common.log.Logger;
 import be.yildiz.module.database.C3P0ConnectionProvider;
 import be.yildiz.module.database.DataBaseConnectionProvider;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -36,6 +38,11 @@ import java.sql.SQLException;
  * @author Grégory Van den Borre
  */
 public class DatabaseAuthenticatorTest {
+
+    @Before
+    public void init() {
+        Logger.disable();
+    }
 
     @Test(expected = AssertionError.class)
     public void withNullProvider() {
