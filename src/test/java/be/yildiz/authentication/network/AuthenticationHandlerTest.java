@@ -85,7 +85,13 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplInvalidMessage() {
-//        Assert.fail();
+        Logger.disable();
+        AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
+        AuthenticationHandler handler = new AuthenticationHandler(manager);
+        SessionMock session = new SessionMock(PlayerId.valueOf(5));
+        handler.processMessages(session, "&10_abc#");
+        Assert.assertEquals(0, session.invocation);
+        Assert.assertFalse(session.isConnected());
     }
 
     private static class SessionMock extends Session  {
