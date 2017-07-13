@@ -23,7 +23,6 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.authentication.Authenticator.AuthenticationResult;
 import be.yildiz.common.Token;
 import be.yildiz.common.authentication.AuthenticationChecker;
 import be.yildiz.common.authentication.AuthenticationRules;
@@ -34,6 +33,7 @@ import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.util.Time;
 import be.yildiz.common.util.Util;
 import be.yildiz.module.network.protocol.Authentication;
+import be.yildiz.module.network.protocol.TokenVerification;
 
 import java.util.Map;
 
@@ -100,7 +100,7 @@ public class AuthenticationManager {
             token = Token.banned();
         } else {
             try {
-                AuthenticationResult result = this.authenticator.getPasswordForUser(this.checker.check(auth.login, auth.password));
+                TokenVerification result = this.authenticator.getPasswordForUser(this.checker.check(auth.login, auth.password));
                 this.addConnectionFailure(auth.login);
                 if (result.authenticated) {
                     token = this.authenticatedPlayers.getOrDefault(result.playerId, this.setAuthenticated(auth.login, result.playerId));

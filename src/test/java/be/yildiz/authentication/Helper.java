@@ -24,6 +24,7 @@
 package be.yildiz.authentication;
 
 import be.yildiz.common.id.PlayerId;
+import be.yildiz.module.network.protocol.TokenVerification;
 import org.junit.Test;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -37,7 +38,7 @@ public class Helper {
         System.out.println(BCrypt.hashpw("testtest", BCrypt.gensalt()));
     }
 
-    public static Authenticator.AuthenticationResult givenAnAuthenticatedResult(PlayerId id) {
-        return new Authenticator.AuthenticationResult(true, id);
+    public static TokenVerification givenAnAuthenticatedResult(PlayerId id) {
+        return new TokenVerification(id, true);
     }
 }

@@ -23,7 +23,14 @@
 
 package be.yildiz.authentication.network;
 
+import be.yildiz.authentication.AuthenticationManager;
+import be.yildiz.authentication.Authenticator;
+import be.yildiz.common.Token;
+import be.yildiz.common.id.PlayerId;
+import be.yildiz.module.network.protocol.*;
+import be.yildiz.module.network.server.Session;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * @author Grégory Van den Borre
@@ -32,26 +39,35 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplAuthenticationRequest() throws Exception {
-        /*Authenticator auth = Mockito.mock(Authenticator.class);
+        NetworkMessageFactory f = new NetworkMessageFactory();
+        Authenticator auth = Mockito.mock(Authenticator.class);
         Mockito
                 .when(auth.getPasswordForUser(Mockito.any()))
-                .thenReturn(new Authenticator.AuthenticationResult(true, PlayerId.get(5)));
+                .thenReturn(new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationManager manager = new AuthenticationManager(auth);
-        Token token = Token.authenticated(PlayerId.get(5), 200L, 123);
-        AuthenticationRequest request = new AuthenticationRequest("abc", "abcde");
+        Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
+        NetworkMessage<Authentication> request = f.authenticationRequest(new Authentication("abc", "abcde"));
         Mockito
-                .when(manager.authenticate(request))
+                .when(manager.authenticate(request.getDto()))
                 .thenReturn(token);
         AuthenticationHandler handler = new AuthenticationHandler(manager);
         Session session = Mockito.mock(Session.class);
         handler.messageReceivedImpl(session, new MessageWrapper(request.buildMessage()));
 
-        Mockito.verify(session).sendMessage(new AuthenticationResponse(token));*/
+        Mockito.verify(session).sendMessage(f.authenticationResponse(token));
     }
 
     @Test
     public void messageReceivedImplTokenVerificationRequest() {
-//        Assert.fail();
+        NetworkMessageFactory f = new NetworkMessageFactory();
+        Authenticator auth = Mockito.mock(Authenticator.class);
+        AuthenticationManager manager = new AuthenticationManager(auth);
+        Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
+        NetworkMessage<Token> request = f.tokenVerification(token);
+        AuthenticationHandler handler = new AuthenticationHandler(manager);
+        Session session = Mockito.mock(Session.class);
+        handler.messageReceivedImpl(session, new MessageWrapper(request.buildMessage()));
+        Mockito.verify(session).sendMessage(f.tokenVerified(new TokenVerification(PlayerId.valueOf(5), true)));
     }
 
     @Test

@@ -28,6 +28,7 @@ import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.protocol.Authentication;
+import be.yildiz.module.network.protocol.TokenVerification;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -152,11 +153,11 @@ public class AuthenticationManagerTest {
         }
 
         @Override
-        public AuthenticationResult getPasswordForUser(Credentials credentials) throws NotFoundException {
+        public TokenVerification getPasswordForUser(Credentials credentials) throws NotFoundException {
             if (notFound) {
                 throw new NotFoundException();
             }
-            return new AuthenticationResult(toReturn, PlayerId.WORLD);
+            return new TokenVerification(PlayerId.WORLD, toReturn);
         }
 
     }

@@ -31,6 +31,7 @@ import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.log.Logger;
 import be.yildiz.module.database.DataBaseConnectionProvider;
+import be.yildiz.module.network.protocol.TokenVerification;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -86,7 +87,7 @@ public final class DataBaseAuthenticator implements Authenticator {
     }
 
     @Override
-    public AuthenticationResult getPasswordForUser(final Credentials credential) throws NotFoundException {
+    public TokenVerification getPasswordForUser(final Credentials credential) throws NotFoundException {
         String query = "SELECT id, password FROM ACCOUNTS WHERE login = ?";
         try (Connection c = this.provider.getConnection(); PreparedStatement stmt = c.prepareStatement(query)) {
             stmt.setString(1, credential.getLogin());
@@ -96,7 +97,7 @@ public final class DataBaseAuthenticator implements Authenticator {
                 }
                 if (key.isPresent() && credential.getPassword().equals(key.get())) {
                     Logger.warning(credential.getLogin() + " connected with generic password.");
-                    return new AuthenticationResult(true, PlayerId.valueOf(results.getInt("id")));
+                    return new TokenVerification(PlayerId.valueOf(results.getInt("id")), true);
                 }
                 boolean authenticated = false;
                 try {
@@ -104,7 +105,7 @@ public final class DataBaseAuthenticator implements Authenticator {
                 } catch (Exception e) {
                     Logger.error(e);
                 }
-                return new AuthenticationResult(authenticated, PlayerId.valueOf(results.getInt("id")));
+                return new TokenVerification(PlayerId.valueOf(results.getInt("id")), authenticated);
             }
         } catch (SQLException e) {
             throw new TechnicalException(e);

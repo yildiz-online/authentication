@@ -26,7 +26,7 @@ package be.yildiz.authentication;
 import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
-import be.yildiz.common.id.PlayerId;
+import be.yildiz.module.network.protocol.TokenVerification;
 
 /**
  * Authenticate Credential with login against their password.
@@ -46,34 +46,6 @@ public interface Authenticator {
      */
     //@Requires credentials != null
     //@Requires credentials to have been checked with an {@link AuthenticationChecker} to ensure no dangerous input is passed to the authenticator.
-    AuthenticationResult getPasswordForUser(Credentials credentials) throws NotFoundException;
-
-    /**
-     * Provide the result of the authentication and the player id.
-     *
-     * @author Van den Borre Grégory
-     */
-    final class AuthenticationResult {
-
-        /**
-         * <code>true</code> if the authentication was positive, <code>false</code> otherwise.
-         */
-        public final boolean authenticated;
-
-        /**
-         * Id of the checked player.
-         */
-        public final PlayerId playerId;
-
-        /**
-         * Build a new AuthenticationResult.
-         * @param authenticated <code>true</code> if the player is successfully autenticated.
-         * @param playerId Authenticated player's id.
-         */
-        public AuthenticationResult(final boolean authenticated, final PlayerId playerId) {
-            this.authenticated = authenticated;
-            this.playerId = playerId;
-        }
-    }
+    TokenVerification getPasswordForUser(Credentials credentials) throws NotFoundException;
 
 }
