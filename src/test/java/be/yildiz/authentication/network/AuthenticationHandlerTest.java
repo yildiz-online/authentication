@@ -58,7 +58,7 @@ public final class AuthenticationHandlerTest {
     }
 
     @Test
-    public void messageReceivedImplTokenVerificationRequest() {
+    public void messageReceivedImplTokenVerificationRequestNegative() {
         Logger.disable();
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
@@ -69,6 +69,20 @@ public final class AuthenticationHandlerTest {
         handler.processMessages(session, request.buildMessage());
         // not authenticated before, so token verification is false
         Mockito.verify(session, Mockito.times(1)).sendMessage(f.tokenVerified(new TokenVerification(PlayerId.valueOf(5), false)));
+    }
+
+    @Test
+    public void messageReceivedImplTokenVerificationRequestPositive() {
+        Logger.disable();
+        NetworkMessageFactory f = new NetworkMessageFactory();
+        AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
+        Token token = manager.authenticate(Credentials.unchecked("abc", "abcde"));
+        AuthenticationHandler handler = new AuthenticationHandler(manager);
+        Session session = Mockito.mock(Session.class);
+        NetworkMessage<Token> request = f.tokenVerification(token);
+        handler.processMessages(session, request.buildMessage());
+        // not authenticated before, so token verification is false
+        Mockito.verify(session, Mockito.times(1)).sendMessage(f.tokenVerified(new TokenVerification(PlayerId.valueOf(5), true)));
     }
 
     @Test
