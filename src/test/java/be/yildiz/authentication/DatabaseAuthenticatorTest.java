@@ -23,49 +23,70 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.authentication.CredentialException;
-import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.log.Logger;
-import be.yildiz.module.database.C3P0ConnectionProvider;
 import be.yildiz.module.database.DataBaseConnectionProvider;
+import be.yildiz.module.database.TestingDatabaseInit;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 
 import java.sql.SQLException;
 
 /**
  * @author Grégory Van den Borre
  */
+@RunWith(Enclosed.class)
 public class DatabaseAuthenticatorTest {
 
-    @Before
-    public void init() {
-        Logger.disable();
+    public static class Constructor {
+
+        @Before
+        public void init() {
+            Logger.disable();
+        }
+
+        @Test
+        public void happyFlow() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                new DataBaseAuthenticator(dbcp, "blabla");
+            }
+        }
+
+        @Test
+        public void withNoKey() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                new DataBaseAuthenticator(dbcp);
+            }
+        }
+
+        @Test(expected = AssertionError.class)
+        public void withNullProvider() {
+            new DataBaseAuthenticator(null);
+        }
+
+        @Test
+        public void withNullKey() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                new DataBaseAuthenticator(dbcp, null);
+            }
+        }
     }
 
-    @Test(expected = AssertionError.class)
-    public void withNullProvider() {
-        new DataBaseAuthenticator(null);
+    public static class GetPasswordForUser {
+
+        @Test(expected = AssertionError.class)
+        public void withNullCredentials() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
+                da.getPasswordForUser(null);
+            }
+        }
     }
 
-    @Test(expected = AssertionError.class)
-    public void withKeyNullProvider() {
-        new DataBaseAuthenticator(null, "ok");
-    }
 
-    @Test(expected = AssertionError.class)
-    public void withNullKey() {
-        new DataBaseAuthenticator(Mockito.mock(DataBaseConnectionProvider.class), null);
-    }
 
-    @Test
-    public void happyFlow() {
-        new DataBaseAuthenticator(Mockito.mock(DataBaseConnectionProvider.class), "ok");
+    public static DataBaseConnectionProvider givenAConnexionProvider() throws SQLException {
+        return new TestingDatabaseInit().init("empty_db.xml");
     }
-
-    @Test
-    public void testGetPasswordForUser() throws SQLException, NotFoundException, CredentialException {
-    }
-
 }

@@ -63,11 +63,7 @@ public final class DataBaseAuthenticator implements Authenticator {
      * @param provider To get the database connection.
      */
     public DataBaseAuthenticator(final DataBaseConnectionProvider provider) {
-        super();
-        assert provider != null;
-        this.provider = provider;
-        this.key = null;
-        this.encrypting = new BCryptEncryptionTool();
+        this(provider, null);
     }
 
     /**
@@ -79,7 +75,6 @@ public final class DataBaseAuthenticator implements Authenticator {
     DataBaseAuthenticator(final DataBaseConnectionProvider provider, final String key) {
         super();
         assert provider != null;
-        assert key != null;
         this.provider = provider;
         this.key = key;
         this.encrypting = new BCryptEncryptionTool();

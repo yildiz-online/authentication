@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+  <changeSet id="1" author="me">
+    <createTable
+            schemaName="YILDIZDATABASE"
+            tableName="ACCOUNTS">
+      <column name="ID" type="int" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="LOGIN" type="VARCHAR(20)" defaultValue="default" />
+      <column name="PASSWORD" type="VARCHAR(255)"  defaultValue="default" />
+      <column name="TYPE" type="int" defaultValueNumeric="0" />
+      <column name="ONLINE" type="boolean" defaultValueBoolean="false" />
+      <column name="MAP_ID" type="int" defaultValueNumeric="1" />
+      <column name="ACTIVE" type="BOOLEAN" defaultValueBoolean="false" />
+      <column name="EMAIL" type="VARCHAR(255)"  defaultValue="default" />
+      <column name="LAST_CONNECTION" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
+    </createTable>
+
+  </changeSet>
+
+</databaseChangeLog>

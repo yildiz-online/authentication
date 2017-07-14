@@ -59,6 +59,12 @@
       <version>1.2.2-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>be.yildiz-games</groupId>
+      <artifactId>module-database</artifactId>
+      <version>1.2.2-SNAPSHOT</version>
+      <type>test-jar</type>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
