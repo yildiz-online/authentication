@@ -20,6 +20,18 @@
       <column name="LAST_CONNECTION" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
     </createTable>
 
+    <insert tableName="ACCOUNTS">
+      <column name="LOGIN">existing</column>
+      <column name="PASSWORD">rightPassword</column>
+      <column name="ACTIVE">true</column>
+    </insert>
+
+    <insert tableName="ACCOUNTS">
+      <column name="LOGIN">existingInactive</column>
+      <column name="PASSWORD">$2a$10$9X2foaqaKGq0jUUDmSfDhey4ayajo.UyYJgynfUz6rYAlWPwQ9gkW</column>
+      <column name="ACTIVE">false</column>
+    </insert>
+
   </changeSet>
 
 </databaseChangeLog>

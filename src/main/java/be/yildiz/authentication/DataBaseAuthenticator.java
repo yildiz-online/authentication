@@ -95,15 +95,16 @@ public final class DataBaseAuthenticator implements Authenticator {
             }
             boolean authenticated = this.encrypting.check(results.getString("password"), credential.password);
             return new TokenVerification(PlayerId.valueOf(results.getInt("id")), authenticated);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | SQLException e) {
             throw new TechnicalException(e);
         }
     }
 
     private PreparedStatement createPreparedStatement(Connection c, String login) throws SQLException {
-        String query = "SELECT id, password FROM ACCOUNTS WHERE login = ?";
+        String query = "SELECT ID, PASSWORD FROM ACCOUNTS WHERE LOGIN = ? AND ACTIVE = ?";
         PreparedStatement stmt = c.prepareStatement(query);
         stmt.setString(1, login);
+        stmt.setBoolean(2, true);
         return stmt;
     }
 }
