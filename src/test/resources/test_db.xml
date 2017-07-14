@@ -22,14 +22,20 @@
 
     <insert tableName="ACCOUNTS">
       <column name="LOGIN">existing</column>
-      <column name="PASSWORD">rightPassword</column>
+      <column name="PASSWORD">$2a$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
       <column name="ACTIVE">true</column>
     </insert>
 
     <insert tableName="ACCOUNTS">
       <column name="LOGIN">existingInactive</column>
-      <column name="PASSWORD">$2a$10$9X2foaqaKGq0jUUDmSfDhey4ayajo.UyYJgynfUz6rYAlWPwQ9gkW</column>
+      <column name="PASSWORD">$2a$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
       <column name="ACTIVE">false</column>
+    </insert>
+
+    <insert tableName="ACCOUNTS">
+      <column name="LOGIN">invalidSalt</column>
+      <column name="PASSWORD">$2y$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
+      <column name="ACTIVE">true</column>
     </insert>
 
   </changeSet>

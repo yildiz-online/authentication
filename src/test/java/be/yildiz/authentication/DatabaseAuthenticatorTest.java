@@ -23,7 +23,8 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.authentication.*;
+import be.yildiz.common.authentication.CredentialException;
+import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.common.id.PlayerId;
@@ -33,7 +34,6 @@ import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildiz.module.network.protocol.TokenVerification;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -96,9 +96,7 @@ public class DatabaseAuthenticatorTest {
         }
 
         private Credentials givenCredentials(String login, String password) throws CredentialException {
-            String encPassword = new BCryptEncryptionTool().encrypt(password);
-            System.out.println(encPassword);
-            return Credentials.unchecked(login, encPassword);
+            return Credentials.unchecked(login, password);
         }
 
         @Test(expected = AssertionError.class)
@@ -117,7 +115,6 @@ public class DatabaseAuthenticatorTest {
             }
         }
 
-        @Ignore
         @Test
         public void withWrongCredentials() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
@@ -128,7 +125,6 @@ public class DatabaseAuthenticatorTest {
             }
         }
 
-        @Ignore
         @Test
         public void withRightCredentials() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
@@ -161,7 +157,7 @@ public class DatabaseAuthenticatorTest {
         public void withInvalidSalt() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                da.getPasswordForUser(Credentials.unchecked("existing", "azerty"));
+                da.getPasswordForUser(Credentials.unchecked("invalidSalt", "azerty"));
             }
         }
     }
