@@ -118,10 +118,8 @@ public class AuthenticationManager {
      * Retrieve a token for a given player, if the player is not found, a not found token is returned.
      *
      * @param id Player id.
-     * @return A token for tha player.
+     * @return A token for tha player, or not found if nothing is matching.
      */
-    //@Requires id != null
-    //@Ensures return a valid token or not found if the id does not match any registered player
     public final Token getAuthenticated(final PlayerId id) {
         return this.authenticatedPlayers.getOrDefault(id, Token.notFound());
     }
@@ -153,12 +151,11 @@ public class AuthenticationManager {
     }
 
     /**
-     * Check if a player has too many time entered a wrong password, if so it will be added to the banned list for a limited amount of time.
+     * Check if a player has too many time entered a wrong password,
+     * if so it will be added to the banned list for a limited amount of time.
      *
      * @param login Login of the player.
      */
-    //@requires login != null
-    //@ensures if(this.failedAuthentication.getOr(login, 0) == AUTHENTICATION_MAXIMUM_FAILURE) {this.banned.contains(login)}
     private void checkIfToBeBanned(final String login) {
         if (this.failedAuthentication.getOrDefault(login, 0).equals(AUTHENTICATION_MAXIMUM_FAILURE)) {
             this.banned.put(login, AUTHENTICATION_FAILURE_BAN_TIME.addNow());
@@ -170,7 +167,6 @@ public class AuthenticationManager {
      *
      * @param login Login of the player.
      */
-    //@requires login != null
     private void addConnectionFailure(final String login) {
         int value = this.failedAuthentication.getOrDefault(login, 0);
         value++;
@@ -182,8 +178,6 @@ public class AuthenticationManager {
      *
      * @param name Name of the player.
      */
-    //@requires name != null
-    //@ensures failedAuthentication.get(name) == 0
     private void resetConnectionFailure(final String name) {
         this.failedAuthentication.put(name, 0);
     }
