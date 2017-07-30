@@ -53,7 +53,8 @@ public class DatabaseAuthenticatorTest {
             Logger.disable();
         }
 
-        private DataBaseConnectionProvider givenAConnexionProvider() throws SQLException {
+        private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
+            Thread.sleep(500);
             return new TestingDatabaseInit().init("test_db.xml");
         }
 
