@@ -30,6 +30,8 @@ import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.common.log.Logger;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
+import be.yildiz.module.database.DatabaseUpdater;
+import be.yildiz.module.database.LiquibaseDatabaseUpdater;
 import be.yildiz.module.network.server.SanityServer;
 
 /**
@@ -60,9 +62,13 @@ public final class EntryPoint {
             Logger.info("Preparing the database connection...");
 
             DataBaseConnectionProvider provider = new DatabaseConnectionProviderFactory().create(config);
-            AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
             provider.sanity();
             Logger.info("Database connection ready.");
+            Logger.info("Updating database schema...");
+            DatabaseUpdater databaseUpdater = new LiquibaseDatabaseUpdater("authentication-database-update.xml");
+            databaseUpdater.update(provider);
+            Logger.info("Database schema up to date.");
+            AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
 
             Logger.info("Preparing the server...");
             new SanityServer().test(config.getAuthenticationPort(), config.getAuthenticationHost());
