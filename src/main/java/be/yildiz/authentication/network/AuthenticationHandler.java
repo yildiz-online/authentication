@@ -26,11 +26,12 @@ package be.yildiz.authentication.network;
 import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.common.Token;
 import be.yildiz.common.authentication.Credentials;
-import be.yildiz.common.log.Logger;
 import be.yildiz.module.network.AbstractHandler;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.protocol.*;
 import be.yildiz.module.network.server.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handle the reception of authentication request and token verification request, call authentication logic and send the authentication response.
@@ -38,6 +39,8 @@ import be.yildiz.module.network.server.Session;
  * @author Grégory Van den Borre
  */
 class AuthenticationHandler extends AbstractHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationHandler.class);
 
     /**
      * Object managing all the authentication logic.
@@ -70,7 +73,7 @@ class AuthenticationHandler extends AbstractHandler {
             if (command == Commands.AUTHENTICATION_REQUEST) {
                 Credentials r = this.factory.authenticationRequest(message);
                 Token token = this.manager.authenticate(r);
-                Logger.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
+                LOGGER.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
                 session.sendMessage(this.factory.authenticationResponse(token));
             } else if (command == Commands.TOKEN_VERIFICATION_REQUEST) {
                 Token r = this.factory.tokenVerification(message);
@@ -78,11 +81,11 @@ class AuthenticationHandler extends AbstractHandler {
                 boolean authenticated = t.isAuthenticated() && t.getKey() == r.getKey();
                 session.sendMessage(this.factory.tokenVerified(new TokenVerification(r.getId(), authenticated)));
             } else {
-                Logger.warning("Invalid command:" + message + " from " + session);
+                LOGGER.warn("Invalid command:" + message + " from " + session);
                 session.disconnect();
             }
         } catch (InvalidNetworkMessage ex) {
-            Logger.warning("Invalid message:" + message + " from " + session);
+            LOGGER.warn("Invalid message:" + message + " from " + session);
             session.disconnect();
         }
     }

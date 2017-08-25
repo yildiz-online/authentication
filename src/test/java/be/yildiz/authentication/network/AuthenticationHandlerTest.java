@@ -27,7 +27,6 @@ import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.common.Token;
 import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.id.PlayerId;
-import be.yildiz.common.log.Logger;
 import be.yildiz.module.network.protocol.NetworkMessage;
 import be.yildiz.module.network.protocol.NetworkMessageFactory;
 import be.yildiz.module.network.protocol.TokenVerification;
@@ -45,7 +44,6 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplAuthenticationRequest() throws Exception {
-        Logger.disable();
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationHandler handler = new AuthenticationHandler(manager);
@@ -59,7 +57,6 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplTokenVerificationRequestNegative() {
-        Logger.disable();
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
@@ -73,7 +70,6 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplTokenVerificationRequestPositive() {
-        Logger.disable();
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = manager.authenticate(Credentials.unchecked("abc", "abcde"));
@@ -87,7 +83,6 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplOtherRequest() {
-        Logger.disable();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationHandler handler = new AuthenticationHandler(manager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));
@@ -99,7 +94,6 @@ public final class AuthenticationHandlerTest {
 
     @Test
     public void messageReceivedImplInvalidMessage() {
-        Logger.disable();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationHandler handler = new AuthenticationHandler(manager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));

@@ -27,12 +27,13 @@ import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.authentication.DataBaseAuthenticator;
 import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AuthenticationServer;
-import be.yildiz.common.log.Logger;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
 import be.yildiz.module.database.DatabaseUpdater;
 import be.yildiz.module.database.LiquibaseDatabaseUpdater;
 import be.yildiz.module.network.server.SanityServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Application entry point, contains the main method.
@@ -40,6 +41,9 @@ import be.yildiz.module.network.server.SanityServer;
  * @author Grégory Van den Borre
  */
 public final class EntryPoint {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EntryPoint.class);
+
 
     private EntryPoint() {
         super();
@@ -53,32 +57,29 @@ public final class EntryPoint {
      */
     public static void main(String[] args) {
         try {
-            Logger.setFile("/yildiz/authentication-server.log");
-            Logger.setLevelDebug();
-            Logger.debug("Debug logger level enabled.");
+            LOGGER.debug("Debug logger level enabled.");
 
             Configuration config = Configuration.fromAppArgs(args);
 
-            Logger.info("Preparing the database connection...");
+            LOGGER.info("Preparing the database connection...");
 
             DataBaseConnectionProvider provider = new DatabaseConnectionProviderFactory().create(config);
             provider.sanity();
-            Logger.info("Database connection ready.");
-            Logger.info("Updating database schema...");
+            LOGGER.info("Database connection ready.");
+            LOGGER.info("Updating database schema...");
             DatabaseUpdater databaseUpdater = new LiquibaseDatabaseUpdater("authentication-database-update.xml");
             databaseUpdater.update(provider);
-            Logger.info("Database schema up to date.");
+            LOGGER.info("Database schema up to date.");
             AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
 
-            Logger.info("Preparing the server...");
+            LOGGER.info("Preparing the server...");
             new SanityServer().test(config.getAuthenticationPort(), config.getAuthenticationHost());
             AuthenticationServer server = new AuthenticationServer(config.getAuthenticationHost(), config.getAuthenticationPort(), manager);
-            Logger.info("Server open on " + server.getHost() + ":" + server.getPort());
+            LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
             server.startServer();
         } catch (Exception e) {
-            Logger.error("An error occurred, closing the server...");
-            Logger.error(e);
-            Logger.info("Server closed.");
+            LOGGER.error("An error occurred, closing the server...", e);
+            LOGGER.info("Server closed.");
             System.exit(-1);
         }
 

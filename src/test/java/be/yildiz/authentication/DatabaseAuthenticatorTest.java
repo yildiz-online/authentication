@@ -28,12 +28,10 @@ import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.common.id.PlayerId;
-import be.yildiz.common.log.Logger;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildiz.module.network.protocol.TokenVerification;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
@@ -47,11 +45,6 @@ import java.sql.SQLException;
 public class DatabaseAuthenticatorTest {
 
     public static class Constructor {
-
-        @Before
-        public void init() {
-            Logger.disable();
-        }
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
             Thread.sleep(500);
@@ -86,11 +79,6 @@ public class DatabaseAuthenticatorTest {
     }
 
     public static class GetPasswordForUser {
-
-        @Before
-        public void init() {
-            Logger.disable();
-        }
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws SQLException {
             return new TestingDatabaseInit().init("test_db.xml");

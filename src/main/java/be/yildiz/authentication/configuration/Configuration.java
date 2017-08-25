@@ -23,10 +23,11 @@
 
 package be.yildiz.authentication.configuration;
 
-import be.yildiz.common.log.Logger;
 import be.yildiz.common.resource.PropertiesHelper;
 import be.yildiz.module.database.DbProperties;
 import be.yildiz.module.network.AuthenticationConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Properties;
@@ -42,6 +43,8 @@ import java.util.Properties;
  * @author Grégory Van den Borre
  */
 public class Configuration implements DbProperties, AuthenticationConfiguration {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
     /**
      * Login to connect the database
@@ -95,7 +98,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
         this.port = PropertiesHelper.getIntValue(properties, "network.port");
         this.address = PropertiesHelper.getValue(properties,"network.host");
         AuthenticationConfigurationInvariant.check(this.address, this.port);
-        Logger.info("Property file loaded.");
+        LOGGER.info("Property file loaded.");
     }
 
     /**
@@ -107,7 +110,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
         if (args == null || args.length == 0) {
             throw new IllegalArgumentException("Please pass the property file as an argument when starting application");
         }
-        Logger.info("Reading property file...");
+        LOGGER.info("Reading property file...");
         Properties properties = PropertiesHelper.getPropertiesFromFile(new File(args[0]), args);
         return new Configuration(properties);
     }
