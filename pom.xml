@@ -116,7 +116,7 @@
             <configuration>
               <serverId>docker-hub</serverId>
               <imageName>moussavdb/yildiz-authentication:${project.version}</imageName>
-              <baseImage>openjdk</baseImage>
+              <baseImage>openjdk:8-jre</baseImage>
               <runs>
                 <run>
                   mkdir /yildiz
