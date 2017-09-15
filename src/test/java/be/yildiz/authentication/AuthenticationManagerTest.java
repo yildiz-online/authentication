@@ -28,46 +28,46 @@ import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.protocol.TokenVerification;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Grégory Van den Borre
  */
-public class AuthenticationManagerTest {
+class AuthenticationManagerTest {
 
-
-    @Test(expected = AssertionError.class)
-    public void withNullAuthenticator() {
-        new AuthenticationManager(null);
+    @Test
+    void withNullAuthenticator() {
+        assertThrows(AssertionError.class, () -> new AuthenticationManager(null));
     }
 
     @Test
-    public void testAuthenticate() {
+    void testAuthenticate() {
         Token result = this.givenAuthenticatedResult("test", "test1");
         this.thenResultIsAuthenticated(result);
     }
 
     @Test
-    public void testAuthenticateNot() {
+    void testAuthenticateNot() {
         Token result = this.givenNotAuthenticatedResult("test", "test1");
         this.thenResultIsNotAuthenticated(result);
     }
 
     @Test
-    public void testAuthenticateNotFound() {
+    void testAuthenticateNotFound() {
         Token result = this.givenNotFoundResult("test", "test1");
         this.thenResultIsNotFound(result);
     }
 
     @Test
-    public void testAuthenticateInvalidInput() {
+    void testAuthenticateInvalidInput() {
         Token result = this.givenAuthenticatedResult("", "");
         this.thenResultIsNotFound(result);
     }
 
     @Test
-    public void testAuthenticateBan() {
+    void testAuthenticateBan() {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 5; i++) {
@@ -82,7 +82,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void testAuthenticateResetInvalidInput() {
+    void testAuthenticateResetInvalidInput() {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 4; i++) {
@@ -100,7 +100,7 @@ public class AuthenticationManagerTest {
     }
 
     @Test
-    public void testGetAuthenticated() {
+    void testGetAuthenticated() {
         //fail("Not yet implemented");
     }
 
@@ -120,23 +120,23 @@ public class AuthenticationManagerTest {
     }
 
     private void thenResultIsNotFound(final Token result) {
-        Assert.assertFalse(result.isAuthenticated());
-        Assert.assertEquals(Token.Status.NOT_FOUND, result.getStatus());
+        assertFalse(result.isAuthenticated());
+        assertEquals(Token.Status.NOT_FOUND, result.getStatus());
     }
 
     private void thenResultIsBanned(final Token result) {
-        Assert.assertFalse(result.isAuthenticated());
-        Assert.assertEquals(Token.Status.BANNED, result.getStatus());
+        assertFalse(result.isAuthenticated());
+        assertEquals(Token.Status.BANNED, result.getStatus());
     }
 
     private void thenResultIsNotAuthenticated(Token result) {
-        Assert.assertFalse(result.isAuthenticated());
-        Assert.assertEquals(Token.Status.NOT_AUTHENTICATED, result.getStatus());
+        assertFalse(result.isAuthenticated());
+        assertEquals(Token.Status.NOT_AUTHENTICATED, result.getStatus());
     }
 
     private void thenResultIsAuthenticated(Token result) {
-        Assert.assertTrue(result.isAuthenticated());
-        Assert.assertEquals(Token.Status.AUTHENTICATED, result.getStatus());
+        assertTrue(result.isAuthenticated());
+        assertEquals(Token.Status.AUTHENTICATED, result.getStatus());
     }
 
     private static class AuthenticatorMock implements Authenticator {

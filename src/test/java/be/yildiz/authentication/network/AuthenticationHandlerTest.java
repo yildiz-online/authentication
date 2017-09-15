@@ -32,18 +32,19 @@ import be.yildiz.module.network.protocol.NetworkMessageFactory;
 import be.yildiz.module.network.protocol.TokenVerification;
 import be.yildiz.module.network.protocol.mapper.IntegerMapper;
 import be.yildiz.module.network.server.Session;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Grégory Van den Borre
  */
-public final class AuthenticationHandlerTest {
+final class AuthenticationHandlerTest {
 
     @Test
-    public void messageReceivedImplAuthenticationRequest() throws Exception {
+    void messageReceivedImplAuthenticationRequest() throws Exception {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationHandler handler = new AuthenticationHandler(manager);
@@ -52,11 +53,11 @@ public final class AuthenticationHandlerTest {
         handler.processMessages(session, request.buildMessage());
         ArgumentCaptor<String> ac = ArgumentCaptor.forClass(String.class);
         Mockito.verify(session, Mockito.times(1)).sendMessage(ac.capture());
-        Assert.assertTrue(ac.getValue().startsWith("&99_5@") && ac.getValue().endsWith("@0#"));
+        assertTrue(ac.getValue().startsWith("&99_5@") && ac.getValue().endsWith("@0#"));
     }
 
     @Test
-    public void messageReceivedImplTokenVerificationRequestNegative() {
+    void messageReceivedImplTokenVerificationRequestNegative() {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
@@ -69,7 +70,7 @@ public final class AuthenticationHandlerTest {
     }
 
     @Test
-    public void messageReceivedImplTokenVerificationRequestPositive() {
+    void messageReceivedImplTokenVerificationRequestPositive() {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = manager.authenticate(Credentials.unchecked("abc", "abcde"));
@@ -82,24 +83,24 @@ public final class AuthenticationHandlerTest {
     }
 
     @Test
-    public void messageReceivedImplOtherRequest() {
+    void messageReceivedImplOtherRequest() {
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationHandler handler = new AuthenticationHandler(manager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));
         NetworkMessage<Integer> request = new NetworkMessage<>(7, IntegerMapper.getInstance(), 45);
         handler.processMessages(session, request.buildMessage());
-        Assert.assertEquals(0, session.invocation);
-        Assert.assertFalse(session.isConnected());
+        assertEquals(0, session.invocation);
+        assertFalse(session.isConnected());
     }
 
     @Test
-    public void messageReceivedImplInvalidMessage() {
+    void messageReceivedImplInvalidMessage() {
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AuthenticationHandler handler = new AuthenticationHandler(manager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));
         handler.processMessages(session, "&10_abc#");
-        Assert.assertEquals(0, session.invocation);
-        Assert.assertFalse(session.isConnected());
+        assertEquals(0, session.invocation);
+        assertFalse(session.isConnected());
     }
 
     private static class SessionMock extends Session  {

@@ -30,51 +30,52 @@ import be.yildiz.module.network.netty.DecoderEncoder;
 import be.yildiz.module.network.netty.server.SessionMessageHandler;
 import be.yildiz.module.network.netty.server.SessionWebSocketMessageHandler;
 import be.yildiz.module.network.protocol.TokenVerification;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Grégory Van den Borre
  */
-@RunWith(Enclosed.class)
-public class AuthenticationHandlerFactoryTest {
+class AuthenticationHandlerFactoryTest {
 
-    public static class Constructor {
+    @Nested
+    class Constructor {
 
         @Test
-        public void happyFlow(){
+        void happyFlow(){
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), DecoderEncoder.WEBSOCKET);
-            Assert.assertEquals(DecoderEncoder.WEBSOCKET, factory.getCodec());
-            Assert.assertTrue(factory.isServer());
+            assertEquals(DecoderEncoder.WEBSOCKET, factory.getCodec());
+            assertTrue(factory.isServer());
         }
 
-        @Test(expected = AssertionError.class)
-        public void nullManager() {
-            new AuthenticationHandlerFactory(null, DecoderEncoder.WEBSOCKET);
+        @Test
+        void nullManager() {
+            assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(null, DecoderEncoder.WEBSOCKET));
         }
 
-        @Test(expected = AssertionError.class)
-        public void nullCodec() {
-            new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), null);
+        @Test
+        void nullCodec() {
+            assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), null));
         }
     }
 
-    public static class Create {
+    @Nested
+    class Create {
 
         @Test
-        public void websocket() {
+        void websocket() {
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(
                     new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), DecoderEncoder.WEBSOCKET);
-            Assert.assertTrue(factory.create() instanceof SessionWebSocketMessageHandler);
+            assertTrue(factory.create() instanceof SessionWebSocketMessageHandler);
         }
 
         @Test
-        public void string() {
+        void string() {
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(
                     new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), DecoderEncoder.STRING);
-            Assert.assertTrue(factory.create() instanceof SessionMessageHandler);
+            assertTrue(factory.create() instanceof SessionMessageHandler);
         }
     }
 }

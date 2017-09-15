@@ -25,16 +25,16 @@ package be.yildiz.authentication;
 
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.protocol.TokenVerification;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * @author Grégory Van den Borre
  */
-public class Helper {
+class Helper {
 
     @Test
-    public void t() {
+    void t() {
         System.out.println(BCrypt.hashpw("testtest", BCrypt.gensalt()));
     }
 

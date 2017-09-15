@@ -31,20 +31,20 @@ import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildiz.module.network.protocol.TokenVerification;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Grégory Van den Borre
  */
-@RunWith(Enclosed.class)
-public class DatabaseAuthenticatorTest {
+class DatabaseAuthenticatorTest {
 
-    public static class Constructor {
+    @Nested
+    class Constructor {
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
             Thread.sleep(500);
@@ -52,33 +52,34 @@ public class DatabaseAuthenticatorTest {
         }
 
         @Test
-        public void happyFlow() throws Exception {
+        void happyFlow() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 new DataBaseAuthenticator(dbcp, "blabla");
             }
         }
 
         @Test
-        public void withNoKey() throws Exception {
+        void withNoKey() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 new DataBaseAuthenticator(dbcp);
             }
         }
 
-        @Test(expected = AssertionError.class)
-        public void withNullProvider() {
-            new DataBaseAuthenticator(null);
+        @Test
+        void withNullProvider() {
+            assertThrows(AssertionError.class, () -> new DataBaseAuthenticator(null));
         }
 
         @Test
-        public void withNullKey() throws Exception {
+        void withNullKey() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 new DataBaseAuthenticator(dbcp, null);
             }
         }
     }
 
-    public static class GetPasswordForUser {
+    @Nested
+    class GetPasswordForUser {
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws SQLException {
             return new TestingDatabaseInit().init("test_db.xml");
@@ -88,65 +89,65 @@ public class DatabaseAuthenticatorTest {
             return Credentials.unchecked(login, password);
         }
 
-        @Test(expected = AssertionError.class)
-        public void withNullCredentials() throws Exception {
+        @Test
+        void withNullCredentials() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                da.getPasswordForUser(null);
-            }
-        }
-
-        @Test(expected = NotFoundException.class)
-        public void withNotFoundCredentials() throws Exception {
-            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                da.getPasswordForUser(givenCredentials("azerty", "azerty"));
+                assertThrows(AssertionError.class, () -> da.getPasswordForUser(null));
             }
         }
 
         @Test
-        public void withWrongCredentials() throws Exception {
+        void withNotFoundCredentials() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
+                assertThrows(NotFoundException.class, () -> da.getPasswordForUser(givenCredentials("azerty", "azerty")));
+            }
+        }
+
+        @Test
+        void withWrongCredentials() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
                 TokenVerification v = da.getPasswordForUser(givenCredentials("existing", "azerty"));
-                Assert.assertFalse(v.authenticated);
-                Assert.assertEquals(PlayerId.valueOf(1), v.playerId);
+                assertFalse(v.authenticated);
+                assertEquals(PlayerId.valueOf(1), v.playerId);
             }
         }
 
         @Test
-        public void withRightCredentials() throws Exception {
+        void withRightCredentials() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
                 TokenVerification v = da.getPasswordForUser(givenCredentials("existing", "rightPassword"));
-                Assert.assertTrue(v.authenticated);
-                Assert.assertEquals(PlayerId.valueOf(1), v.playerId);
-            }
-        }
-
-        @Test(expected = NotFoundException.class)
-        public void withRightCredentialsButInactive() throws Exception {
-            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                da.getPasswordForUser(givenCredentials("existingInactive", "rightPassword"));
+                assertTrue(v.authenticated);
+                assertEquals(PlayerId.valueOf(1), v.playerId);
             }
         }
 
         @Test
-        public void withGenericKey() throws Exception {
+        void withRightCredentialsButInactive() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp, "magic");
-                TokenVerification v = da.getPasswordForUser(Credentials.unchecked("existing", "magic"));
-                Assert.assertTrue(v.authenticated);
-                Assert.assertEquals(PlayerId.valueOf(1), v.playerId);
+                DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
+                assertThrows(NotFoundException.class, () -> da.getPasswordForUser(givenCredentials("existingInactive", "rightPassword")));
             }
         }
 
-        @Test(expected = TechnicalException.class)
-        public void withInvalidSalt() throws Exception {
+        @Test
+        void withGenericKey() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp, "magic");
+                TokenVerification v = da.getPasswordForUser(Credentials.unchecked("existing", "magic"));
+                assertTrue(v.authenticated);
+                assertEquals(PlayerId.valueOf(1), v.playerId);
+            }
+        }
+
+        @Test
+        void withInvalidSalt() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                da.getPasswordForUser(Credentials.unchecked("invalidSalt", "azerty"));
+                assertThrows(TechnicalException.class, () -> da.getPasswordForUser(Credentials.unchecked("invalidSalt", "azerty")));
             }
         }
     }

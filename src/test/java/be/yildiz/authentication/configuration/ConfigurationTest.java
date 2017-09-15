@@ -24,89 +24,91 @@
 package be.yildiz.authentication.configuration;
 
 import be.yildiz.common.exeption.ResourceMissingException;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Grégory Van den Borre
  */
-@RunWith(Enclosed.class)
-public class ConfigurationTest {
+class ConfigurationTest {
 
-    public static class FromArgs {
+    @Nested
+    class FromArgs {
 
         @Test
-        public void happyFlow() {
+        void happyFlow() {
             Configuration.fromAppArgs(new String[] {getFile("test-happyflow.properties").getAbsolutePath()});
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void fromIncompleteFile() {
-            Configuration.fromAppArgs(new String[] {getFile("test-incomplete.properties").getAbsolutePath()});
+        @Test
+        void fromIncompleteFile() {
+            assertThrows(IllegalArgumentException.class, () -> Configuration.fromAppArgs(new String[] {getFile("test-incomplete.properties").getAbsolutePath()}));
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void fromNull() {
-            Configuration.fromAppArgs(null);
+        @Test
+        void fromNull() {
+            assertThrows(IllegalArgumentException.class, () -> Configuration.fromAppArgs(null));
         }
 
-        @Test(expected = IllegalArgumentException.class)
-        public void fromEmptyArgs() {
-            Configuration.fromAppArgs(new String[] {});
+        @Test
+        void fromEmptyArgs() {
+            assertThrows(IllegalArgumentException.class, () -> Configuration.fromAppArgs(new String[] {}));
         }
 
-        @Test(expected = ResourceMissingException.class)
-        public void notExistingFile() {
-            Configuration.fromAppArgs(new String[] {"nowhere"});
+        @Test
+        void notExistingFile() {
+            assertThrows(ResourceMissingException.class, () -> Configuration.fromAppArgs(new String[] {"nowhere"}));
         }
     }
 
-    public static class Getter  {
+    @Nested
+    class Getter  {
 
         Configuration c = Configuration.fromAppArgs(new String[] {getFile("test-happyflow.properties").getAbsolutePath()});
 
         @Test
-        public void getDatabaseUser() {
-            Assert.assertEquals("user", c.getDbUser());
+        void getDatabaseUser() {
+            assertEquals("user", c.getDbUser());
         }
 
         @Test
-        public void getDatabasePassword() {
-            Assert.assertEquals("pwd", c.getDbPassword());
+        void getDatabasePassword() {
+            assertEquals("pwd", c.getDbPassword());
         }
 
         @Test
-        public void getDatabaseName() {
-            Assert.assertEquals("name", c.getDbName());
+        void getDatabaseName() {
+            assertEquals("name", c.getDbName());
         }
 
         @Test
-        public void getDatabaseHost() {
-            Assert.assertEquals("host", c.getDbHost());
+        void getDatabaseHost() {
+            assertEquals("host", c.getDbHost());
         }
 
         @Test
-        public void getDatabasePort() {
-            Assert.assertEquals(123, c.getDbPort());
+        void getDatabasePort() {
+            assertEquals(123, c.getDbPort());
         }
 
         @Test
-        public void getDatabaseSystem() {
-            Assert.assertEquals("sys", c.getSystem());
+        void getDatabaseSystem() {
+            assertEquals("sys", c.getSystem());
         }
 
         @Test
-        public void getNetworkPort() {
-            Assert.assertEquals(456, c.getAuthenticationPort());
+        void getNetworkPort() {
+            assertEquals(456, c.getAuthenticationPort());
         }
 
         @Test
-        public void getNetworkHost() {
-            Assert.assertEquals("nhost", c.getAuthenticationHost());
+        void getNetworkHost() {
+            assertEquals("nhost", c.getAuthenticationHost());
         }
 
     }
