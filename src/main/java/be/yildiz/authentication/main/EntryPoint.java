@@ -62,21 +62,21 @@ public final class EntryPoint {
             Configuration config = Configuration.fromAppArgs(args);
 
             LOGGER.info("Preparing the database connection...");
+            try(DataBaseConnectionProvider provider = new DatabaseConnectionProviderFactory().create(config)) {
+                provider.sanity();
+                LOGGER.info("Database connection ready.");
+                LOGGER.info("Updating database schema...");
+                DatabaseUpdater databaseUpdater = new LiquibaseDatabaseUpdater("authentication-database-update.xml");
+                databaseUpdater.update(provider);
+                LOGGER.info("Database schema up to date.");
+                AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
 
-            DataBaseConnectionProvider provider = new DatabaseConnectionProviderFactory().create(config);
-            provider.sanity();
-            LOGGER.info("Database connection ready.");
-            LOGGER.info("Updating database schema...");
-            DatabaseUpdater databaseUpdater = new LiquibaseDatabaseUpdater("authentication-database-update.xml");
-            databaseUpdater.update(provider);
-            LOGGER.info("Database schema up to date.");
-            AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
-
-            LOGGER.info("Preparing the server...");
-            new SanityServer().test(config.getAuthenticationPort(), config.getAuthenticationHost());
-            AuthenticationServer server = new AuthenticationServer(config.getAuthenticationHost(), config.getAuthenticationPort(), manager);
-            LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
-            server.startServer();
+                LOGGER.info("Preparing the server...");
+                new SanityServer().test(config.getAuthenticationPort(), config.getAuthenticationHost());
+                AuthenticationServer server = new AuthenticationServer(config.getAuthenticationHost(), config.getAuthenticationPort(), manager);
+                LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
+                server.startServer();
+            }
         } catch (Exception e) {
             LOGGER.error("An error occurred, closing the server...", e);
             LOGGER.info("Server closed.");
