@@ -23,6 +23,7 @@
 
 package be.yildiz.authentication.configuration;
 
+import be.yildiz.common.exeption.InitializationException;
 import be.yildiz.common.resource.PropertiesHelper;
 import be.yildiz.module.database.DbProperties;
 import be.yildiz.module.network.AuthenticationConfiguration;
@@ -85,16 +86,20 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
      * Address to use for connection.
      */
     private final String address;
+    private final String dbRootUser;
+    private final String dbRootPassword;
 
     private Configuration(final Properties properties) {
         super();
         this.dbUser = PropertiesHelper.getValue(properties,"database.user");
         this.dbPassword = PropertiesHelper.getValue(properties,"database.password");
+        this.dbRootUser = PropertiesHelper.getValue(properties,"database.root.user");
+        this.dbRootPassword = PropertiesHelper.getValue(properties,"database.root.password");
         this.dbName = PropertiesHelper.getValue(properties,"database.name");
         this.dbHost = PropertiesHelper.getValue(properties, "database.host");
         this.dbPort = PropertiesHelper.getIntValue(properties, "database.port");
         this.system = PropertiesHelper.getValue(properties,"database.system");
-        DbPropertiesInvariant.check(this.dbUser, this.dbPassword, this.dbName, this.dbHost, this.dbPort, this.system);
+        DbPropertiesInvariant.check(this.dbUser, this.dbPassword, this.dbRootUser, this.dbRootPassword, this.dbName, this.dbHost, this.dbPort, this.system);
         this.port = PropertiesHelper.getIntValue(properties, "network.port");
         this.address = PropertiesHelper.getValue(properties,"network.host");
         AuthenticationConfigurationInvariant.check(this.address, this.port);
@@ -108,7 +113,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
      */
     public static Configuration fromAppArgs(String[] args) {
         if (args == null || args.length == 0) {
-            throw new IllegalArgumentException("Please pass the property file as an argument when starting application");
+            throw new InitializationException("Please pass the property file as an argument when starting application");
         }
         LOGGER.info("Reading property file...");
         Properties properties = PropertiesHelper.getPropertiesFromFile(new File(args[0]), args);
@@ -153,5 +158,15 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
     @Override
     public final String getSystem() {
         return this.system;
+    }
+
+    @Override
+    public String getDbRootUser() {
+        return this.dbRootUser;
+    }
+
+    @Override
+    public String getDbRootPassword() {
+        return this.dbRootPassword;
     }
 }
