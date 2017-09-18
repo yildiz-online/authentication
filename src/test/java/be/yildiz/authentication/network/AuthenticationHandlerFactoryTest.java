@@ -24,7 +24,10 @@
 
 package be.yildiz.authentication.network;
 
+import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
+import be.yildiz.authentication.DummyAccountCreator;
+import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.netty.DecoderEncoder;
 import be.yildiz.module.network.netty.server.SessionMessageHandler;
@@ -45,6 +48,7 @@ class AuthenticationHandlerFactoryTest {
 
         @Test
         void happyFlow(){
+            AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, DecoderEncoder.WEBSOCKET);
             assertEquals(DecoderEncoder.WEBSOCKET, factory.getCodec());
             assertTrue(factory.isServer());
@@ -52,11 +56,13 @@ class AuthenticationHandlerFactoryTest {
 
         @Test
         void nullManager() {
+            AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
             assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(null, accountCreationManager, DecoderEncoder.WEBSOCKET));
         }
 
         @Test
         void nullCodec() {
+            AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
             assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, null));
         }
     }
@@ -66,6 +72,7 @@ class AuthenticationHandlerFactoryTest {
 
         @Test
         void websocket() {
+            AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(
                     new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, DecoderEncoder.WEBSOCKET);
             assertTrue(factory.create() instanceof SessionWebSocketMessageHandler);
@@ -73,6 +80,7 @@ class AuthenticationHandlerFactoryTest {
 
         @Test
         void string() {
+            AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(
                     new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, DecoderEncoder.STRING);
             assertTrue(factory.create() instanceof SessionMessageHandler);

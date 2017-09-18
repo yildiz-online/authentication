@@ -23,8 +23,11 @@
 
 package be.yildiz.authentication.network;
 
+import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
+import be.yildiz.authentication.DummyAccountCreator;
 import be.yildiz.common.Token;
+import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.protocol.NetworkMessage;
@@ -47,6 +50,7 @@ final class AuthenticationHandlerTest {
     void messageReceivedImplAuthenticationRequest() throws Exception {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         Session session = Mockito.mock(Session.class);
         NetworkMessage<Credentials> request = f.authenticationRequest(Credentials.unchecked("abc", "abcde"));
@@ -61,6 +65,7 @@ final class AuthenticationHandlerTest {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         Session session = Mockito.mock(Session.class);
         NetworkMessage<Token> request = f.tokenVerification(token);
@@ -74,6 +79,7 @@ final class AuthenticationHandlerTest {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = manager.authenticate(Credentials.unchecked("abc", "abcde"));
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         Session session = Mockito.mock(Session.class);
         NetworkMessage<Token> request = f.tokenVerification(token);
@@ -85,6 +91,7 @@ final class AuthenticationHandlerTest {
     @Test
     void messageReceivedImplOtherRequest() {
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));
         NetworkMessage<Integer> request = new NetworkMessage<>(7, IntegerMapper.getInstance(), 45);
@@ -96,6 +103,7 @@ final class AuthenticationHandlerTest {
     @Test
     void messageReceivedImplInvalidMessage() {
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT);
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));
         handler.processMessages(session, "&10_abc#");

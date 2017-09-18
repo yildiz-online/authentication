@@ -23,6 +23,7 @@
 
 package be.yildiz.authentication.configuration;
 
+import be.yildiz.common.exeption.InitializationException;
 import be.yildiz.common.exeption.ResourceMissingException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -52,12 +53,12 @@ class ConfigurationTest {
 
         @Test
         void fromNull() {
-            assertThrows(IllegalArgumentException.class, () -> Configuration.fromAppArgs(null));
+            assertThrows(InitializationException.class, () -> Configuration.fromAppArgs(null));
         }
 
         @Test
         void fromEmptyArgs() {
-            assertThrows(IllegalArgumentException.class, () -> Configuration.fromAppArgs(new String[] {}));
+            assertThrows(InitializationException.class, () -> Configuration.fromAppArgs(new String[] {}));
         }
 
         @Test
