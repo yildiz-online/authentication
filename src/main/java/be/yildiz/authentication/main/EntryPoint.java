@@ -65,6 +65,18 @@ public final class EntryPoint {
             Configuration config = Configuration.fromAppArgs(args);
 
             LOGGER.info("Preparing the database connection...");
+            try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().createWithHighPrivilege(config)) {
+                provider.sanity();
+                LOGGER.info("Database connection ready.");
+                LOGGER.info("Updating database schema...");
+                DatabaseUpdater databaseUpdater = LiquibaseDatabaseUpdater.fromConfigurationPath("authentication-database-update.xml");
+                databaseUpdater.update(provider);
+                LOGGER.info("Database schema up to date.");
+            }
+            try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().create(config)) {
+                provider.sanity();
+                LOGGER.info("Database connection ready.");
+                AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
 
             DataBaseConnectionProvider provider = new DatabaseConnectionProviderFactory().create(config);
             provider.sanity();
@@ -77,6 +89,12 @@ public final class EntryPoint {
             AccountCreationManager accountCreationManager =
                     new AccountCreationManager(new DatabaseAccountCreator(provider), AuthenticationRules.DEFAULT);
 
+                LOGGER.info("Preparing the server...");
+                SanityServer.test(config.getAuthenticationPort(), config.getAuthenticationHost());
+                AuthenticationServer server = new AuthenticationServer(config.getAuthenticationHost(), config.getAuthenticationPort(), manager);
+                LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
+                server.startServer();
+            }
             LOGGER.info("Preparing the server...");
             new SanityServer().test(config.getAuthenticationPort(), config.getAuthenticationHost());
             AuthenticationServer server = new AuthenticationServer(
