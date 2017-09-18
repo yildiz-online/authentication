@@ -23,6 +23,7 @@
 
 package be.yildiz.authentication.network;
 
+import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.common.Token;
 import be.yildiz.common.authentication.Credentials;
@@ -47,10 +48,13 @@ class AuthenticationHandler extends AbstractHandler {
      */
     private final AuthenticationManager manager;
 
+    private final AccountCreationManager accountCreationManager;
+
     private final NetworkMessageFactory factory = new NetworkMessageFactory();
 
-    AuthenticationHandler(AuthenticationManager manager) {
+    AuthenticationHandler(AuthenticationManager manager, AccountCreationManager accountCreationManager) {
         this.manager = manager;
+        this.accountCreationManager = accountCreationManager;
     }
 
     /**
@@ -80,6 +84,10 @@ class AuthenticationHandler extends AbstractHandler {
                 Token t = this.manager.getAuthenticated(r.getId());
                 boolean authenticated = t.isAuthenticated() && t.getKey() == r.getKey();
                 session.sendMessage(this.factory.tokenVerified(new TokenVerification(r.getId(), authenticated)));
+            } else if(command == Commands.ACCOUNT_CREATION) {
+                TemporaryAccountDto temporaryAccount = this.factory.accountCreation(message);
+                TemporaryAccountCreationResultDto result = this.accountCreationManager.create(temporaryAccount);
+                session.sendMessage(this.factory.accountCreationResult(result));
             } else {
                 LOGGER.warn("Invalid command:" + message + " from " + session);
                 session.disconnect();

@@ -23,6 +23,7 @@
 
 package be.yildiz.authentication.network;
 
+import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.module.network.netty.DecoderEncoder;
 import be.yildiz.module.network.netty.HandlerFactory;
@@ -42,11 +43,14 @@ public final class AuthenticationHandlerFactory implements HandlerFactory {
      */
     private final AuthenticationManager manager;
     private final DecoderEncoder codec;
+    private final AccountCreationManager accountCreationManager;
 
-    public AuthenticationHandlerFactory(AuthenticationManager manager, DecoderEncoder codec) {
+    public AuthenticationHandlerFactory(AuthenticationManager manager, AccountCreationManager accountCreationManager, DecoderEncoder codec) {
         assert manager != null;
+        assert accountCreationManager != null;
         assert codec != null;
         this.manager = manager;
+        this.accountCreationManager = accountCreationManager;
         this.codec = codec;
     }
 
@@ -58,9 +62,9 @@ public final class AuthenticationHandlerFactory implements HandlerFactory {
     @Override
     public ChannelHandler create() {
         if(codec == DecoderEncoder.WEBSOCKET) {
-            return new SessionWebSocketMessageHandler(new AuthenticationHandler(this.manager));
+            return new SessionWebSocketMessageHandler(new AuthenticationHandler(this.manager, this.accountCreationManager));
         }
-        return new SessionMessageHandler(new AuthenticationHandler(this.manager));
+        return new SessionMessageHandler(new AuthenticationHandler(this.manager, this.accountCreationManager));
     }
 
     @Override

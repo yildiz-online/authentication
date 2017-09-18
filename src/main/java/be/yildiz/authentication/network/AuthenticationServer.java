@@ -23,6 +23,7 @@
 
 package be.yildiz.authentication.network;
 
+import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.module.network.netty.DecoderEncoder;
 import be.yildiz.module.network.netty.factory.NettyFactory;
@@ -50,9 +51,9 @@ public final class AuthenticationServer {
     //@requires 0 >= port <= 65635
     //@requires manager != null
     //@ensures to create a new server.
-    public AuthenticationServer(final String address, final int port, final AuthenticationManager manager) {
+    public AuthenticationServer(final String address, final int port, final AuthenticationManager manager, AccountCreationManager accountCreationManager) {
         super();
-        this.server = NettyFactory.createServerNetty(address, port, new AuthenticationHandlerFactory(manager, DecoderEncoder.WEBSOCKET));
+        this.server = NettyFactory.createServerNetty(address, port, new AuthenticationHandlerFactory(manager, accountCreationManager, DecoderEncoder.WEBSOCKET));
     }
 
     /**

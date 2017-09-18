@@ -45,19 +45,19 @@ class AuthenticationHandlerFactoryTest {
 
         @Test
         void happyFlow(){
-            AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), DecoderEncoder.WEBSOCKET);
+            AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, DecoderEncoder.WEBSOCKET);
             assertEquals(DecoderEncoder.WEBSOCKET, factory.getCodec());
             assertTrue(factory.isServer());
         }
 
         @Test
         void nullManager() {
-            assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(null, DecoderEncoder.WEBSOCKET));
+            assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(null, accountCreationManager, DecoderEncoder.WEBSOCKET));
         }
 
         @Test
         void nullCodec() {
-            assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), null));
+            assertThrows(AssertionError.class, () -> new AuthenticationHandlerFactory(new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, null));
         }
     }
 
@@ -67,14 +67,14 @@ class AuthenticationHandlerFactoryTest {
         @Test
         void websocket() {
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(
-                    new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), DecoderEncoder.WEBSOCKET);
+                    new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, DecoderEncoder.WEBSOCKET);
             assertTrue(factory.create() instanceof SessionWebSocketMessageHandler);
         }
 
         @Test
         void string() {
             AuthenticationHandlerFactory factory = new AuthenticationHandlerFactory(
-                    new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), DecoderEncoder.STRING);
+                    new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true)), accountCreationManager, DecoderEncoder.STRING);
             assertTrue(factory.create() instanceof SessionMessageHandler);
         }
     }

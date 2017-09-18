@@ -23,10 +23,13 @@
 
 package be.yildiz.authentication.main;
 
+import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.authentication.DataBaseAuthenticator;
+import be.yildiz.authentication.DatabaseAccountCreator;
 import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AuthenticationServer;
+import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
 import be.yildiz.module.database.DatabaseUpdater;
@@ -71,10 +74,16 @@ public final class EntryPoint {
             databaseUpdater.update(provider);
             LOGGER.info("Database schema up to date.");
             AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
+            AccountCreationManager accountCreationManager =
+                    new AccountCreationManager(new DatabaseAccountCreator(provider), AuthenticationRules.DEFAULT);
 
             LOGGER.info("Preparing the server...");
             new SanityServer().test(config.getAuthenticationPort(), config.getAuthenticationHost());
-            AuthenticationServer server = new AuthenticationServer(config.getAuthenticationHost(), config.getAuthenticationPort(), manager);
+            AuthenticationServer server = new AuthenticationServer(
+                    config.getAuthenticationHost(),
+                    config.getAuthenticationPort(),
+                    manager,
+                    accountCreationManager);
             LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
             server.startServer();
         } catch (Exception e) {

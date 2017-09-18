@@ -53,7 +53,6 @@
       <column name="EMAIL" type="VARCHAR(255)" />
       <column name="CHECK_VALUE" type="VARCHAR(50)" />
       <column name="DATE" type="TIMESTAMP" />
-      <column name="COMPLETE" type="BOOLEAN" />
     </createTable>
   </changeSet>
 
