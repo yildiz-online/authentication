@@ -26,7 +26,11 @@ package be.yildiz.authentication;
 
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
+import be.yildiz.module.database.Transaction;
+import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.time.Instant;
@@ -36,6 +40,8 @@ import java.util.UUID;
  * @author Grégory Van den Borre
  */
 public class DatabaseAccountCreator implements AccountCreator {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final DataBaseConnectionProvider provider;
 
@@ -60,14 +66,14 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     private PreparedStatement createPreparedStatementSearchAccount(Connection c, String login) throws SQLException {
-        String query = "SELECT FROM ACCOUNTS WHERE LOGIN = ? AND ACTIVE = '1'";
+        String query = "SELECT ID FROM ACCOUNTS WHERE LOGIN = ? AND ACTIVE = '1'";
         PreparedStatement stmt = c.prepareStatement(query);
         stmt.setString(1, login);
         return stmt;
     }
 
     private PreparedStatement createPreparedStatementSearchTempAccount(Connection c, String login) throws SQLException {
-        String query = "SELECT FROM TEMP_ACCOUNTS WHERE LOGIN = ?";
+        String query = "SELECT ID FROM TEMP_ACCOUNTS WHERE LOGIN = ?";
         PreparedStatement stmt = c.prepareStatement(query);
         stmt.setString(1, login);
         return stmt;
@@ -90,14 +96,14 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     private PreparedStatement createPreparedStatementSearchEmail(Connection c, String email) throws SQLException {
-        String query = "SELECT FROM ACCOUNTS WHERE EMAIL = ? AND ACTIVE = '1'";
+        String query = "SELECT ID FROM ACCOUNTS WHERE EMAIL = ? AND ACTIVE = '1'";
         PreparedStatement stmt = c.prepareStatement(query);
         stmt.setString(1, email);
         return stmt;
     }
 
     private PreparedStatement createPreparedStatementSearchTempEmail(Connection c, String email) throws SQLException {
-        String query = "SELECT FROM TEMP_ACCOUNTS WHERE EMAIL = ?";
+        String query = "SELECT ID FROM TEMP_ACCOUNTS WHERE EMAIL = ?";
         PreparedStatement stmt = c.prepareStatement(query);
         stmt.setString(1, email);
         return stmt;
@@ -118,5 +124,39 @@ public class DatabaseAccountCreator implements AccountCreator {
         } catch (SQLException e) {
             throw new TechnicalException(e);
         }
+    }
+
+    @Override
+    public void validate(AccountValidationDto validation) {
+        Transaction transaction = new Transaction(this.provider);
+        transaction.execute((c) -> {
+            String query = "SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = ?";
+            PreparedStatement getTemp = c.prepareStatement(query);
+            getTemp.setString(1, validation.getLogin());
+            ResultSet rs = getTemp.executeQuery();
+            rs.first();
+            int id = rs.getInt(1);
+            String login = rs.getString(2);
+            String password = rs.getString(3);
+            String email = rs.getString(4);
+            String token = rs.getString(5);
+
+            if(!token.equals(validation.getToken())) {
+                return;
+            }
+
+            query = "INSERT INTO ACCOUNTS (LOGIN, PASSWORD, EMAIL, ACTIVE) VALUES (?,?,?,?)";
+            PreparedStatement insertAccount = c.prepareStatement(query);
+            insertAccount.setString(1, login);
+            insertAccount.setString(2, password);
+            insertAccount.setString(3, email);
+            insertAccount.setBoolean(4, true);
+            insertAccount.executeUpdate();
+            query = "DELETE FROM TEMP_ACCOUNTS WHERE ID = ?";
+            PreparedStatement deleteTemp = c.prepareStatement(query);
+            deleteTemp.setInt(1, id);
+            deleteTemp.executeUpdate();
+        });
+
     }
 }

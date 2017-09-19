@@ -28,6 +28,7 @@ import be.yildiz.common.authentication.AuthenticationChecker;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.common.authentication.CredentialException;
 import be.yildiz.common.exeption.TechnicalException;
+import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
 import org.slf4j.Logger;
@@ -98,5 +99,9 @@ public class AccountCreationManager {
             result.setTechnicalIssue(true);
         }
         return result;
+    }
+
+    public void validateAccount(AccountValidationDto validation) {
+        accountCreator.validate(validation);
     }
 }

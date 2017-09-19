@@ -22,23 +22,13 @@
  *
  */
 
-package be.yildiz.authentication;
+package be.yildiz.authentication.it;
 
-import be.yildiz.module.network.protocol.AccountValidationDto;
-import be.yildiz.module.network.protocol.TemporaryAccountDto;
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import org.junit.runner.RunWith;
 
-import java.util.UUID;
-
-/**
- * @author Grégory Van den Borre
- */
-public interface AccountCreator {
-    
-    boolean loginAlreadyExist(String login);
-
-    boolean emailAlreadyExist(String email);
-
-    void create(TemporaryAccountDto dto, UUID token);
-
-    void validate(AccountValidationDto validation);
+@RunWith(Cucumber.class)
+@CucumberOptions(format = "pretty")
+public class RunCukesTest {
 }

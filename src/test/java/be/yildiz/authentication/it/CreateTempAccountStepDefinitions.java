@@ -22,23 +22,34 @@
  *
  */
 
-package be.yildiz.authentication;
+package be.yildiz.authentication.it;
 
-import be.yildiz.module.network.protocol.AccountValidationDto;
-import be.yildiz.module.network.protocol.TemporaryAccountDto;
-
-import java.util.UUID;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
 /**
  * @author Grégory Van den Borre
  */
-public interface AccountCreator {
-    
-    boolean loginAlreadyExist(String login);
+public class CreateTempAccountStepDefinitions {
 
-    boolean emailAlreadyExist(String email);
+    @Given("^the system is initialized$")
+    public void initializeSystem() throws Exception {
 
-    void create(TemporaryAccountDto dto, UUID token);
+    }
 
-    void validate(AccountValidationDto validation);
+    @When("^the system receive a temporary account creation request$")
+    public void receiveRequest() throws InterruptedException {
+    }
+
+    @Then("^the temporary account exists$")
+    public void TemporaryAccountExists() {
+        // Write code here that turns the phrase above into concrete actions
+    }
+
+    @Then("^close the system$")
+    public void closeSystem() {
+        // Write code here that turns the phrase above into concrete actions
+    }
+
 }

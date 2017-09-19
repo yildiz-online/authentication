@@ -24,6 +24,7 @@
 
 package be.yildiz.authentication;
 
+import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
 
 import java.util.UUID;
@@ -44,6 +45,11 @@ public class DummyAccountCreator implements AccountCreator {
 
     @Override
     public void create(TemporaryAccountDto dto, UUID token) {
+
+    }
+
+    @Override
+    public void validate(AccountValidationDto validation) {
 
     }
 }

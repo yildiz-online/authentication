@@ -87,7 +87,12 @@ class AuthenticationHandler extends AbstractHandler {
             } else if(command == Commands.ACCOUNT_CREATION) {
                 TemporaryAccountDto temporaryAccount = this.factory.accountCreation(message);
                 TemporaryAccountCreationResultDto result = this.accountCreationManager.create(temporaryAccount);
-                session.sendMessage(this.factory.accountCreationResult(result));
+                NetworkMessage m = this.factory.accountCreationResult(result);
+                session.sendMessage(m);
+                LOGGER.debug("Sent account creation result message:" + m.buildMessage());
+            } else if(command == Commands.ACCOUNT_VALIDATION) {
+                AccountValidationDto validation = this.factory.accountValidation(message);
+                this.accountCreationManager.validateAccount(validation);
             } else {
                 LOGGER.warn("Invalid command:" + message + " from " + session);
                 session.disconnect();

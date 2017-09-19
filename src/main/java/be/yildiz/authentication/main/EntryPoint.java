@@ -38,6 +38,10 @@ import be.yildiz.module.network.server.SanityServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 /**
  * Application entry point, contains the main method.
  *
@@ -61,7 +65,6 @@ public final class EntryPoint {
     public static void main(String[] args) {
         try {
             LOGGER.debug("Debug logger level enabled.");
-
             Configuration config = Configuration.fromAppArgs(args);
 
             LOGGER.info("Preparing the database connection...");
@@ -72,10 +75,6 @@ public final class EntryPoint {
                 DatabaseUpdater databaseUpdater = LiquibaseDatabaseUpdater.fromConfigurationPath("authentication-database-update.xml");
                 databaseUpdater.update(provider);
                 LOGGER.info("Database schema up to date.");
-            }
-            try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().create(config)) {
-                provider.sanity();
-                LOGGER.info("Database connection ready.");
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                     new AccountCreationManager(new DatabaseAccountCreator(provider), AuthenticationRules.DEFAULT);
@@ -88,13 +87,30 @@ public final class EntryPoint {
                         accountCreationManager);
                 LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
                 server.startServer();
+                LOGGER.info("Server running");
+                waitForInput();
             }
         } catch (Exception e) {
             LOGGER.error("An error occurred, closing the server...", e);
             LOGGER.info("Server closed.");
             System.exit(-1);
         }
+        LOGGER.info("Server closed.");
+    }
 
+    private static void waitForInput() {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String input = "";
+        try {
+            System.out.println("Enter a command:");
+            input = br.readLine();
+        } catch (IOException e) {
+            LOGGER.error("IO issue", e);
+        }
+        if(input.equalsIgnoreCase("EXIT") || input.equalsIgnoreCase("QUIT")) {
+            System.exit(0);
+        }
+        waitForInput();
     }
 
 }
