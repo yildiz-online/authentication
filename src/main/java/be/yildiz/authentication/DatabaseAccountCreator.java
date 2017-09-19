@@ -141,7 +141,8 @@ public class DatabaseAccountCreator implements AccountCreator {
             String email = rs.getString(4);
             String token = rs.getString(5);
 
-            if(!token.equals(validation.getToken())) {
+            if (!token.equals(validation.getToken())) {
+                logger.warn("Invalid token received from " + login);
                 return;
             }
 
@@ -157,6 +158,5 @@ public class DatabaseAccountCreator implements AccountCreator {
             deleteTemp.setInt(1, id);
             deleteTemp.executeUpdate();
         });
-
     }
 }
