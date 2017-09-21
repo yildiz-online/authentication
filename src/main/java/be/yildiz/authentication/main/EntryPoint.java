@@ -34,11 +34,14 @@ import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
 import be.yildiz.module.database.DatabaseUpdater;
 import be.yildiz.module.database.LiquibaseDatabaseUpdater;
+import be.yildiz.module.messaging.Broker;
+import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.network.server.SanityServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -78,6 +81,9 @@ public final class EntryPoint {
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                     new AccountCreationManager(new DatabaseAccountCreator(provider), AuthenticationRules.DEFAULT);
+                LOGGER.info("Preparing the broker...");
+                Broker broker = Broker.initialize("authentication", new File(config.getBrokerDataFolder()), config.getBrokerHost(), config.getBrokerPort());
+                BrokerMessageDestination destination = broker.createQueue("authentication-creation");
                 LOGGER.info("Preparing the server...");
                 SanityServer.test(config.getAuthenticationPort(), config.getAuthenticationHost());
                 AuthenticationServer server = new AuthenticationServer(
