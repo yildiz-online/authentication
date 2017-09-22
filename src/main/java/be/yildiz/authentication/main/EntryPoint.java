@@ -36,6 +36,7 @@ import be.yildiz.module.database.DatabaseUpdater;
 import be.yildiz.module.database.LiquibaseDatabaseUpdater;
 import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
+import be.yildiz.module.messaging.MessageProducer;
 import be.yildiz.module.network.server.SanityServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,12 +79,13 @@ public final class EntryPoint {
                 DatabaseUpdater databaseUpdater = LiquibaseDatabaseUpdater.fromConfigurationPath("authentication-database-update.xml");
                 databaseUpdater.update(provider);
                 LOGGER.info("Database schema up to date.");
+                LOGGER.info("Preparing the broker...");
+                Broker broker = Broker.initializeInternal("authentication", new File(config.getBrokerDataFolder()), config.getBrokerHost(), config.getBrokerPort());
+                BrokerMessageDestination destination = broker.registerQueue("authentication-creation");
+                MessageProducer producer = destination.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
-                    new AccountCreationManager(new DatabaseAccountCreator(provider), AuthenticationRules.DEFAULT);
-                LOGGER.info("Preparing the broker...");
-                Broker broker = Broker.initialize("authentication", new File(config.getBrokerDataFolder()), config.getBrokerHost(), config.getBrokerPort());
-                BrokerMessageDestination destination = broker.createQueue("authentication-creation");
+                        new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT);
                 LOGGER.info("Preparing the server...");
                 SanityServer.test(config.getAuthenticationPort(), config.getAuthenticationHost());
                 AuthenticationServer server = new AuthenticationServer(

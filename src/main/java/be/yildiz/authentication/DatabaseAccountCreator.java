@@ -27,6 +27,7 @@ package be.yildiz.authentication;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.Transaction;
+import be.yildiz.module.messaging.MessageProducer;
 import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
 import org.slf4j.Logger;
@@ -45,8 +46,11 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     private final DataBaseConnectionProvider provider;
 
-    public DatabaseAccountCreator(DataBaseConnectionProvider provider) {
+    private final MessageProducer messageProducer;
+
+    public DatabaseAccountCreator(DataBaseConnectionProvider provider, MessageProducer messageProducer) {
         this.provider = provider;
+        this.messageProducer = messageProducer;
     }
 
     @Override
@@ -146,17 +150,41 @@ public class DatabaseAccountCreator implements AccountCreator {
                 return;
             }
 
-            query = "INSERT INTO ACCOUNTS (LOGIN, PASSWORD, EMAIL, ACTIVE) VALUES (?,?,?,?)";
-            PreparedStatement insertAccount = c.prepareStatement(query);
+            insertAccount(c, login, password, email);
+            deleteTemp(c, id);
+            int accountId = getCreatedAccountId(c, login);
+            messageProducer.sendMessage("{login:" + login + ", id:" + accountId + "}");
+        });
+    }
+
+    private void insertAccount(Connection c, String login, String password, String email) throws SQLException{
+        String query = "INSERT INTO ACCOUNTS (LOGIN, PASSWORD, EMAIL, ACTIVE) VALUES (?,?,?,?)";
+        try(PreparedStatement insertAccount = c.prepareStatement(query)) {
             insertAccount.setString(1, login);
             insertAccount.setString(2, password);
             insertAccount.setString(3, email);
             insertAccount.setBoolean(4, true);
             insertAccount.executeUpdate();
-            query = "DELETE FROM TEMP_ACCOUNTS WHERE ID = ?";
-            PreparedStatement deleteTemp = c.prepareStatement(query);
+        }
+    }
+
+    private void deleteTemp(Connection c, int id) throws SQLException{
+        String query = "DELETE FROM TEMP_ACCOUNTS WHERE ID = ?";
+        try(PreparedStatement deleteTemp = c.prepareStatement(query)) {
             deleteTemp.setInt(1, id);
             deleteTemp.executeUpdate();
-        });
+        }
+    }
+
+    private int getCreatedAccountId(Connection c, String login) throws SQLException{
+        String query = "SELECT ID FROM ACCOUNTS WHERE LOGIN = ?";
+        int accountId;
+        try(PreparedStatement getAccount = c.prepareStatement(query)) {
+            getAccount.setString(1, login);
+            ResultSet rs = getAccount.executeQuery();
+            rs.first();
+            accountId = rs.getInt(1);
+        }
+        return accountId;
     }
 }

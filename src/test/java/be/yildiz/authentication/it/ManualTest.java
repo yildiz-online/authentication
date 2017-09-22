@@ -24,21 +24,29 @@
 
 package be.yildiz.authentication.it;
 
+import be.yildiz.module.messaging.Broker;
+import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.network.client.NetworkListener;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.netty.client.ClientNetty;
 import be.yildiz.module.network.netty.factory.NettyFactory;
-import be.yildiz.module.network.protocol.*;
+import be.yildiz.module.network.protocol.AccountValidationDto;
+import be.yildiz.module.network.protocol.MessageWrapper;
+import be.yildiz.module.network.protocol.NetworkMessage;
+import be.yildiz.module.network.protocol.NetworkMessageFactory;
 
 /**
  * @author Grégory Van den Borre
  */
 public class ManualTest {
 
-    public static void main(String[] args) throws InvalidNetworkMessage {
+    public static void main(String[] args) throws Exception {
         NetworkMessageFactory factory = new NetworkMessageFactory();
-        NetworkMessage message = factory.accountValidation(new AccountValidationDto("mylogin", "6b89b85b-19d5-49cf-879b-fdf5ec8cf9d3"));
+        NetworkMessage message = factory.accountValidation(new AccountValidationDto("mylogin", "8b7e1f34-bf04-4bba-b528-bf18f046b563"));
         ClientNetty client = NettyFactory.createClientNetty();
+        Broker broker = Broker.initialize("localhost", 61616);
+        BrokerMessageDestination destination = broker.registerQueue("authentication-creation");
+        destination.createConsumer((m) -> System.out.println(m));
         client.addNetworkListener(new NetworkListener() {
             @Override
             public void parse(MessageWrapper message) throws InvalidNetworkMessage {
@@ -51,7 +59,10 @@ public class ManualTest {
             }
         });
         client.connect("localhost", 15023);
-
+        while(true) {
+            client.update();
+            Thread.sleep(100);
+        }
     }
 
 }
