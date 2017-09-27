@@ -137,42 +137,16 @@
         <plugins>
           <plugin>
             <groupId>com.spotify</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
+            <artifactId>dockerfile-maven-plugin</artifactId>
             <configuration>
-              <serverId>docker-hub</serverId>
-              <imageName>moussavdb/yildiz-authentication:${project.version}</imageName>
-              <baseImage>openjdk:8-jre</baseImage>
-              <runs>
-                <run>
-                  mkdir /yildiz
-                </run>
-              </runs>
-              <entryPoint>["java", "-jar", "/authentication-server-jar-with-dependencies.jar", "/yildiz/authentication.properties"]</entryPoint>
-              <forceTags>true</forceTags>
-              <imageTags>
-                <imageTag>${project.version}</imageTag>
-                <imageTag>latest</imageTag>
-              </imageTags>
-              <resources>
-                <resource>
-                  <targetPath>/</targetPath>
-                  <directory>${project.build.directory}</directory>
-                  <include>authentication-server-jar-with-dependencies.jar</include>
-                </resource>
-              </resources>
+              <repository>moussavdb/yildiz-authentication</repository>
+              <tag>${project.version}</tag>
             </configuration>
             <executions>
               <execution>
-                <id>build-image</id>
-                <phase>package</phase>
+                <id>default</id>
                 <goals>
                   <goal>build</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>deploy-image</id>
-                <phase>install</phase>
-                <goals>
                   <goal>push</goal>
                 </goals>
               </execution>
