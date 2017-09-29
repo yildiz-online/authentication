@@ -28,6 +28,7 @@ import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.authentication.DataBaseAuthenticator;
 import be.yildiz.authentication.DatabaseAccountCreator;
 import be.yildiz.authentication.configuration.Configuration;
+import be.yildiz.authentication.network.AsynchronousAuthenticationServer;
 import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.module.database.DataBaseConnectionProvider;
@@ -37,10 +38,6 @@ import be.yildiz.module.database.LiquibaseDatabaseUpdater;
 import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.MessageProducer;
-import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
-import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
-import be.yildiz.module.network.protocol.mapper.TemporaryAccountMapper;
-import be.yildiz.module.network.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildiz.module.network.server.SanityServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,21 +83,12 @@ public final class EntryPoint {
                 LOGGER.info("Preparing the broker...");
                 Broker broker = Broker.initializeInternal("authentication", new File(config.getBrokerDataFolder()), config.getBrokerHost(), config.getBrokerPort());
                 BrokerMessageDestination accountCreatedQueue = broker.registerQueue("authentication-creation");
-                BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue("authentication-creation-temporary");
-                BrokerMessageDestination accountCreationRequestQueue = broker.registerQueue("create-account-request");
                 MessageProducer producer = accountCreatedQueue.createProducer();
-                MessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT);
-                accountCreationRequestQueue.createConsumer((message) -> {
-                    try {
-                        TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message));
-                        tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result));
-                    } catch (InvalidNetworkMessage e) {
-                        LOGGER.warn("Unexpected message", e);
-                    }
-                });
+                LOGGER.info("Preparing the messaging system");
+                new AsynchronousAuthenticationServer(broker, accountCreationManager);
                 LOGGER.info("Preparing the server...");
                 SanityServer.test(config.getAuthenticationPort(), config.getAuthenticationHost());
                 AuthenticationServer server = new AuthenticationServer(
