@@ -96,7 +96,8 @@ public final class EntryPoint {
                 LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
                 server.startServer();
                 LOGGER.info("Server running");
-                waitForInput();
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                waitForInput(br);
             }
         } catch (Exception e) {
             LOGGER.error("An error occurred, closing the server...", e);
@@ -106,8 +107,8 @@ public final class EntryPoint {
         LOGGER.info("Server closed.");
     }
 
-    private static void waitForInput() {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    private static void waitForInput(BufferedReader br) {
+
         String input = "";
         try {
             System.out.println("Enter a command:");
@@ -118,7 +119,7 @@ public final class EntryPoint {
         if(input.equalsIgnoreCase("EXIT") || input.equalsIgnoreCase("QUIT")) {
             System.exit(0);
         }
-        waitForInput();
+        waitForInput(br);
     }
 
 }
