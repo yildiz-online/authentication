@@ -99,8 +99,8 @@ public final class EntryPoint {
                 LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
                 server.startServer();
                 LOGGER.info("Server running");
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                waitForInput(br);
+                //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+                //waitForInput(br);
             }
         } catch (Exception e) {
             LOGGER.error("An error occurred, closing the server...", e);
@@ -116,6 +116,7 @@ public final class EntryPoint {
         try {
             System.out.println("Enter a command:");
             input = br.readLine();
+            input = input == null ? "" : input;
         } catch (IOException e) {
             LOGGER.error("IO issue", e);
         }
