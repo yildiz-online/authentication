@@ -28,6 +28,7 @@ import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.authentication.DataBaseAuthenticator;
 import be.yildiz.authentication.DatabaseAccountCreator;
 import be.yildiz.authentication.configuration.Configuration;
+import be.yildiz.authentication.network.AsynchronousAuthenticationServer;
 import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.module.database.DataBaseConnectionProvider;
@@ -81,11 +82,13 @@ public final class EntryPoint {
                 LOGGER.info("Database schema up to date.");
                 LOGGER.info("Preparing the broker...");
                 Broker broker = Broker.initializeInternal("authentication", new File(config.getBrokerDataFolder()), config.getBrokerHost(), config.getBrokerPort());
-                BrokerMessageDestination destination = broker.registerQueue("authentication-creation");
-                MessageProducer producer = destination.createProducer();
+                BrokerMessageDestination accountCreatedQueue = broker.registerQueue("authentication-creation");
+                MessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT);
+                LOGGER.info("Preparing the messaging system");
+                new AsynchronousAuthenticationServer(broker, accountCreationManager);
                 LOGGER.info("Preparing the server...");
                 SanityServer.test(config.getAuthenticationPort(), config.getAuthenticationHost());
                 AuthenticationServer server = new AuthenticationServer(

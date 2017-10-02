@@ -32,6 +32,7 @@ import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildiz.module.network.protocol.TokenVerification;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -41,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Grégory Van den Borre
  */
+@Tag("database")
 class DatabaseAuthenticatorTest {
 
     @Nested
