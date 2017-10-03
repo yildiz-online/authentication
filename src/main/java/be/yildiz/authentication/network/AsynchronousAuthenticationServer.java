@@ -48,7 +48,7 @@ public class AsynchronousAuthenticationServer {
         MessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
         accountCreationRequestQueue.createConsumer((message) -> {
             try {
-                TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message));
+                TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result));
             } catch (InvalidNetworkMessage e) {
                 logger.warn("Unexpected message", e);
