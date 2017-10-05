@@ -30,6 +30,7 @@ import be.yildiz.authentication.DatabaseAccountCreator;
 import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AsynchronousAuthenticationServer;
 import be.yildiz.authentication.network.AuthenticationServer;
+import be.yildiz.authentication.network.JavaMailEmailService;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
@@ -45,7 +46,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  * Application entry point, contains the main method.
@@ -86,7 +86,7 @@ public final class EntryPoint {
                 MessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
-                        new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT);
+                        new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT, new JavaMailEmailService(config));
                 LOGGER.info("Preparing the messaging system");
                 new AsynchronousAuthenticationServer(broker, accountCreationManager);
                 LOGGER.info("Preparing the server...");

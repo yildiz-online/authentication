@@ -24,6 +24,7 @@
 
 package be.yildiz.authentication;
 
+import be.yildiz.authentication.network.EmailService;
 import be.yildiz.common.authentication.AuthenticationChecker;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.common.authentication.CredentialException;
@@ -52,9 +53,12 @@ public class AccountCreationManager {
 
     private final AccountCreator accountCreator;
 
-    public AccountCreationManager(AccountCreator accountCreator, AuthenticationRules rules) {
+    private final EmailService emailService;
+
+    public AccountCreationManager(AccountCreator accountCreator, AuthenticationRules rules, EmailService emailService) {
         this.accountCreator = accountCreator;
         this.checker = new AuthenticationChecker(rules);
+        this.emailService = emailService;
     }
 
     public TemporaryAccountCreationResultDto create(TemporaryAccountDto dto) {
@@ -94,6 +98,7 @@ public class AccountCreationManager {
             }
             result.setToken(token.toString());
             accountCreator.create(dto, token);
+            this.emailService.send(new TemporaryAccountEmail("fr", dto.getLogin(), dto.getEmail(), token.toString()));
         } catch (TechnicalException e) {
             logger.error("Error while persisting temp account " + dto + ":" + token, e);
             result.setTechnicalIssue(true);

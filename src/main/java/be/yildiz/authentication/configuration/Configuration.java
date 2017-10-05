@@ -91,9 +91,13 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
     private final String brokerDataFolder;
     private final String brokerHost;
     private final int brokerPort;
+    private final String emailLogin;
+    private final String emailPassword;
+    private final Properties properties;
 
     private Configuration(final Properties properties) {
         super();
+        this.properties = properties;
         this.dbUser = PropertiesHelper.getValue(properties,"database.user");
         this.dbPassword = PropertiesHelper.getValue(properties,"database.password");
         this.dbRootUser = PropertiesHelper.getValue(properties,"database.root.user");
@@ -108,6 +112,8 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
         this.brokerDataFolder = PropertiesHelper.getValue(properties, "broker.data");
         this.brokerHost = PropertiesHelper.getValue(properties, "broker.host");
         this.brokerPort = PropertiesHelper.getIntValue(properties, "broker.port");
+        this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
+        this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
         AuthenticationConfigurationInvariant.check(this.address, this.port);
         LOGGER.info("Property file loaded.");
     }
@@ -189,5 +195,17 @@ public class Configuration implements DbProperties, AuthenticationConfiguration 
     @Override
     public int getBrokerPort() {
         return this.brokerPort;
+    }
+
+    public String getEmailLogin() {
+        return this.emailLogin;
+    }
+
+    public String getEmailPassword() {
+        return this.emailPassword;
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 }
