@@ -167,6 +167,21 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>skipIt</id>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <properties>
+                <excludeTags>database</excludeTags>
+              </properties>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
 </project>

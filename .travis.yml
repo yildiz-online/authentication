@@ -18,6 +18,6 @@ addons:
     branch_pattern: master
 
 script:
-  - mvn -V -B -s settings.xml test
+  - mvn -V -B -s settings.xml test -PskipIt
 install:
-  - mvn -V -B -s settings.xml clean install
+  - mvn -V -B -s settings.xml clean install -PskipIt
