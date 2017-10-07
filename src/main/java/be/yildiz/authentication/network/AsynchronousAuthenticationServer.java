@@ -27,6 +27,7 @@ package be.yildiz.authentication.network;
 import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
+import be.yildiz.module.messaging.Header;
 import be.yildiz.module.messaging.MessageProducer;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
@@ -49,7 +50,7 @@ public class AsynchronousAuthenticationServer {
         accountCreationRequestQueue.createConsumer((message) -> {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
-                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result));
+                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
             } catch (InvalidNetworkMessage e) {
                 logger.warn("Unexpected message", e);
             }
