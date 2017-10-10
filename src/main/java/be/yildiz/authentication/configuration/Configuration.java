@@ -26,6 +26,7 @@ package be.yildiz.authentication.configuration;
 import be.yildiz.common.exeption.InitializationException;
 import be.yildiz.common.resource.PropertiesHelper;
 import be.yildiz.module.database.DbProperties;
+import be.yildiz.module.messaging.BrokerProperties;
 import be.yildiz.module.network.AuthenticationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ import java.util.Properties;
  * If the file cannot be loaded of if the keys are not all available, an exception is thrown.
  * @author Grégory Van den Borre
  */
-public class Configuration implements DbProperties, AuthenticationConfiguration {
+public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 

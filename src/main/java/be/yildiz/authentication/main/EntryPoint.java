@@ -81,7 +81,7 @@ public final class EntryPoint {
                 databaseUpdater.update(provider);
                 LOGGER.info("Database schema up to date.");
                 LOGGER.info("Preparing the broker...");
-                Broker broker = Broker.initializeInternal("authentication", new File(config.getBrokerDataFolder()), config.getBrokerHost(), config.getBrokerPort());
+                Broker broker = Broker.initialize(config);
                 BrokerMessageDestination accountCreatedQueue = broker.registerQueue("authentication-creation");
                 MessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
