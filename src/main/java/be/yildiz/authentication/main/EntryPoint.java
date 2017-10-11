@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -75,12 +74,8 @@ public final class EntryPoint {
             LOGGER.info("Preparing the database connection...");
             try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().createWithHighPrivilege(config)) {
                 provider.sanity();
-                LOGGER.info("Database connection ready.");
-                LOGGER.info("Updating database schema...");
                 DatabaseUpdater databaseUpdater = LiquibaseDatabaseUpdater.fromConfigurationPath("authentication-database-update.xml");
                 databaseUpdater.update(provider);
-                LOGGER.info("Database schema up to date.");
-                LOGGER.info("Preparing the broker...");
                 Broker broker = Broker.initialize(config);
                 BrokerMessageDestination accountCreatedQueue = broker.registerQueue("authentication-creation");
                 MessageProducer producer = accountCreatedQueue.createProducer();
