@@ -30,9 +30,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
   <changeSet id="1" author="me">
-    <createTable
-            schemaName="YILDIZ_AUTHENTICATION_DATABASE"
-            tableName="ACCOUNTS">
+    <createTable tableName="ACCOUNTS">
       <column name="ID" type="SMALLINT UNSIGNED" autoIncrement="true"><constraints primaryKey="true"/></column>
       <column name="LOGIN" type="VARCHAR(20)" defaultValue="default" />
       <column name="PASSWORD" type="VARCHAR(255)"  defaultValue="default" />
@@ -44,9 +42,7 @@
       <column name="LAST_CONNECTION" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
     </createTable>
 
-    <createTable
-            schemaName="YILDIZ_AUTHENTICATION_DATABASE"
-            tableName="TEMP_ACCOUNTS">
+    <createTable tableName="TEMP_ACCOUNTS">
       <column name="ID" type="SMALLINT UNSIGNED" autoIncrement="true"><constraints primaryKey="true"/></column>
       <column name="LOGIN" type="VARCHAR(20)" />
       <column name="PASSWORD" type="VARCHAR(255)" />
