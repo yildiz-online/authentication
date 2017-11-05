@@ -82,6 +82,7 @@ public class AccountCreationManager {
                 }
             }
         }
+
         UUID token = UUID.randomUUID();
         try {
             if(dto.getEmail() == null) {
@@ -97,8 +98,10 @@ public class AccountCreationManager {
                 result.setEmailExisting(true);
             }
             result.setToken(token.toString());
-            accountCreator.create(dto, token);
-            this.emailService.send(new TemporaryAccountEmail("fr", dto.getLogin(), dto.getEmail(), token.toString()));
+            if(!result.hasError()) {
+                accountCreator.create(dto, token);
+                this.emailService.send(new TemporaryAccountEmail("fr", dto.getLogin(), dto.getEmail(), token.toString()));
+            }
         } catch (TechnicalException e) {
             logger.error("Error while persisting temp account " + dto + ":" + token, e);
             result.setTechnicalIssue(true);

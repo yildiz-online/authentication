@@ -58,11 +58,11 @@ public class DatabaseAccountCreator implements AccountCreator {
         assert login != null;
         try (Connection c = this.provider.getConnection();
              ResultSet result = this.createPreparedStatementSearchAccount(c, login).executeQuery()) {
-            if(result.first()) {
+            if(result.next()) {
                 return true;
             }
             try (ResultSet resultTemp = this.createPreparedStatementSearchTempAccount(c, login).executeQuery()) {
-                return resultTemp.first();
+                return resultTemp.next();
             }
         } catch (SQLException e) {
             throw new TechnicalException(e);
@@ -88,11 +88,11 @@ public class DatabaseAccountCreator implements AccountCreator {
         assert email != null;
         try (Connection c = this.provider.getConnection();
              ResultSet result = this.createPreparedStatementSearchEmail(c, email).executeQuery()) {
-            if(result.first()) {
+            if(result.next()) {
                 return true;
             }
             try (ResultSet resultTemp = this.createPreparedStatementSearchTempEmail(c, email).executeQuery()) {
-                return resultTemp.first();
+                return resultTemp.next();
             }
         } catch (SQLException e) {
             throw new TechnicalException(e);
