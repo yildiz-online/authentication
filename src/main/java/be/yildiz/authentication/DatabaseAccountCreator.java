@@ -57,7 +57,8 @@ public class DatabaseAccountCreator implements AccountCreator {
     public boolean loginAlreadyExist(String login) {
         assert login != null;
         try (Connection c = this.provider.getConnection();
-             ResultSet result = this.createPreparedStatementSearchAccount(c, login).executeQuery()) {
+             PreparedStatement stmt = this.createPreparedStatementSearchAccount(c, login);
+             ResultSet result = stmt.executeQuery()) {
             if(result.next()) {
                 return true;
             }
@@ -87,7 +88,8 @@ public class DatabaseAccountCreator implements AccountCreator {
     public boolean emailAlreadyExist(String email) {
         assert email != null;
         try (Connection c = this.provider.getConnection();
-             ResultSet result = this.createPreparedStatementSearchEmail(c, email).executeQuery()) {
+             PreparedStatement stmt = this.createPreparedStatementSearchEmail(c, email);
+             ResultSet result = stmt.executeQuery()) {
             if(result.next()) {
                 return true;
             }
