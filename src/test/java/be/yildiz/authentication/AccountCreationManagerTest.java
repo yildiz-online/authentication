@@ -59,7 +59,10 @@ class AccountCreationManagerTest {
 
         @Test
         void loginTooLong() {
-
+            AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
+            TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("123456789012345678901234567890", "passwordok", "me@me.com"));
+            Assertions.assertTrue(dto.isInvalidLogin());
+            Assertions.assertTrue(dto.hasError());
         }
 
         @Test
