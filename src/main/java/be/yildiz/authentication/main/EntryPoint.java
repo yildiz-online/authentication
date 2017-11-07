@@ -31,6 +31,7 @@ import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AsynchronousAuthenticationServer;
 import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.authentication.network.JavaMailEmailService;
+import be.yildiz.common.Terminal;
 import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
@@ -109,7 +110,7 @@ public final class EntryPoint {
 
         String input = "";
         try {
-            System.out.println("Enter a command:");
+            Terminal.print("Enter a command:");
             input = br.readLine();
             input = input == null ? "" : input;
         } catch (IOException e) {

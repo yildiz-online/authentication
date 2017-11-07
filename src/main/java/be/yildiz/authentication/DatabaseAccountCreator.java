@@ -93,7 +93,8 @@ public class DatabaseAccountCreator implements AccountCreator {
             if(result.next()) {
                 return true;
             }
-            try (ResultSet resultTemp = this.createPreparedStatementSearchTempEmail(c, email).executeQuery()) {
+            try (PreparedStatement stmtTemp = this.createPreparedStatementSearchTempEmail(c, email);
+                 ResultSet resultTemp = stmtTemp.executeQuery()) {
                 return resultTemp.next();
             }
         } catch (SQLException e) {
@@ -135,7 +136,7 @@ public class DatabaseAccountCreator implements AccountCreator {
     @Override
     public void validate(AccountValidationDto validation) {
         Transaction transaction = new Transaction(this.provider);
-        transaction.execute((c) -> {
+        transaction.execute(c -> {
             String query = "SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = ?";
             PreparedStatement getTemp = c.prepareStatement(query);
             getTemp.setString(1, validation.getLogin());
