@@ -37,7 +37,7 @@ import javax.mail.internet.MimeMessage;
  */
 public class JavaMailEmailService implements EmailService {
 
-    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Session session;
 
@@ -65,7 +65,7 @@ public class JavaMailEmailService implements EmailService {
             message.setText(template.getBody());
             Transport.send(message);
         } catch (MessagingException mex) {
-            LOGGER.error("Error sending mail", mex);
+            this.logger.error("Error sending mail", mex);
         }
     }
 }
