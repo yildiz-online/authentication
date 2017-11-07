@@ -179,14 +179,19 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     private int getCreatedAccountId(Connection c, String login) throws SQLException{
-        String query = "SELECT ID FROM ACCOUNTS WHERE LOGIN = ?";
         int accountId;
-        try(PreparedStatement getAccount = c.prepareStatement(query)) {
-            getAccount.setString(1, login);
-            ResultSet rs = getAccount.executeQuery();
-            rs.first();
+        try(PreparedStatement getAccount = createPreparedStatementAccountId(c, login);
+            ResultSet rs = getAccount.executeQuery()) {
+            rs.next();
             accountId = rs.getInt(1);
         }
         return accountId;
+    }
+
+    private PreparedStatement createPreparedStatementAccountId(Connection c, String login) throws SQLException {
+        String query = "SELECT ID FROM ACCOUNTS WHERE LOGIN = ?";
+        PreparedStatement stmt = c.prepareStatement(query);
+        stmt.setString(1, login);
+        return stmt;
     }
 }
