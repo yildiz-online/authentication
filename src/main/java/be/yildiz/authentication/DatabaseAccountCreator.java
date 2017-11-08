@@ -27,7 +27,7 @@ package be.yildiz.authentication;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.Transaction;
-import be.yildiz.module.messaging.MessageProducer;
+import be.yildiz.module.messaging.AsyncMessageProducer;
 import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
 import org.slf4j.Logger;
@@ -46,9 +46,9 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     private final DataBaseConnectionProvider provider;
 
-    private final MessageProducer messageProducer;
+    private final AsyncMessageProducer messageProducer;
 
-    public DatabaseAccountCreator(DataBaseConnectionProvider provider, MessageProducer messageProducer) {
+    public DatabaseAccountCreator(DataBaseConnectionProvider provider, AsyncMessageProducer messageProducer) {
         this.provider = provider;
         this.messageProducer = messageProducer;
     }

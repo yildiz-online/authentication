@@ -7,7 +7,6 @@
 
   <changeSet id="1" author="me">
     <createTable
-            schemaName="YILDIZDATABASE"
             tableName="ACCOUNTS">
       <column name="ID" type="int" autoIncrement="true"><constraints primaryKey="true"/></column>
       <column name="LOGIN" type="VARCHAR(20)" defaultValue="default" />
@@ -20,22 +19,41 @@
       <column name="LAST_CONNECTION" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP" />
     </createTable>
 
+    <createTable tableName="TEMP_ACCOUNTS">
+      <column name="ID" type="SMALLINT UNSIGNED" autoIncrement="true"><constraints primaryKey="true"/></column>
+      <column name="LOGIN" type="VARCHAR(20)" />
+      <column name="PASSWORD" type="VARCHAR(255)" />
+      <column name="EMAIL" type="VARCHAR(255)" />
+      <column name="CHECK_VALUE" type="VARCHAR(50)" />
+      <column name="DATE" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+    </createTable>
+
+    <insert tableName="TEMP_ACCOUNTS">
+      <column name="LOGIN">existingTemp</column>
+      <column name="PASSWORD">$2a$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
+      <column name="CHECK_VALUE">azerty</column>
+      <column name="EMAIL">existing@e.com</column>
+    </insert>
+
     <insert tableName="ACCOUNTS">
       <column name="LOGIN">existing</column>
       <column name="PASSWORD">$2a$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
       <column name="ACTIVE">true</column>
+      <column name="EMAIL">existing@e.com</column>
     </insert>
 
     <insert tableName="ACCOUNTS">
       <column name="LOGIN">existingInactive</column>
       <column name="PASSWORD">$2a$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
       <column name="ACTIVE">false</column>
+      <column name="EMAIL">existingInactive@e.com</column>
     </insert>
 
     <insert tableName="ACCOUNTS">
       <column name="LOGIN">invalidSalt</column>
       <column name="PASSWORD">$2y$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
       <column name="ACTIVE">true</column>
+      <column name="EMAIL">invalidSalt@e.com</column>
     </insert>
 
   </changeSet>

@@ -39,7 +39,7 @@ import be.yildiz.module.database.DatabaseUpdater;
 import be.yildiz.module.database.LiquibaseDatabaseUpdater;
 import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
-import be.yildiz.module.messaging.MessageProducer;
+import be.yildiz.module.messaging.JmsMessageProducer;
 import be.yildiz.module.network.server.SanityServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +79,7 @@ public final class EntryPoint {
                 databaseUpdater.update(provider);
                 Broker broker = Broker.initialize(config);
                 BrokerMessageDestination accountCreatedQueue = broker.registerQueue("authentication-creation");
-                MessageProducer producer = accountCreatedQueue.createProducer();
+                JmsMessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT, new JavaMailEmailService(config));

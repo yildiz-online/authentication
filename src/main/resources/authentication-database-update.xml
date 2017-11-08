@@ -48,7 +48,7 @@
       <column name="PASSWORD" type="VARCHAR(255)" />
       <column name="EMAIL" type="VARCHAR(255)" />
       <column name="CHECK_VALUE" type="VARCHAR(50)" />
-      <column name="DATE" type="TIMESTAMP" />
+      <column name="DATE" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
     </createTable>
   </changeSet>
 

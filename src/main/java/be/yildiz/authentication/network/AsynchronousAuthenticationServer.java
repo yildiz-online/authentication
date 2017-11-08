@@ -28,7 +28,7 @@ import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.Header;
-import be.yildiz.module.messaging.MessageProducer;
+import be.yildiz.module.messaging.JmsMessageProducer;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
 import be.yildiz.module.network.protocol.mapper.TemporaryAccountMapper;
@@ -46,7 +46,7 @@ public class AsynchronousAuthenticationServer {
     public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager) {
         BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue("authentication-creation-temporary");
         BrokerMessageDestination accountCreationRequestQueue = broker.registerQueue("create-account-request");
-        MessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
+        JmsMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
         accountCreationRequestQueue.createConsumer((message) -> {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
