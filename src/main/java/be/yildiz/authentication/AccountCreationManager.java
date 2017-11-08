@@ -43,11 +43,11 @@ import java.util.regex.Pattern;
  */
 public class AccountCreationManager {
 
+    private static final String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final AuthenticationChecker checker;
-
-    private static final String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
     private final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
@@ -87,15 +87,16 @@ public class AccountCreationManager {
         try {
             if(dto.getEmail() == null) {
               result.setEmailMissing(true);
-            }
-            if(!emailPattern.matcher(dto.getEmail()).matches()) {
-                result.setEmailInvalid(true);
+            } else {
+                if(!emailPattern.matcher(dto.getEmail()).matches()) {
+                    result.setEmailInvalid(true);
+                }
+                if(accountCreator.emailAlreadyExist(dto.getEmail())) {
+                    result.setEmailExisting(true);
+                }
             }
             if(accountCreator.loginAlreadyExist(dto.getLogin())) {
                 result.setAccountExisting(true);
-            }
-            if(accountCreator.emailAlreadyExist(dto.getEmail())) {
-                result.setEmailExisting(true);
             }
             result.setToken(token.toString());
             if(!result.hasError()) {

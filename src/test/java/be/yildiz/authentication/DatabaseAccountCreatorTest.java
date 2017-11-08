@@ -69,4 +69,37 @@ class DatabaseAccountCreatorTest {
             }
         }
     }
+
+    @Nested
+    class EmailAlreadyExists {
+
+        private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
+            Thread.sleep(500);
+            return new TestingDatabaseInit().init("test_db.xml");
+        }
+
+        @Test
+        void doesNotExistInAccountNorInTemp() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                Assertions.assertFalse(creator.emailAlreadyExist("notexisting@me.com"));
+            }
+        }
+
+        @Test
+        void existsInAccountNotInTemp() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                Assertions.assertTrue(creator.emailAlreadyExist("existing@e.com"));
+            }
+        }
+
+        @Test
+        void existsInTempNotInAccount() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                Assertions.assertTrue(creator.emailAlreadyExist("existingTemp@e.com"));
+            }
+        }
+    }
 }

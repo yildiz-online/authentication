@@ -50,9 +50,10 @@ In your maven project, add the dependency
 <dependency>
     <groupId>be.yildiz-games</groupId>
     <artifactId>authentication</artifactId>
-    <version>1.0.0</version>
+    <version>LATEST</version>
 </dependency>
 ```
+Replace LATEST with the correct version.
 
 ## Contact
 Owner of this repository: Grégory Van den Borre

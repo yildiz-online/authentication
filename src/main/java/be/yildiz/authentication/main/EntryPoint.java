@@ -95,15 +95,12 @@ public final class EntryPoint {
                 LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
                 server.startServer();
                 LOGGER.info("Server running");
-                //BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                //waitForInput(br);
             }
         } catch (Exception e) {
             LOGGER.error("An error occurred, closing the server...", e);
             LOGGER.info("Server closed.");
             System.exit(-1);
         }
-        LOGGER.info("Server closed.");
     }
 
     private static void waitForInput(BufferedReader br) {
