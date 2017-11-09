@@ -33,6 +33,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 /**
  * @author Grégory Van den Borre
  */
@@ -142,14 +146,41 @@ class DatabaseAccountCreatorTest {
         @Test
         void happyFlow() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                Result message = new Result();
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
                 creator.validate(givenAnAccountValidationDto());
+                Assertions.assertEquals("{login:existingTemp, id:4}", message.value);
+                try (Connection c = dbcp.getConnection();
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'existingTemp'");
+                     ResultSet resultSet = stmt.executeQuery()) {
+                    Assertions.assertFalse(resultSet.next());
+                }
+                try (Connection c = dbcp.getConnection();
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM ACCOUNTS WHERE LOGIN = 'existingTemp'");
+                     ResultSet resultSet = stmt.executeQuery()) {
+                    Assertions.assertTrue(resultSet.next());
+                }
             }
         }
 
         @Test
-        void validationFails() {
-            //TODO check for rollback
+        void validationFails() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                Result message = new Result();
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
+                creator.validate(givenAWrongAccountValidationDto());
+                Assertions.assertEquals("", message.value);
+                try (Connection c = dbcp.getConnection();
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'existingTemp'");
+                     ResultSet resultSet = stmt.executeQuery()) {
+                    Assertions.assertTrue(resultSet.next());
+                }
+                try (Connection c = dbcp.getConnection();
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM ACCOUNTS WHERE LOGIN = 'existingTemp'");
+                     ResultSet resultSet = stmt.executeQuery()) {
+                    Assertions.assertFalse(resultSet.next());
+                }
+            }
         }
 
         @Test
@@ -158,27 +189,35 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void insertionFails() {
+        void insertionFails() throws Exception {
             //TODO check for rollback
         }
 
         @Test
-        void deleteFails() {
-            //TODO check for rollback
-        }
-
-        @Test
-        void technicalException() {
+        void deleteFails() throws Exception {
             //TODO check for rollback
         }
 
         AccountValidationDto givenAnAccountValidationDto() {
-            return new AccountValidationDto("tempExisting", "1234");
+            return new AccountValidationDto("existingTemp", "azerty");
         }
+
+        AccountValidationDto givenAWrongAccountValidationDto() {
+            return new AccountValidationDto("existingTemp", "123");
+        }
+
 
         AccountValidationDto givenANotExistingAccountValidationDto() {
             return new AccountValidationDto("tempNotExisting", "1234");
         }
+
+    }
+
+    private class Result {
+
+        private String value = "";
+
+
     }
 
 
