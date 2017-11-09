@@ -79,6 +79,14 @@ class DatabaseAccountCreatorTest {
                 Assertions.assertThrows(TechnicalException.class, () -> creator.loginAlreadyExist("test"));
             }
         }
+
+        @Test
+        void fromNull() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                Assertions.assertThrows(AssertionError.class, () -> creator.loginAlreadyExist(null));
+            }
+        }
     }
 
     @Nested
