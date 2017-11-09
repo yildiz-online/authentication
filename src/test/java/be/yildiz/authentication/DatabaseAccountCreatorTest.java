@@ -27,6 +27,7 @@ package be.yildiz.authentication;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
+import be.yildiz.module.network.protocol.AccountValidationDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -111,5 +112,66 @@ class DatabaseAccountCreatorTest {
                 Assertions.assertTrue(creator.emailAlreadyExist("existingTemp@e.com"));
             }
         }
+
+        @Test
+        void technicalException() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                dbcp.close();
+                Assertions.assertThrows(TechnicalException.class, () -> creator.emailAlreadyExist("test@test.com"));
+            }
+        }
     }
+
+    @Nested
+    class Validate {
+
+        private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
+            Thread.sleep(500);
+            return new TestingDatabaseInit().init("test_db.xml");
+        }
+
+        @Test
+        void happyFlow() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                creator.validate(givenAnAccountValidationDto());
+            }
+        }
+
+        @Test
+        void validationFails() {
+            //TODO check for rollback
+        }
+
+        @Test
+        void accountNotExisting() throws Exception {
+            //TODO check for rollback
+        }
+
+        @Test
+        void insertionFails() {
+            //TODO check for rollback
+        }
+
+        @Test
+        void deleteFails() {
+            //TODO check for rollback
+        }
+
+        @Test
+        void technicalException() {
+            //TODO check for rollback
+        }
+
+        AccountValidationDto givenAnAccountValidationDto() {
+            return new AccountValidationDto("tempExisting", "1234");
+        }
+
+        AccountValidationDto givenANotExistingAccountValidationDto() {
+            return new AccountValidationDto("tempNotExisting", "1234");
+        }
+    }
+
+
 }
