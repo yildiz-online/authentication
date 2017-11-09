@@ -24,6 +24,7 @@
 
 package be.yildiz.authentication;
 
+import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import org.junit.jupiter.api.Assertions;
@@ -66,6 +67,15 @@ class DatabaseAccountCreatorTest {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertTrue(creator.loginAlreadyExist("existingTemp"));
+            }
+        }
+
+        @Test
+        void technicalException() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
+                dbcp.close();
+                Assertions.assertThrows(TechnicalException.class, () -> creator.loginAlreadyExist("test"));
             }
         }
     }
