@@ -29,10 +29,10 @@ import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.Header;
 import be.yildiz.module.messaging.JmsMessageProducer;
-import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
 import be.yildiz.module.network.protocol.mapper.TemporaryAccountMapper;
 import be.yildiz.module.network.protocol.mapper.TemporaryAccountResultMapper;
+import be.yildizgames.common.mapping.MappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
-            } catch (InvalidNetworkMessage e) {
+            } catch (MappingException e) {
                 logger.warn("Unexpected message", e);
             }
         });

@@ -34,8 +34,8 @@ import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.protocol.NetworkMessage;
 import be.yildiz.module.network.protocol.NetworkMessageFactory;
 import be.yildiz.module.network.protocol.TokenVerification;
-import be.yildiz.module.network.protocol.mapper.IntegerMapper;
 import be.yildiz.module.network.server.Session;
+import be.yildizgames.common.mapping.IntegerMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.*;
 final class AuthenticationHandlerTest {
 
     @Test
-    void messageReceivedImplAuthenticationRequest() throws Exception {
+    void messageReceivedImplAuthenticationRequest() {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService());
