@@ -23,7 +23,7 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.authentication.Credentials;
+import be.yildizgames.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.network.protocol.TokenVerification;

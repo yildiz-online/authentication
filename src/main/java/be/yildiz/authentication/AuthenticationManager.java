@@ -24,11 +24,11 @@
 package be.yildiz.authentication;
 
 import be.yildiz.common.Token;
-import be.yildiz.common.authentication.AuthenticationChecker;
-import be.yildiz.common.authentication.AuthenticationRules;
-import be.yildiz.common.authentication.CredentialException;
-import be.yildiz.common.authentication.Credentials;
-import be.yildiz.common.collections.Maps;
+import be.yildizgames.common.authentication.AuthenticationChecker;
+import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.common.authentication.CredentialException;
+import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.collection.Maps;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.util.Time;

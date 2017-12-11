@@ -26,7 +26,7 @@ package be.yildiz.authentication.network;
 import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.common.Token;
-import be.yildiz.common.authentication.Credentials;
+import be.yildizgames.common.authentication.Credentials;
 import be.yildiz.module.network.AbstractHandler;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.protocol.*;
