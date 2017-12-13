@@ -28,10 +28,7 @@ import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildiz.module.network.protocol.AccountValidationDto;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,6 +37,7 @@ import java.sql.ResultSet;
 /**
  * @author Grégory Van den Borre
  */
+@Disabled
 @Tag("database")
 class DatabaseAccountCreatorTest {
 

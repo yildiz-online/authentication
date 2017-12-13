@@ -31,6 +31,7 @@ import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildiz.module.network.protocol.TokenVerification;
 import be.yildizgames.common.authentication.CredentialException;
 import be.yildizgames.common.authentication.Credentials;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Grégory Van den Borre
  */
+@Disabled
 @Tag("database")
 class DatabaseAuthenticatorTest {
 
