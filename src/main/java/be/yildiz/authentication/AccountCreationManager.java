@@ -24,14 +24,15 @@
 
 package be.yildiz.authentication;
 
+import be.yildiz.authentication.configuration.EmailTemplateConfiguration;
 import be.yildiz.authentication.network.EmailService;
-import be.yildiz.common.authentication.AuthenticationChecker;
-import be.yildiz.common.authentication.AuthenticationRules;
-import be.yildiz.common.authentication.CredentialException;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
+import be.yildizgames.common.authentication.AuthenticationChecker;
+import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.common.authentication.CredentialException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,10 +56,13 @@ public class AccountCreationManager {
 
     private final EmailService emailService;
 
-    public AccountCreationManager(AccountCreator accountCreator, AuthenticationRules rules, EmailService emailService) {
+    private final EmailTemplateConfiguration configuration;
+
+    public AccountCreationManager(AccountCreator accountCreator, AuthenticationRules rules, EmailService emailService, EmailTemplateConfiguration configuration) {
         this.accountCreator = accountCreator;
         this.checker = new AuthenticationChecker(rules);
         this.emailService = emailService;
+        this.configuration = configuration;
     }
 
     public TemporaryAccountCreationResultDto create(TemporaryAccountDto dto) {
@@ -101,7 +105,7 @@ public class AccountCreationManager {
             result.setToken(token.toString());
             if(!result.hasError()) {
                 accountCreator.create(dto, token);
-                this.emailService.send(new TemporaryAccountEmail("fr", dto.getLogin(), dto.getEmail(), token.toString()));
+                this.emailService.send(new TemporaryAccountEmail(configuration.getEmailTemplatePath(), dto.getLogin(), dto.getEmail(), token.toString()));
             }
         } catch (TechnicalException e) {
             logger.error("Error while persisting temp account " + dto + ":" + token, e);

@@ -24,15 +24,16 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
+import be.yildizgames.common.authentication.AuthenticationRules;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Paths;
 import java.util.UUID;
 
 /**
@@ -219,6 +220,6 @@ class AccountCreationManagerTest {
     }
 
     private static AccountCreationManager givenAManager(AccountCreator c) {
-        return new AccountCreationManager(c, AuthenticationRules.DEFAULT, (m) -> {});
+        return new AccountCreationManager(c, AuthenticationRules.DEFAULT, (m) -> {}, () -> Paths.get(""));
     }
 }

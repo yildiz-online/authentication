@@ -32,7 +32,6 @@ import be.yildiz.authentication.network.AsynchronousAuthenticationServer;
 import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.authentication.network.JavaMailEmailService;
 import be.yildiz.common.Terminal;
-import be.yildiz.common.authentication.AuthenticationRules;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
 import be.yildiz.module.database.DatabaseUpdater;
@@ -41,6 +40,8 @@ import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.JmsMessageProducer;
 import be.yildiz.module.network.server.SanityServer;
+import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.module.database.postgresql.PostgresqlSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +74,7 @@ public final class EntryPoint {
             Configuration config = Configuration.fromAppArgs(args);
 
             LOGGER.info("Preparing the database connection...");
+            PostgresqlSystem.support();
             try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().createWithHighPrivilege(config)) {
                 provider.sanity();
                 DatabaseUpdater databaseUpdater = LiquibaseDatabaseUpdater.fromConfigurationPath("authentication-database-update.xml");
@@ -82,7 +84,7 @@ public final class EntryPoint {
                 JmsMessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
-                        new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT, new JavaMailEmailService(config));
+                        new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT, new JavaMailEmailService(config), config);
                 LOGGER.info("Preparing the messaging system");
                 new AsynchronousAuthenticationServer(broker, accountCreationManager);
                 LOGGER.info("Preparing the server...");

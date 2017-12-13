@@ -23,14 +23,14 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.authentication.CredentialException;
-import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildiz.module.network.protocol.TokenVerification;
+import be.yildizgames.common.authentication.CredentialException;
+import be.yildizgames.common.authentication.Credentials;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

@@ -32,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -44,7 +46,7 @@ import java.util.Properties;
  * If the file cannot be loaded of if the keys are not all available, an exception is thrown.
  * @author Grégory Van den Borre
  */
-public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties {
+public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties, EmailTemplateConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
@@ -94,6 +96,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     private final int brokerPort;
     private final String emailLogin;
     private final String emailPassword;
+    private final Path emailTemplatePath;
     private final Properties properties;
 
     private Configuration(final Properties properties) {
@@ -115,6 +118,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.brokerPort = PropertiesHelper.getIntValue(properties, "broker.port");
         this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
+        this.emailTemplatePath = Paths.get(PropertiesHelper.getValue(properties, "mail.template.path"));
         AuthenticationConfigurationInvariant.check(this.address, this.port);
         LOGGER.info("Property file loaded.");
     }
@@ -174,39 +178,44 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     }
 
     @Override
-    public String getDbRootUser() {
+    public final String getDbRootUser() {
         return this.dbRootUser;
     }
 
     @Override
-    public String getDbRootPassword() {
+    public final String getDbRootPassword() {
         return this.dbRootPassword;
     }
 
     @Override
-    public String getBrokerDataFolder() {
+    public final String getBrokerDataFolder() {
         return this.brokerDataFolder;
     }
 
     @Override
-    public String getBrokerHost() {
+    public final String getBrokerHost() {
         return this.brokerHost;
     }
 
     @Override
-    public int getBrokerPort() {
+    public final int getBrokerPort() {
         return this.brokerPort;
     }
 
-    public String getEmailLogin() {
+    public final String getEmailLogin() {
         return this.emailLogin;
     }
 
-    public String getEmailPassword() {
+    public final String getEmailPassword() {
         return this.emailPassword;
     }
 
-    public Properties getProperties() {
+    @Override
+    public final Path getEmailTemplatePath() {
+        return this.emailTemplatePath;
+    }
+
+    public final Properties getProperties() {
         return properties;
     }
 }

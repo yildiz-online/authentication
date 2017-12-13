@@ -28,17 +28,19 @@ import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.authentication.DummyAccountCreator;
 import be.yildiz.authentication.DummyEmailService;
 import be.yildiz.common.Token;
-import be.yildiz.common.authentication.AuthenticationRules;
-import be.yildiz.common.authentication.Credentials;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.protocol.NetworkMessage;
 import be.yildiz.module.network.protocol.NetworkMessageFactory;
 import be.yildiz.module.network.protocol.TokenVerification;
 import be.yildiz.module.network.server.Session;
+import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.mapping.IntegerMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,7 +53,7 @@ final class AuthenticationHandlerTest {
     void messageReceivedImplAuthenticationRequest() {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
-        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService());
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService(), () -> Paths.get(""));
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         Session session = Mockito.mock(Session.class);
         NetworkMessage<Credentials> request = f.authenticationRequest(Credentials.unchecked("abc", "abcde"));
@@ -66,7 +68,7 @@ final class AuthenticationHandlerTest {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = Token.authenticated(PlayerId.valueOf(5), 200L, 123);
-        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService());
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService(), () -> Paths.get(""));
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         Session session = Mockito.mock(Session.class);
         NetworkMessage<Token> request = f.tokenVerification(token);
@@ -80,7 +82,7 @@ final class AuthenticationHandlerTest {
         NetworkMessageFactory f = new NetworkMessageFactory();
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
         Token token = manager.authenticate(Credentials.unchecked("abc", "abcde"));
-        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService());
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService(), () -> Paths.get(""));
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         Session session = Mockito.mock(Session.class);
         NetworkMessage<Token> request = f.tokenVerification(token);
@@ -92,7 +94,7 @@ final class AuthenticationHandlerTest {
     @Test
     void messageReceivedImplOtherRequest() {
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
-        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService());
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService(), () -> Paths.get(""));
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));
         NetworkMessage<Integer> request = new NetworkMessage<>(7, IntegerMapper.getInstance(), 45);
@@ -104,7 +106,7 @@ final class AuthenticationHandlerTest {
     @Test
     void messageReceivedImplInvalidMessage() {
         AuthenticationManager manager = new AuthenticationManager(c -> new TokenVerification(PlayerId.valueOf(5), true));
-        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService());
+        AccountCreationManager accountCreationManager = new AccountCreationManager(new DummyAccountCreator(), AuthenticationRules.DEFAULT, new DummyEmailService(), () -> Paths.get(""));
         AuthenticationHandler handler = new AuthenticationHandler(manager, accountCreationManager);
         SessionMock session = new SessionMock(PlayerId.valueOf(5));
         handler.processMessages(session, "&10_abc#");
