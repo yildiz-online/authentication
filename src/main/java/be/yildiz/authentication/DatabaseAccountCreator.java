@@ -30,8 +30,8 @@ import be.yildiz.module.database.Transaction;
 import be.yildiz.module.messaging.AsyncMessageProducer;
 import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.TemporaryAccountDto;
+import be.yildizgames.common.logging.LogFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.time.Instant;
@@ -42,7 +42,7 @@ import java.util.UUID;
  */
 public class DatabaseAccountCreator implements AccountCreator {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LogFactory.getInstance().getLogger(this.getClass());
 
     private final DataBaseConnectionProvider provider;
 

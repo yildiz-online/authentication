@@ -23,11 +23,13 @@
 
 package be.yildiz.authentication.configuration;
 
-import be.yildiz.common.exeption.InitializationException;
-import be.yildiz.common.resource.PropertiesHelper;
 import be.yildiz.module.database.DbProperties;
+import be.yildiz.module.database.SimpleDbProperties;
 import be.yildiz.module.messaging.BrokerProperties;
 import be.yildiz.module.network.AuthenticationConfiguration;
+import be.yildizgames.common.exception.technical.InitializationException;
+import be.yildizgames.common.file.FileProperties;
+import be.yildizgames.common.util.PropertiesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,35 +52,6 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
-    /**
-     * Login to connect the database
-     */
-    private final String dbUser;
-
-    /**
-     * Password to connect to the database
-     */
-    private final String dbPassword;
-
-    /**
-     * Database to use.
-     */
-    private final String dbName;
-
-    /**
-     * Host address to connect to the database.
-     */
-    private final String dbHost;
-
-    /**
-     * Port to connect to the database.
-     */
-    private final int dbPort;
-
-    /**
-     * Database system to use.
-     */
-    private final String system;
 
     /**
      * Port to expose.
@@ -89,8 +62,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
      * Address to use for connection.
      */
     private final String address;
-    private final String dbRootUser;
-    private final String dbRootPassword;
+    private final DbProperties dbProperties;
     private final String brokerDataFolder;
     private final String brokerHost;
     private final int brokerPort;
@@ -102,15 +74,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     private Configuration(final Properties properties) {
         super();
         this.properties = properties;
-        this.dbUser = PropertiesHelper.getValue(properties,"database.user");
-        this.dbPassword = PropertiesHelper.getValue(properties,"database.password");
-        this.dbRootUser = PropertiesHelper.getValue(properties,"database.root.user");
-        this.dbRootPassword = PropertiesHelper.getValue(properties,"database.root.password");
-        this.dbName = PropertiesHelper.getValue(properties,"database.name");
-        this.dbHost = PropertiesHelper.getValue(properties, "database.host");
-        this.dbPort = PropertiesHelper.getIntValue(properties, "database.port");
-        this.system = PropertiesHelper.getValue(properties,"database.system");
-        DbPropertiesInvariant.check(this.dbUser, this.dbPassword, this.dbRootUser, this.dbRootPassword, this.dbName, this.dbHost, this.dbPort, this.system);
+        this.dbProperties = new SimpleDbProperties(properties);
         this.port = PropertiesHelper.getIntValue(properties, "network.port");
         this.address = PropertiesHelper.getValue(properties,"network.host");
         this.brokerDataFolder = PropertiesHelper.getValue(properties, "broker.data");
@@ -133,33 +97,33 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
             throw new InitializationException("Please pass the property file as an argument when starting application");
         }
         LOGGER.info("Reading property file...");
-        Properties properties = PropertiesHelper.getPropertiesFromFile(new File(args[0]), args);
+        Properties properties = FileProperties.getPropertiesFromFile(new File(args[0]), args);
         return new Configuration(properties);
     }
 
     @Override
     public final String getDbUser() {
-        return this.dbUser;
+        return this.dbProperties.getDbUser();
     }
 
     @Override
     public final int getDbPort() {
-        return this.dbPort;
+        return this.dbProperties.getDbPort();
     }
 
     @Override
     public final String getDbPassword() {
-        return this.dbPassword;
+        return this.dbProperties.getDbPassword();
     }
 
     @Override
     public final String getDbHost() {
-        return this.dbHost;
+        return this.dbProperties.getDbHost();
     }
 
     @Override
     public final String getDbName() {
-        return this.dbName;
+        return this.dbProperties.getDbName();
     }
 
     @Override
@@ -174,17 +138,17 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     @Override
     public final String getSystem() {
-        return this.system;
+        return this.dbProperties.getSystem();
     }
 
     @Override
     public final String getDbRootUser() {
-        return this.dbRootUser;
+        return this.dbProperties.getDbRootUser();
     }
 
     @Override
     public final String getDbRootPassword() {
-        return this.dbRootPassword;
+        return this.dbProperties.getDbRootPassword();
     }
 
     @Override

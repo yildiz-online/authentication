@@ -31,7 +31,6 @@ import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AsynchronousAuthenticationServer;
 import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.authentication.network.JavaMailEmailService;
-import be.yildiz.common.Terminal;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
 import be.yildiz.module.database.DatabaseUpdater;
@@ -41,12 +40,9 @@ import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.JmsMessageProducer;
 import be.yildiz.module.network.server.SanityServer;
 import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.module.database.postgresql.PostgresqlSystem;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
 
 /**
  * Application entry point, contains the main method.
@@ -54,8 +50,6 @@ import java.io.IOException;
  * @author Grégory Van den Borre
  */
 public final class EntryPoint {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EntryPoint.class);
 
 
     private EntryPoint() {
@@ -69,11 +63,12 @@ public final class EntryPoint {
      * @param args Unused.
      */
     public static void main(String[] args) {
+        Logger logger = LogFactory.getInstance().getLogger(EntryPoint.class);
         try {
-            LOGGER.debug("Debug logger level enabled.");
+            logger.debug("Debug logger level enabled.");
             Configuration config = Configuration.fromAppArgs(args);
 
-            LOGGER.info("Preparing the database connection...");
+            logger.info("Preparing the database connection...");
             PostgresqlSystem.support();
             try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().createWithHighPrivilege(config)) {
                 provider.sanity();
@@ -85,40 +80,24 @@ public final class EntryPoint {
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT, new JavaMailEmailService(config), config);
-                LOGGER.info("Preparing the messaging system");
+                logger.info("Preparing the messaging system");
                 new AsynchronousAuthenticationServer(broker, accountCreationManager);
-                LOGGER.info("Preparing the server...");
+                logger.info("Preparing the server...");
                 SanityServer.test(config.getAuthenticationPort(), config.getAuthenticationHost());
                 AuthenticationServer server = new AuthenticationServer(
                         config.getAuthenticationHost(),
                         config.getAuthenticationPort(),
                         manager,
                         accountCreationManager);
-                LOGGER.info("Server open on " + server.getHost() + ":" + server.getPort());
+                logger.info("Server open on " + server.getHost() + ":" + server.getPort());
                 server.startServer();
-                LOGGER.info("Server running");
+                logger.info("Server running");
             }
         } catch (Exception e) {
-            LOGGER.error("An error occurred, closing the server...", e);
-            LOGGER.info("Server closed.");
+            logger.error("An error occurred, closing the server...", e);
+            logger.info("Server closed.");
             System.exit(-1);
         }
-    }
-
-    private static void waitForInput(BufferedReader br) {
-
-        String input = "";
-        try {
-            Terminal.print("Enter a command:");
-            input = br.readLine();
-            input = input == null ? "" : input;
-        } catch (IOException e) {
-            LOGGER.error("IO issue", e);
-        }
-        if(input.equalsIgnoreCase("EXIT") || input.equalsIgnoreCase("QUIT")) {
-            System.exit(0);
-        }
-        waitForInput(br);
     }
 
 }
