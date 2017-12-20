@@ -23,8 +23,9 @@
 
 package be.yildiz.authentication.configuration;
 
-import be.yildiz.common.exeption.InitializationException;
-import be.yildiz.common.exeption.ResourceMissingException;
+import be.yildizgames.common.exception.technical.InitializationException;
+import be.yildizgames.common.exception.technical.ResourceMissingException;
+import be.yildizgames.common.util.PropertiesException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ class ConfigurationTest {
 
         @Test
         void fromIncompleteFile() {
-            assertThrows(IllegalArgumentException.class, () -> Configuration.fromAppArgs(new String[] {getFile("test-incomplete.properties").getAbsolutePath()}));
+            assertThrows(PropertiesException.class, () -> Configuration.fromAppArgs(new String[] {getFile("test-incomplete.properties").getAbsolutePath()}));
         }
 
         @Test
