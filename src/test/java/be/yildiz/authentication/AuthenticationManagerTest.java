@@ -23,11 +23,11 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.Token;
 import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.id.PlayerId;
-import be.yildiz.module.network.protocol.TokenVerification;
 import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.protocol.Token;
+import be.yildizgames.common.authentication.protocol.TokenVerification;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

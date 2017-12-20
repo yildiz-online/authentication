@@ -30,10 +30,10 @@ import be.yildiz.module.network.client.NetworkListener;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
 import be.yildiz.module.network.netty.client.ClientNetty;
 import be.yildiz.module.network.netty.factory.NettyFactory;
-import be.yildiz.module.network.protocol.AccountValidationDto;
 import be.yildiz.module.network.protocol.MessageWrapper;
 import be.yildiz.module.network.protocol.NetworkMessage;
 import be.yildiz.module.network.protocol.NetworkMessageFactory;
+import be.yildizgames.common.authentication.protocol.AccountValidationDto;
 
 /**
  * @author Grégory Van den Borre

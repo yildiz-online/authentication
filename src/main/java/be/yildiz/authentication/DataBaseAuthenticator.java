@@ -27,10 +27,10 @@ import be.yildiz.common.exeption.NotFoundException;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.database.DataBaseConnectionProvider;
-import be.yildiz.module.network.protocol.TokenVerification;
 import be.yildizgames.common.authentication.BCryptEncryptionTool;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;
+import be.yildizgames.common.authentication.protocol.TokenVerification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

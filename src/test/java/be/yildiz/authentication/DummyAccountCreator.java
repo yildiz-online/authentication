@@ -24,8 +24,8 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.module.network.protocol.AccountValidationDto;
-import be.yildiz.module.network.protocol.TemporaryAccountDto;
+import be.yildizgames.common.authentication.protocol.AccountValidationDto;
+import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
 
 import java.util.UUID;
 

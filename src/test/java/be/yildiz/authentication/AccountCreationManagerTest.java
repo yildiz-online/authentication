@@ -25,10 +25,10 @@
 package be.yildiz.authentication;
 
 import be.yildiz.common.exeption.TechnicalException;
-import be.yildiz.module.network.protocol.AccountValidationDto;
-import be.yildiz.module.network.protocol.TemporaryAccountCreationResultDto;
-import be.yildiz.module.network.protocol.TemporaryAccountDto;
 import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.common.authentication.protocol.AccountValidationDto;
+import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
+import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;

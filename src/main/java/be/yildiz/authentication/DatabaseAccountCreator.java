@@ -28,8 +28,8 @@ import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.Transaction;
 import be.yildiz.module.messaging.AsyncMessageProducer;
-import be.yildiz.module.network.protocol.AccountValidationDto;
-import be.yildiz.module.network.protocol.TemporaryAccountDto;
+import be.yildizgames.common.authentication.protocol.AccountValidationDto;
+import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
 import be.yildizgames.common.logging.LogFactory;
 import org.slf4j.Logger;
 

@@ -32,8 +32,8 @@ import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.network.netty.DecoderEncoder;
 import be.yildiz.module.network.netty.server.SessionMessageHandler;
 import be.yildiz.module.network.netty.server.SessionWebSocketMessageHandler;
-import be.yildiz.module.network.protocol.TokenVerification;
 import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.common.authentication.protocol.TokenVerification;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 

@@ -25,12 +25,14 @@ package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
-import be.yildiz.common.Token;
-import be.yildizgames.common.authentication.Credentials;
 import be.yildiz.module.network.AbstractHandler;
 import be.yildiz.module.network.exceptions.InvalidNetworkMessage;
-import be.yildiz.module.network.protocol.*;
+import be.yildiz.module.network.protocol.Commands;
+import be.yildiz.module.network.protocol.MessageWrapper;
+import be.yildiz.module.network.protocol.NetworkMessage;
 import be.yildiz.module.network.server.Session;
+import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.protocol.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

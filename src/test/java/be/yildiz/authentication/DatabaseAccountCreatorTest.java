@@ -27,7 +27,7 @@ package be.yildiz.authentication;
 import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
-import be.yildiz.module.network.protocol.AccountValidationDto;
+import be.yildizgames.common.authentication.protocol.AccountValidationDto;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
