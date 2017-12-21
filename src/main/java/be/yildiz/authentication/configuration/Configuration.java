@@ -26,7 +26,7 @@ package be.yildiz.authentication.configuration;
 import be.yildiz.module.database.DbProperties;
 import be.yildiz.module.database.SimpleDbProperties;
 import be.yildiz.module.messaging.BrokerProperties;
-import be.yildiz.module.network.AuthenticationConfiguration;
+import be.yildizgames.common.authentication.AuthenticationConfiguration;
 import be.yildizgames.common.exception.technical.InitializationException;
 import be.yildizgames.common.file.FileProperties;
 import be.yildizgames.common.util.PropertiesHelper;
@@ -52,16 +52,6 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
-
-    /**
-     * Port to expose.
-     */
-    private final int port;
-
-    /**
-     * Address to use for connection.
-     */
-    private final String address;
     private final DbProperties dbProperties;
     private final String brokerDataFolder;
     private final String brokerHost;
@@ -75,15 +65,12 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         super();
         this.properties = properties;
         this.dbProperties = new SimpleDbProperties(properties);
-        this.port = PropertiesHelper.getIntValue(properties, "network.port");
-        this.address = PropertiesHelper.getValue(properties,"network.host");
         this.brokerDataFolder = PropertiesHelper.getValue(properties, "broker.data");
         this.brokerHost = PropertiesHelper.getValue(properties, "broker.host");
         this.brokerPort = PropertiesHelper.getIntValue(properties, "broker.port");
         this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
         this.emailTemplatePath = Paths.get(PropertiesHelper.getValue(properties, "mail.template.path"));
-        AuthenticationConfigurationInvariant.check(this.address, this.port);
         LOGGER.info("Property file loaded.");
     }
 
@@ -124,16 +111,6 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     @Override
     public final String getDbName() {
         return this.dbProperties.getDbName();
-    }
-
-    @Override
-    public final String getAuthenticationHost() {
-        return this.address;
-    }
-
-    @Override
-    public final int getAuthenticationPort() {
-        return this.port;
     }
 
     @Override

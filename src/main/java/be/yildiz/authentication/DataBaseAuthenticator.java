@@ -23,14 +23,13 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.NotFoundException;
-import be.yildiz.common.exeption.TechnicalException;
-import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildizgames.common.authentication.BCryptEncryptionTool;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;
+import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.model.PlayerId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,13 +83,13 @@ public final class DataBaseAuthenticator implements Authenticator {
     }
 
     @Override
-    public TokenVerification getPasswordForUser(final Credentials credential) throws NotFoundException {
+    public TokenVerification getPasswordForUser(final Credentials credential) throws UserNotFoundException {
         assert credential != null;
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = createPreparedStatement(c, credential.login);
              ResultSet results = stmt.executeQuery()) {
             if (!results.next()) {
-                throw new NotFoundException();
+                throw new UserNotFoundException();
             }
             if (credential.password.equals(this.key)) {
                 LOGGER.warn(credential.login + " connected with generic password.");
@@ -99,7 +98,7 @@ public final class DataBaseAuthenticator implements Authenticator {
             boolean authenticated = this.encrypting.check(results.getString("password"), credential.password);
             return new TokenVerification(PlayerId.valueOf(results.getInt("id")), authenticated);
         } catch (IllegalArgumentException | SQLException e) {
-            throw new TechnicalException(e);
+            throw new AuthenticationException(e);
         }
     }
 
