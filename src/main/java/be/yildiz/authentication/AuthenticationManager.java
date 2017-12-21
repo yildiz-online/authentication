@@ -23,17 +23,12 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.NotFoundException;
-import be.yildiz.common.id.PlayerId;
 import be.yildiz.common.util.Time;
-import be.yildiz.common.util.Util;
-import be.yildizgames.common.authentication.AuthenticationChecker;
-import be.yildizgames.common.authentication.AuthenticationRules;
-import be.yildizgames.common.authentication.CredentialException;
-import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.*;
 import be.yildizgames.common.authentication.protocol.Token;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
 import be.yildizgames.common.collection.Maps;
+import be.yildizgames.common.model.PlayerId;
 
 import java.util.Map;
 
@@ -107,7 +102,7 @@ public class AuthenticationManager {
                 } else {
                     token = Token.authenticationFailed();
                 }
-            } catch (NotFoundException | CredentialException e) {
+            } catch (UserNotFoundException | CredentialException e) {
                 token = Token.notFound();
             }
         }

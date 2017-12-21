@@ -23,9 +23,8 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.NotFoundException;
-import be.yildiz.common.exeption.TechnicalException;
 import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
 
 /**
@@ -41,11 +40,10 @@ public interface Authenticator {
      *
      * @param credentials User credentials.
      * @return The authentication result with <code>true</code> if the password is correct for the userName.
-     * @throws TechnicalException If something went wrong while trying to check the credentials.
-     * @throws NotFoundException  If the credentials login does not exists.
+     * @throws UserNotFoundException  If the credentials login does not exists.
      */
     //@Requires credentials != null
     //@Requires credentials to have been checked with an {@link AuthenticationChecker} to ensure no dangerous input is passed to the authenticator.
-    TokenVerification getPasswordForUser(Credentials credentials) throws NotFoundException;
+    TokenVerification getPasswordForUser(Credentials credentials) throws UserNotFoundException;
 
 }
