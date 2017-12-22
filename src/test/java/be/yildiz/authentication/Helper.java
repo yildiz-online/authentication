@@ -23,8 +23,8 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.id.PlayerId;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.model.PlayerId;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 

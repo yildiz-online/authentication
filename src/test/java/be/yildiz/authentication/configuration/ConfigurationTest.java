@@ -103,15 +103,6 @@ class ConfigurationTest {
             assertEquals("sys", c.getSystem());
         }
 
-        @Test
-        void getNetworkPort() {
-            assertEquals(456, c.getAuthenticationPort());
-        }
-
-        @Test
-        void getNetworkHost() {
-            assertEquals("nhost", c.getAuthenticationHost());
-        }
 
     }
 

@@ -24,13 +24,13 @@
 package be.yildiz.authentication;
 
 import be.yildizgames.common.authentication.*;
-import be.yildizgames.common.authentication.protocol.Token;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
 import be.yildizgames.common.collection.Maps;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.common.util.Util;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -68,7 +68,7 @@ public class AuthenticationManager {
     /**
      * List of banned players, the key is the player's name, and the value the time when the ban is removed.
      */
-    private final Map<String, Duration> banned = Maps.newMap();
+    private final Map<String, LocalDateTime> banned = Maps.newMap();
 
     /**
      * Provide the authentication logic.
@@ -142,8 +142,9 @@ public class AuthenticationManager {
      * @return <code>true</code> if the player is banned.
      */
     private boolean isBanned(final String login) {
-        Duration bannedTime = this.banned.getOrDefault(login, Duration.ZERO);
-        return bannedTime.isNotElapsed();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime bannedTime = this.banned.getOrDefault(login, now);
+        return bannedTime.isAfter(now);
     }
 
     /**
@@ -154,7 +155,7 @@ public class AuthenticationManager {
      */
     private void checkIfToBeBanned(final String login) {
         if (this.failedAuthentication.getOrDefault(login, 0).equals(AUTHENTICATION_MAXIMUM_FAILURE)) {
-            this.banned.put(login, AUTHENTICATION_FAILURE_BAN_TIME.addNow());
+            this.banned.put(login, LocalDateTime.now().plus(AUTHENTICATION_FAILURE_BAN_TIME));
         }
     }
 

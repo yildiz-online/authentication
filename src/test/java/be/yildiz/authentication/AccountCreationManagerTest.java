@@ -24,7 +24,6 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.TechnicalException;
 import be.yildizgames.common.authentication.AuthenticationRules;
 import be.yildizgames.common.authentication.protocol.AccountValidationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
@@ -210,7 +209,7 @@ class AccountCreationManagerTest {
             @Override
             public void create(TemporaryAccountDto dto, UUID token) {
                 if(error) {
-                    throw new TechnicalException(new Exception("Boum"));
+                    throw new PersistenceException(new Exception("Boum"));
                 }
             }
 

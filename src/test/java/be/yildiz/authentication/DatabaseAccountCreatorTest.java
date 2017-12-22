@@ -24,10 +24,10 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildizgames.common.authentication.protocol.AccountValidationDto;
+import be.yildizgames.common.exception.technical.TechnicalException;
 import org.junit.jupiter.api.*;
 
 import java.sql.Connection;
@@ -182,17 +182,17 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void accountNotExisting() throws Exception {
+        void accountNotExisting() {
             //TODO check for rollback
         }
 
         @Test
-        void insertionFails() throws Exception {
+        void insertionFails() {
             //TODO check for rollback
         }
 
         @Test
-        void deleteFails() throws Exception {
+        void deleteFails() {
             //TODO check for rollback
         }
 

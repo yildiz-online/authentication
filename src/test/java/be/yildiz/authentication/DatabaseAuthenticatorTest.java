@@ -23,14 +23,14 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.NotFoundException;
-import be.yildiz.common.exeption.TechnicalException;
-import be.yildiz.common.id.PlayerId;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
 import be.yildizgames.common.authentication.CredentialException;
 import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.exception.technical.TechnicalException;
+import be.yildizgames.common.model.PlayerId;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -105,7 +105,7 @@ class DatabaseAuthenticatorTest {
         void withNotFoundCredentials() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                assertThrows(NotFoundException.class, () -> da.getPasswordForUser(givenCredentials("azerty", "azerty")));
+                assertThrows(UserNotFoundException.class, () -> da.getPasswordForUser(givenCredentials("azerty", "azerty")));
             }
         }
 
@@ -115,7 +115,7 @@ class DatabaseAuthenticatorTest {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
                 TokenVerification v = da.getPasswordForUser(givenCredentials("existing", "azerty"));
                 assertFalse(v.authenticated);
-                assertEquals(PlayerId.valueOf(1), v.playerId);
+                assertEquals(PlayerId.valueOf(1), v.userId);
             }
         }
 
@@ -125,7 +125,7 @@ class DatabaseAuthenticatorTest {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
                 TokenVerification v = da.getPasswordForUser(givenCredentials("existing", "rightPassword"));
                 assertTrue(v.authenticated);
-                assertEquals(PlayerId.valueOf(1), v.playerId);
+                assertEquals(PlayerId.valueOf(1), v.userId);
             }
         }
 
@@ -133,7 +133,7 @@ class DatabaseAuthenticatorTest {
         void withRightCredentialsButInactive() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                assertThrows(NotFoundException.class, () -> da.getPasswordForUser(givenCredentials("existingInactive", "rightPassword")));
+                assertThrows(UserNotFoundException.class, () -> da.getPasswordForUser(givenCredentials("existingInactive", "rightPassword")));
             }
         }
 
@@ -143,7 +143,7 @@ class DatabaseAuthenticatorTest {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp, "magic");
                 TokenVerification v = da.getPasswordForUser(Credentials.unchecked("existing", "magic"));
                 assertTrue(v.authenticated);
-                assertEquals(PlayerId.valueOf(1), v.playerId);
+                assertEquals(PlayerId.valueOf(1), v.userId);
             }
         }
 

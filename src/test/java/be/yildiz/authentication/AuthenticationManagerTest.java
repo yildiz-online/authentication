@@ -23,11 +23,11 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.NotFoundException;
-import be.yildiz.common.id.PlayerId;
 import be.yildizgames.common.authentication.Credentials;
-import be.yildizgames.common.authentication.protocol.Token;
+import be.yildizgames.common.authentication.Token;
+import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.model.PlayerId;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -152,9 +152,9 @@ class AuthenticationManagerTest {
         }
 
         @Override
-        public TokenVerification getPasswordForUser(Credentials credentials) throws NotFoundException {
+        public TokenVerification getPasswordForUser(Credentials credentials) throws UserNotFoundException {
             if (notFound) {
-                throw new NotFoundException();
+                throw new UserNotFoundException();
             }
             return new TokenVerification(PlayerId.WORLD, toReturn);
         }
