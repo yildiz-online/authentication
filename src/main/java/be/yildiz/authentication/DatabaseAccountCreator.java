@@ -24,7 +24,6 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.exeption.TechnicalException;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.Transaction;
 import be.yildiz.module.messaging.AsyncMessageProducer;
@@ -66,7 +65,7 @@ public class DatabaseAccountCreator implements AccountCreator {
                 return resultTemp.next();
             }
         } catch (SQLException e) {
-            throw new TechnicalException(e);
+            throw new PersistenceException(e);
         }
     }
 
@@ -98,7 +97,7 @@ public class DatabaseAccountCreator implements AccountCreator {
                 return resultTemp.next();
             }
         } catch (SQLException e) {
-            throw new TechnicalException(e);
+            throw new PersistenceException(e);
         }
     }
 
@@ -129,7 +128,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             stmt.setTimestamp(5, Timestamp.from(Instant.now()));
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new TechnicalException(e);
+            throw new PersistenceException(e);
         }
     }
 

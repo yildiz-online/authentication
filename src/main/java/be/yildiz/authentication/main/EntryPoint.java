@@ -29,7 +29,6 @@ import be.yildiz.authentication.DataBaseAuthenticator;
 import be.yildiz.authentication.DatabaseAccountCreator;
 import be.yildiz.authentication.configuration.Configuration;
 import be.yildiz.authentication.network.AsynchronousAuthenticationServer;
-import be.yildiz.authentication.network.AuthenticationServer;
 import be.yildiz.authentication.network.JavaMailEmailService;
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.DatabaseConnectionProviderFactory;
@@ -38,7 +37,6 @@ import be.yildiz.module.database.LiquibaseDatabaseUpdater;
 import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.JmsMessageProducer;
-import be.yildiz.module.network.server.SanityServer;
 import be.yildizgames.common.authentication.AuthenticationRules;
 import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.module.database.postgresql.PostgresqlSystem;
@@ -81,16 +79,7 @@ public final class EntryPoint {
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT, new JavaMailEmailService(config), config);
                 logger.info("Preparing the messaging system");
-                new AsynchronousAuthenticationServer(broker, accountCreationManager);
-                logger.info("Preparing the server...");
-                SanityServer.test(config.getAuthenticationPort(), config.getAuthenticationHost());
-                AuthenticationServer server = new AuthenticationServer(
-                        config.getAuthenticationHost(),
-                        config.getAuthenticationPort(),
-                        manager,
-                        accountCreationManager);
-                logger.info("Server open on " + server.getHost() + ":" + server.getPort());
-                server.startServer();
+                new AsynchronousAuthenticationServer(broker, accountCreationManager, manager);
                 logger.info("Server running");
             }
         } catch (Exception e) {

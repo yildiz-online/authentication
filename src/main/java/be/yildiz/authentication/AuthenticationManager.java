@@ -23,13 +23,14 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.common.util.Time;
 import be.yildizgames.common.authentication.*;
 import be.yildizgames.common.authentication.protocol.Token;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
 import be.yildizgames.common.collection.Maps;
 import be.yildizgames.common.model.PlayerId;
+import be.yildizgames.common.util.Util;
 
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -42,7 +43,7 @@ public class AuthenticationManager {
     /**
      * Time, in milliseconds to wait before being able to try to authenticate again after some failure.
      */
-    private static final Time AUTHENTICATION_FAILURE_BAN_TIME = Time.seconds(15);
+    private static final Duration AUTHENTICATION_FAILURE_BAN_TIME = Duration.ofSeconds(15);
 
     /**
      * Number of maximum authentication failure before being banned for a small amount of time.
@@ -67,7 +68,7 @@ public class AuthenticationManager {
     /**
      * List of banned players, the key is the player's name, and the value the time when the ban is removed.
      */
-    private final Map<String, Time> banned = Maps.newMap();
+    private final Map<String, Duration> banned = Maps.newMap();
 
     /**
      * Provide the authentication logic.
@@ -98,7 +99,7 @@ public class AuthenticationManager {
                 TokenVerification result = this.authenticator.getPasswordForUser(this.checker.check(auth.login, auth.password));
                 this.addConnectionFailure(auth.login);
                 if (result.authenticated) {
-                    token = this.authenticatedPlayers.getOrDefault(result.playerId, this.setAuthenticated(auth.login, result.playerId));
+                    token = this.authenticatedPlayers.getOrDefault(result.userId, this.setAuthenticated(auth.login, result.userId));
                 } else {
                     token = Token.authenticationFailed();
                 }
@@ -141,7 +142,7 @@ public class AuthenticationManager {
      * @return <code>true</code> if the player is banned.
      */
     private boolean isBanned(final String login) {
-        Time bannedTime = this.banned.getOrDefault(login, Time.ZERO);
+        Duration bannedTime = this.banned.getOrDefault(login, Duration.ZERO);
         return bannedTime.isNotElapsed();
     }
 

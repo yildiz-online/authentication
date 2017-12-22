@@ -25,8 +25,8 @@
 package be.yildiz.authentication;
 
 import be.yildiz.authentication.network.EmailTemplate;
-import be.yildiz.common.exeption.TechnicalException;
-import be.yildiz.common.util.StringUtil;
+import be.yildizgames.common.exception.technical.TechnicalException;
+import be.yildizgames.common.util.StringUtil;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -51,13 +51,13 @@ class TemporaryAccountEmail implements EmailTemplate {
             String content = new String(Files.readAllBytes(emailTemplate), Charset.forName("UTF-8"));
             String[] values = content.split("##");
             if (values.length < 2) {
-                throw new TechnicalException("Invalid content, '##' expected between the title and the body");
+                throw new EmailException("Invalid content, '##' expected between the title and the body");
             }
             this.title = values[0];
             String[] params = {login, email, token};
             this.body = StringUtil.fillVariable(values[1], params);
         } catch (IOException e) {
-            throw new TechnicalException(e);
+            throw new EmailException(e);
         }
         /*if("fr".equals(language)) {
             this.title = "Yildiz-Online Confirmation de votre compte.";

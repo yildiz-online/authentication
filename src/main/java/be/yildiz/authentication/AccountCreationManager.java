@@ -26,13 +26,13 @@ package be.yildiz.authentication;
 
 import be.yildiz.authentication.configuration.EmailTemplateConfiguration;
 import be.yildiz.authentication.network.EmailService;
-import be.yildiz.common.exeption.TechnicalException;
 import be.yildizgames.common.authentication.AuthenticationChecker;
 import be.yildizgames.common.authentication.AuthenticationRules;
 import be.yildizgames.common.authentication.CredentialException;
 import be.yildizgames.common.authentication.protocol.AccountValidationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
+import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.common.logging.LogFactory;
 import org.slf4j.Logger;
 

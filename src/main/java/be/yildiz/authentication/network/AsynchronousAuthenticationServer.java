@@ -25,32 +25,50 @@
 package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AccountCreationManager;
+import be.yildiz.authentication.AuthenticationManager;
 import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.Header;
 import be.yildiz.module.messaging.JmsMessageProducer;
+import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
+import be.yildizgames.common.authentication.protocol.Token;
+import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
+import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
+import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.common.mapping.MappingException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Grégory Van den Borre
  */
 public class AsynchronousAuthenticationServer {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LogFactory.getInstance().getLogger(this.getClass());
 
-    public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager) {
+    public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager, AuthenticationManager authenticationManager) {
         BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue("authentication-creation-temporary");
         BrokerMessageDestination accountCreationRequestQueue = broker.registerQueue("create-account-request");
+        BrokerMessageDestination authenticationRequestQueue = broker.registerQueue("authentication-request");
+        BrokerMessageDestination authenticationResponseQueue = broker.registerQueue("authentication-response");
         JmsMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
         accountCreationRequestQueue.createConsumer((message) -> {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
+            } catch (MappingException e) {
+                logger.warn("Unexpected message", e);
+            }
+        });
+        JmsMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
+        authenticationRequestQueue.createConsumer((message) -> {
+            try {
+                Credentials r = CredentialsMapper.getInstance().from(message.getText());
+                Token token = authenticationManager.authenticate(r);
+                logger.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
+                authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), Header.correlationId(message.getCorrelationId()));
             } catch (MappingException e) {
                 logger.warn("Unexpected message", e);
             }
