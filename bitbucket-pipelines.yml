@@ -15,5 +15,7 @@ pipelines:
     develop:
       - step:
           script:
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d
+            - gpg --import private-key.gpg
             - mvn -V -B -s settings.xml deploy
             - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"target/authentication-server-jar-with-dependencies.jar"
