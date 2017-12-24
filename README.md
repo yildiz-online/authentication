@@ -1,11 +1,11 @@
 # Yildiz-Engine authentication
 
 This is the official repository of The authentication application, part of the Yildiz-Engine project.
-The autentication application is exposed to the client to authenticate it, and to the server to provide the authorizations for clients.
+The authentication application is exposed to the client to authenticate it, and to the server to provide the authorizations for clients.
 
 ## Features
 
-* Classic socket interface.
+* Broker interface.
 * Database persistence.
 * ...
 
