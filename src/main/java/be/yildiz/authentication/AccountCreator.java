@@ -24,8 +24,8 @@
 
 package be.yildiz.authentication;
 
-import be.yildizgames.common.authentication.protocol.AccountValidationDto;
-import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
+import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
+import be.yildizgames.common.authentication.TemporaryAccount;
 
 import java.util.UUID;
 
@@ -38,7 +38,7 @@ public interface AccountCreator {
 
     boolean emailAlreadyExist(String email);
 
-    void create(TemporaryAccountDto dto, UUID token);
+    void create(TemporaryAccount dto, UUID token);
 
-    void validate(AccountValidationDto validation);
+    void validate(AccountConfirmationDto validation);
 }

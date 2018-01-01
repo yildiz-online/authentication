@@ -26,7 +26,7 @@ package be.yildiz.authentication;
 
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.TestingDatabaseInit;
-import be.yildizgames.common.authentication.protocol.AccountValidationDto;
+import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import org.junit.jupiter.api.*;
 
@@ -196,17 +196,17 @@ class DatabaseAccountCreatorTest {
             //TODO check for rollback
         }
 
-        AccountValidationDto givenAnAccountValidationDto() {
-            return new AccountValidationDto("existingTemp", "azerty");
+        AccountConfirmationDto givenAnAccountValidationDto() {
+            return new AccountConfirmationDto("existingTemp", "azerty");
         }
 
-        AccountValidationDto givenAWrongAccountValidationDto() {
-            return new AccountValidationDto("existingTemp", "123");
+        AccountConfirmationDto givenAWrongAccountValidationDto() {
+            return new AccountConfirmationDto("existingTemp", "123");
         }
 
 
-        AccountValidationDto givenANotExistingAccountValidationDto() {
-            return new AccountValidationDto("tempNotExisting", "1234");
+        AccountConfirmationDto givenANotExistingAccountValidationDto() {
+            return new AccountConfirmationDto("tempNotExisting", "1234");
         }
 
     }

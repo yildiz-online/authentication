@@ -77,7 +77,7 @@ public final class EntryPoint {
                 JmsMessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
-                        new AccountCreationManager(new DatabaseAccountCreator(provider, producer), AuthenticationRules.DEFAULT, new JavaMailEmailService(config), config);
+                        new AccountCreationManager(new DatabaseAccountCreator(provider, producer), new JavaMailEmailService(config), config);
                 logger.info("Preparing the messaging system");
                 new AsynchronousAuthenticationServer(broker, accountCreationManager, manager);
                 logger.info("Server running");

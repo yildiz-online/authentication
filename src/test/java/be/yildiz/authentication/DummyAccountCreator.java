@@ -24,8 +24,8 @@
 
 package be.yildiz.authentication;
 
-import be.yildizgames.common.authentication.protocol.AccountValidationDto;
-import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
+import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
+import be.yildizgames.common.authentication.TemporaryAccount;
 
 import java.util.UUID;
 
@@ -44,12 +44,12 @@ public class DummyAccountCreator implements AccountCreator {
     }
 
     @Override
-    public void create(TemporaryAccountDto dto, UUID token) {
+    public void create(TemporaryAccount dto, UUID token) {
 
     }
 
     @Override
-    public void validate(AccountValidationDto validation) {
+    public void validate(AccountConfirmationDto validation) {
 
     }
 }

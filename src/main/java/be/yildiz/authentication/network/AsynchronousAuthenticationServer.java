@@ -30,7 +30,9 @@ import be.yildiz.module.messaging.Broker;
 import be.yildiz.module.messaging.BrokerMessageDestination;
 import be.yildiz.module.messaging.Header;
 import be.yildiz.module.messaging.JmsMessageProducer;
+import be.yildizgames.common.authentication.AuthenticationChecker;
 import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.TemporaryAccountValidationException;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
 import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
@@ -60,6 +62,24 @@ public class AsynchronousAuthenticationServer {
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
             } catch (MappingException e) {
                 logger.warn("Unexpected message", e);
+            } catch (TemporaryAccountValidationException e) {
+                TemporaryAccountCreationResultDto result = new TemporaryAccountCreationResultDto();
+                for(AuthenticationChecker.AuthenticationError error: e.getExceptions()) {
+                    if(error == AuthenticationChecker.AuthenticationError.LOGIN_TOO_LONG) {
+                        result.setInvalidLogin(true);
+                    } else if(error == AuthenticationChecker.AuthenticationError.LOGIN_TOO_SHORT) {
+                        result.setInvalidLogin(true);
+                    } else if(error == AuthenticationChecker.AuthenticationError.INVALID_LOGIN_CHAR) {
+                        result.setInvalidLogin(true);
+                    } else if(error == AuthenticationChecker.AuthenticationError.PASS_TOO_SHORT) {
+                        result.setInvalidPassword(true);
+                    } else if(error == AuthenticationChecker.AuthenticationError.PASS_TOO_LONG) {
+                        result.setInvalidPassword(true);
+                    } else if(error == AuthenticationChecker.AuthenticationError.INVALID_PASS_CHAR) {
+                        result.setInvalidPassword(true);
+                    }
+                }
+                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
             }
         });
         JmsMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
