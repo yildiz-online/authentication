@@ -79,7 +79,7 @@ public class AccountCreationManager {
             }
             if(!result.hasError()) {
                 accountCreator.create(dto, token);
-                this.emailService.send(new TemporaryAccountEmail(configuration.getEmailTemplatePath(), dto.getLogin(), dto.getEmail(), token.toString()));
+                this.emailService.send(new TemporaryAccountEmail(configuration.getEmailTemplatePath(dto.getLanguage()), dto.getLogin(), dto.getEmail(), token.toString()));
             }
         } catch (TechnicalException e) {
             logger.error("Error while persisting temp account " + dto + ":" + token, e);

@@ -31,5 +31,5 @@ import java.nio.file.Path;
  */
 public interface EmailTemplateConfiguration {
 
-    Path getEmailTemplatePath();
+    Path getEmailTemplatePath(String language);
 }

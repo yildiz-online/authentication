@@ -58,7 +58,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     private final int brokerPort;
     private final String emailLogin;
     private final String emailPassword;
-    private final Path emailTemplatePath;
+    private final String emailTemplatePath;
     private final Properties properties;
 
     private Configuration(final Properties properties) {
@@ -70,7 +70,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.brokerPort = PropertiesHelper.getIntValue(properties, "broker.port");
         this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
-        this.emailTemplatePath = Paths.get(PropertiesHelper.getValue(properties, "mail.template.path"));
+        this.emailTemplatePath = PropertiesHelper.getValue(properties, "mail.template.path");
         LOGGER.info("Property file loaded.");
     }
 
@@ -152,8 +152,8 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     }
 
     @Override
-    public final Path getEmailTemplatePath() {
-        return this.emailTemplatePath;
+    public final Path getEmailTemplatePath(String language) {
+        return Paths.get(this.emailTemplatePath + File.separator + language);
     }
 
     public final Properties getProperties() {
