@@ -42,6 +42,9 @@ import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.module.database.postgresql.PostgresqlSystem;
 import org.slf4j.Logger;
 
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * Application entry point, contains the main method.
  *
@@ -62,6 +65,16 @@ public final class EntryPoint {
      */
     public static void main(String[] args) {
         Logger logger = LogFactory.getInstance().getLogger(EntryPoint.class);
+        logger.info("Authentication Server.");
+        try(InputStream is = EntryPoint.class.getClassLoader().getResourceAsStream("git.properties")) {
+            Properties p = new Properties();
+            p.load(is);
+            GitProperties git = new GitProperties(p);
+            logger.info("Version:" + git.getVersion());
+            logger.info("Built at:" + git.getBuildTime());
+        } catch (Exception e) {
+            logger.error("Could not retrieve git info:", e);
+        }
         try {
             logger.debug("Debug logger level enabled.");
             Configuration config = Configuration.fromAppArgs(args);
