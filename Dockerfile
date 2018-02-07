@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM openjdk:9-jre
 
 LABEL maintainer="Grégory Van den Borre vandenborre.gregory@hotmail.fr"
 
