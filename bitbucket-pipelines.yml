@@ -17,6 +17,6 @@ pipelines:
           script:
             - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in private-key.gpg.enc -out private-key.gpg -d
             - gpg --import --batch private-key.gpg
-            - mvn -V -B -s settings.xml deploy
+            - mvn -V -B -s settings.xml org.jacoco:jacoco-maven-plugin:prepare-agent deploy sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.login=$SONAR
             - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"target/authentication-server-jar-with-dependencies.jar"
             - curl -H "Content-Type:application/json" --data '{"source_type":"Branch", "source_name":"develop"}' -X POST https://registry.hub.docker.com/u/moussavdb/authentication-server/trigger/${DOCKERHUB_TOKEN}/
