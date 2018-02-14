@@ -26,10 +26,10 @@ package be.yildiz.authentication;
 
 import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildiz.module.database.Transaction;
-import be.yildiz.module.messaging.AsyncMessageProducer;
 import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.logging.LogFactory;
+import be.yildizgames.module.messaging.AsyncMessageProducer;
 import org.slf4j.Logger;
 
 import java.sql.Connection;
