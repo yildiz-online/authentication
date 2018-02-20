@@ -24,13 +24,13 @@
 
 package be.yildiz.authentication.configuration;
 
-import be.yildiz.module.database.DbProperties;
-import be.yildiz.module.database.SimpleDbProperties;
-import be.yildiz.module.messaging.BrokerProperties;
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
 import be.yildizgames.common.exception.technical.InitializationException;
 import be.yildizgames.common.file.FileProperties;
 import be.yildizgames.common.util.PropertiesHelper;
+import be.yildizgames.module.database.DbProperties;
+import be.yildizgames.module.database.SimpleDbProperties;
+import be.yildizgames.module.messaging.BrokerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

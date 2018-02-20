@@ -26,10 +26,6 @@ package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
-import be.yildiz.module.messaging.Broker;
-import be.yildiz.module.messaging.BrokerMessageDestination;
-import be.yildiz.module.messaging.Header;
-import be.yildiz.module.messaging.JmsMessageProducer;
 import be.yildizgames.common.authentication.AuthenticationChecker;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.TemporaryAccountValidationException;
@@ -41,6 +37,10 @@ import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResu
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
 import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.common.mapping.MappingException;
+import be.yildizgames.module.messaging.Broker;
+import be.yildizgames.module.messaging.BrokerMessageDestination;
+import be.yildizgames.module.messaging.Header;
+import be.yildizgames.module.messaging.JmsMessageProducer;
 import org.slf4j.Logger;
 
 /**

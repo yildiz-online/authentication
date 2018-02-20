@@ -32,6 +32,12 @@ module be.yildizgames.authentication {
     requires java.sql;
     requires be.yildizgames.common.exception;
     requires be.yildizgames.common.util;
+    requires be.yildizgames.module.database;
+    requires be.yildizgames.common.file;
+    requires be.yildizgames.common.model;
+    requires be.yildizgames.common.mapping;
+    requires be.yildizgames.module.database.postgresql;
+    requires javax.mail;
 
 
 }

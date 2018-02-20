@@ -31,12 +31,12 @@ import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
-import be.yildizgames.common.collection.Maps;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.common.util.Util;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -59,7 +59,7 @@ public class AuthenticationManager {
     /**
      * List of successfully setAuthenticated players.
      */
-    private final Map<PlayerId, Token> authenticatedPlayers = Maps.newMap();
+    private final Map<PlayerId, Token> authenticatedPlayers = new HashMap<>();
 
     /**
      * Check if the inputs are correct following a given set of rules.
@@ -69,12 +69,12 @@ public class AuthenticationManager {
     /**
      * List of failed authentications, the key is the player's name and the value is the number of failure.
      */
-    private final Map<String, Integer> failedAuthentication = Maps.newMap();
+    private final Map<String, Integer> failedAuthentication = new HashMap<>();
 
     /**
      * List of banned players, the key is the player's name, and the value the time when the ban is removed.
      */
-    private final Map<String, LocalDateTime> banned = Maps.newMap();
+    private final Map<String, LocalDateTime> banned = new HashMap<>();
 
     /**
      * Provide the authentication logic.

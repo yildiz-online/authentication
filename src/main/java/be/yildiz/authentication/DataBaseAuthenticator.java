@@ -24,13 +24,13 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.module.database.DataBaseConnectionProvider;
 import be.yildizgames.common.authentication.BCryptEncryptionTool;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
 import be.yildizgames.common.model.PlayerId;
+import be.yildizgames.module.database.DataBaseConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
