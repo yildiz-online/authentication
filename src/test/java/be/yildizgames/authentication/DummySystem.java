@@ -22,21 +22,34 @@
  *
  */
 
-module be.yildizgames.authentication {
+package be.yildizgames.authentication;
 
-    requires be.yildizgames.common.authentication;
-    requires be.yildizgames.common.logging;
-    requires be.yildizgames.module.messaging;
-    requires be.yildizgames.common.exception;
-    requires be.yildizgames.common.util;
-    requires be.yildizgames.module.database;
-    requires be.yildizgames.common.file;
-    requires be.yildizgames.common.model;
-    requires be.yildizgames.common.mapping;
+import be.yildizgames.module.database.DatabaseSystem;
+import be.yildizgames.module.database.DbProperties;
+import be.yildizgames.module.database.DriverProvider;
+import org.h2.Driver;
+import org.jooq.SQLDialect;
 
-    requires slf4j.api;
-    requires java.sql;
-    requires javax.mail;
+class DummySystem implements DatabaseSystem {
 
+    @Override
+    public SQLDialect getDialect() {
+        return SQLDialect.H2;
+    }
 
+    @Override
+    public String getDriver() {
+        return "org.h2.Driver";
+    }
+
+    @Override
+    public DriverProvider getDriverProvider() {
+        return Driver::new;
+
+    }
+
+    @Override
+    public String getUrl(DbProperties p) {
+        return "jdbc:h2:~/test";
+    }
 }

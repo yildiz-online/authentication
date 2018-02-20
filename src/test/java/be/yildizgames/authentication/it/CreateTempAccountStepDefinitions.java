@@ -22,21 +22,34 @@
  *
  */
 
-module be.yildizgames.authentication {
+package be.yildizgames.authentication.it;
 
-    requires be.yildizgames.common.authentication;
-    requires be.yildizgames.common.logging;
-    requires be.yildizgames.module.messaging;
-    requires be.yildizgames.common.exception;
-    requires be.yildizgames.common.util;
-    requires be.yildizgames.module.database;
-    requires be.yildizgames.common.file;
-    requires be.yildizgames.common.model;
-    requires be.yildizgames.common.mapping;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
-    requires slf4j.api;
-    requires java.sql;
-    requires javax.mail;
+/**
+ * @author Grégory Van den Borre
+ */
+public class CreateTempAccountStepDefinitions {
 
+    @Given("^the system is initialized$")
+    public void initializeSystem() throws Exception {
+
+    }
+
+    @When("^the system receive a temporary account creation request$")
+    public void receiveRequest() throws InterruptedException {
+    }
+
+    @Then("^the temporary account exists$")
+    public void TemporaryAccountExists() {
+        // Write code here that turns the phrase above into concrete actions
+    }
+
+    @Then("^close the system$")
+    public void closeSystem() {
+        // Write code here that turns the phrase above into concrete actions
+    }
 
 }

@@ -22,21 +22,16 @@
  *
  */
 
-module be.yildizgames.authentication {
+package be.yildizgames.authentication.network;
 
-    requires be.yildizgames.common.authentication;
-    requires be.yildizgames.common.logging;
-    requires be.yildizgames.module.messaging;
-    requires be.yildizgames.common.exception;
-    requires be.yildizgames.common.util;
-    requires be.yildizgames.module.database;
-    requires be.yildizgames.common.file;
-    requires be.yildizgames.common.model;
-    requires be.yildizgames.common.mapping;
+/**
+ * @author Grégory Van den Borre
+ */
+public interface EmailTemplate {
 
-    requires slf4j.api;
-    requires java.sql;
-    requires javax.mail;
+    String getTitle();
 
+    String getBody();
 
+    String getEmail();
 }

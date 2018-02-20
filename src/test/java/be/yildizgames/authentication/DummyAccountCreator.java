@@ -22,21 +22,34 @@
  *
  */
 
-module be.yildizgames.authentication {
+package be.yildizgames.authentication;
 
-    requires be.yildizgames.common.authentication;
-    requires be.yildizgames.common.logging;
-    requires be.yildizgames.module.messaging;
-    requires be.yildizgames.common.exception;
-    requires be.yildizgames.common.util;
-    requires be.yildizgames.module.database;
-    requires be.yildizgames.common.file;
-    requires be.yildizgames.common.model;
-    requires be.yildizgames.common.mapping;
+import be.yildizgames.common.authentication.TemporaryAccount;
+import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 
-    requires slf4j.api;
-    requires java.sql;
-    requires javax.mail;
+import java.util.UUID;
 
+/**
+ * @author Grégory Van den Borre
+ */
+public class DummyAccountCreator implements AccountCreator {
+    @Override
+    public boolean loginAlreadyExist(String login) {
+        return false;
+    }
 
+    @Override
+    public boolean emailAlreadyExist(String email) {
+        return false;
+    }
+
+    @Override
+    public void create(TemporaryAccount dto, UUID token) {
+
+    }
+
+    @Override
+    public void validate(AccountConfirmationDto validation) {
+
+    }
 }
