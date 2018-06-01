@@ -83,7 +83,7 @@ public class AsynchronousAuthenticationServer {
             }
         });
         JmsMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
-        authenticationRequestQueue.createConsumer((message) -> {
+        authenticationRequestQueue.createConsumer(message -> {
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
