@@ -27,11 +27,13 @@ package be.yildiz.authentication;
 import be.yildiz.authentication.configuration.EmailTemplateConfiguration;
 import be.yildiz.authentication.network.EmailService;
 import be.yildizgames.common.authentication.AuthenticationChecker;
+import be.yildizgames.common.authentication.AuthenticationError;
 import be.yildizgames.common.authentication.AuthenticationRules;
 import be.yildizgames.common.authentication.CredentialException;
-import be.yildizgames.common.authentication.protocol.AccountValidationDto;
+import be.yildizgames.common.authentication.SimpleAuthenticationChecker;
+import be.yildizgames.common.authentication.TemporaryAccount;
+import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
-import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.common.logging.LogFactory;
 import org.slf4j.Logger;
@@ -60,37 +62,18 @@ public class AccountCreationManager {
 
     public AccountCreationManager(AccountCreator accountCreator, AuthenticationRules rules, EmailService emailService, EmailTemplateConfiguration configuration) {
         this.accountCreator = accountCreator;
-        this.checker = new AuthenticationChecker(rules);
+        this.checker = new SimpleAuthenticationChecker(rules);
         this.emailService = emailService;
         this.configuration = configuration;
     }
 
-    public TemporaryAccountCreationResultDto create(TemporaryAccountDto dto) {
-        TemporaryAccountCreationResultDto result = new TemporaryAccountCreationResultDto();
-        try {
-            this.checker.check(dto.getLogin(), dto.getPassword());
-        } catch (CredentialException e) {
-            for(AuthenticationChecker.AuthenticationError error: e.getErrors()) {
-                if(error == AuthenticationChecker.AuthenticationError.LOGIN_TOO_LONG) {
-                    result.setInvalidLogin(true);
-                } else if(error == AuthenticationChecker.AuthenticationError.LOGIN_TOO_SHORT) {
-                    result.setInvalidLogin(true);
-                } else if(error == AuthenticationChecker.AuthenticationError.INVALID_LOGIN_CHAR) {
-                    result.setInvalidLogin(true);
-                } else if(error == AuthenticationChecker.AuthenticationError.PASS_TOO_SHORT) {
-                    result.setInvalidPassword(true);
-                } else if(error == AuthenticationChecker.AuthenticationError.PASS_TOO_LONG) {
-                    result.setInvalidPassword(true);
-                } else if(error == AuthenticationChecker.AuthenticationError.INVALID_PASS_CHAR) {
-                    result.setInvalidPassword(true);
-                }
-            }
-        }
+    public TemporaryAccountCreationResultDto create(TemporaryAccount dto) {
+        TemporaryAccountCreationResultDto result = TemporaryAccountCreationResultDto.success();
 
         UUID token = UUID.randomUUID();
         try {
             if(dto.getEmail() == null) {
-              result.setEmailMissing(true);
+                result.setEmailMissing(true);
             } else {
                 if(!emailPattern.matcher(dto.getEmail()).matches()) {
                     result.setEmailInvalid(true);
@@ -102,10 +85,9 @@ public class AccountCreationManager {
             if(accountCreator.loginAlreadyExist(dto.getLogin())) {
                 result.setAccountExisting(true);
             }
-            result.setToken(token.toString());
             if(!result.hasError()) {
                 accountCreator.create(dto, token);
-                this.emailService.send(new TemporaryAccountEmail(configuration.getEmailTemplatePath(), dto.getLogin(), dto.getEmail(), token.toString()));
+                this.emailService.send(new TemporaryAccountEmail(configuration.getEmailTemplatePath(dto.getLanguage()), dto.getLogin(), dto.getEmail(), token.toString()));
             }
         } catch (TechnicalException e) {
             logger.error("Error while persisting temp account " + dto + ":" + token, e);
@@ -114,7 +96,7 @@ public class AccountCreationManager {
         return result;
     }
 
-    public void validateAccount(AccountValidationDto validation) {
+    public void validateAccount(AccountConfirmationDto validation) {
         accountCreator.validate(validation);
     }
 }

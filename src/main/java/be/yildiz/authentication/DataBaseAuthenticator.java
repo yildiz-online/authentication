@@ -23,7 +23,7 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.module.database.DataBaseConnectionProvider;
+import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.common.authentication.BCryptEncryptionTool;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;

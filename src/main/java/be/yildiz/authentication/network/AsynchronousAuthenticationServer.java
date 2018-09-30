@@ -26,10 +26,10 @@ package be.yildiz.authentication.network;
 
 import be.yildiz.authentication.AccountCreationManager;
 import be.yildiz.authentication.AuthenticationManager;
-import be.yildiz.module.messaging.Broker;
-import be.yildiz.module.messaging.BrokerMessageDestination;
-import be.yildiz.module.messaging.Header;
-import be.yildiz.module.messaging.JmsMessageProducer;
+import be.yildizgames.module.messaging.Broker;
+import be.yildizgames.module.messaging.BrokerMessageDestination;
+import be.yildizgames.module.messaging.Header;
+import be.yildizgames.module.messaging.JmsMessageProducer;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;

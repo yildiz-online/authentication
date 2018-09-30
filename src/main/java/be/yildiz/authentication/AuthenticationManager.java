@@ -23,14 +23,20 @@
 
 package be.yildiz.authentication;
 
-import be.yildizgames.common.authentication.*;
+import be.yildizgames.common.authentication.AuthenticationChecker;
+import be.yildizgames.common.authentication.AuthenticationRules;
+import be.yildizgames.common.authentication.CredentialException;
+import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.SimpleAuthenticationChecker;
+import be.yildizgames.common.authentication.Token;
+import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
-import be.yildizgames.common.collection.Maps;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.common.util.Util;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -53,22 +59,22 @@ public class AuthenticationManager {
     /**
      * List of successfully setAuthenticated players.
      */
-    private final Map<PlayerId, Token> authenticatedPlayers = Maps.newMap();
+    private final Map<PlayerId, Token> authenticatedPlayers = new HashMap<>();
 
     /**
      * Check if the inputs are correct following a given set of rules.
      */
-    private final AuthenticationChecker checker = new AuthenticationChecker(AuthenticationRules.DEFAULT);
+    private final AuthenticationChecker checker = new SimpleAuthenticationChecker(AuthenticationRules.DEFAULT);
 
     /**
      * List of failed authentications, the key is the player's name and the value is the number of failure.
      */
-    private final Map<String, Integer> failedAuthentication = Maps.newMap();
+    private final Map<String, Integer> failedAuthentication = new HashMap<>();
 
     /**
      * List of banned players, the key is the player's name, and the value the time when the ban is removed.
      */
-    private final Map<String, LocalDateTime> banned = Maps.newMap();
+    private final Map<String, LocalDateTime> banned = new HashMap<>();
 
     /**
      * Provide the authentication logic.

@@ -24,15 +24,19 @@
 
 package be.yildiz.authentication;
 
-import be.yildiz.module.database.DataBaseConnectionProvider;
-import be.yildiz.module.database.Transaction;
-import be.yildiz.module.messaging.AsyncMessageProducer;
-import be.yildizgames.common.authentication.protocol.AccountValidationDto;
-import be.yildizgames.common.authentication.protocol.TemporaryAccountDto;
+import be.yildizgames.common.authentication.TemporaryAccount;
+import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.logging.LogFactory;
+import be.yildizgames.module.database.DataBaseConnectionProvider;
+import be.yildizgames.module.database.Transaction;
+import be.yildizgames.module.messaging.AsyncMessageProducer;
 import org.slf4j.Logger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -116,7 +120,7 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     @Override
-    public void create(TemporaryAccountDto dto, UUID token) {
+    public void create(TemporaryAccount dto, UUID token) {
         assert dto != null;
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
         try (Connection c = this.provider.getConnection();
@@ -133,7 +137,7 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     @Override
-    public void validate(AccountValidationDto validation) {
+    public void validate(AccountConfirmationDto validation) {
         Transaction transaction = new Transaction(this.provider);
         transaction.execute(c -> {
             String query = "SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = ?";
