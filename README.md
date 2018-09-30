@@ -1,17 +1,17 @@
 # Yildiz-Engine authentication
 
 This is the official repository of The authentication application, part of the Yildiz-Engine project.
-The autentication application is exposed to the client to authenticate it, and to the server to provide the authorizations for clients.
+The authentication application is exposed to the client to authenticate it, and to the server to provide the authorizations for clients.
 
 ## Features
 
-* Classic socket interface.
+* Broker interface.
 * Database persistence.
 * ...
 
 ## Requirements
 
-To build this module, you will need a java 8 JDK and Maven 3.
+To build this module, you will need a java 9 JDK and Maven 3.
 
 ## Coding Style and other information
 
@@ -25,7 +25,7 @@ Wiki:
 https://yildiz.atlassian.net/wiki
 
 Quality report:
-https://sonarqube.com/overview?id=be.yildiz-games:authentication
+https://sonarcloud.io/dashboard/index/be.yildiz-games:authentication
 
 ## License
 
