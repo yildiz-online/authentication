@@ -28,6 +28,7 @@ import be.yildizgames.common.authentication.AuthenticationChecker;
 import be.yildizgames.common.authentication.AuthenticationRules;
 import be.yildizgames.common.authentication.CredentialException;
 import be.yildizgames.common.authentication.Credentials;
+import be.yildizgames.common.authentication.SimpleAuthenticationChecker;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;

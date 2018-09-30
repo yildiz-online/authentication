@@ -26,7 +26,7 @@ package be.yildizgames.authentication.network;
 
 import be.yildizgames.authentication.AccountCreationManager;
 import be.yildizgames.authentication.AuthenticationManager;
-import be.yildizgames.common.authentication.AuthenticationChecker;
+import be.yildizgames.common.authentication.AuthenticationError;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.TemporaryAccountValidationException;
 import be.yildizgames.common.authentication.Token;
@@ -64,18 +64,18 @@ public class AsynchronousAuthenticationServer {
                 logger.warn("Unexpected message", e);
             } catch (TemporaryAccountValidationException e) {
                 TemporaryAccountCreationResultDto result = new TemporaryAccountCreationResultDto();
-                for(AuthenticationChecker.AuthenticationError error: e.getExceptions()) {
-                    if(error == AuthenticationChecker.AuthenticationError.LOGIN_TOO_LONG) {
+                for(AuthenticationError error: e.getExceptions()) {
+                    if(error == AuthenticationError.LOGIN_TOO_LONG) {
                         result.setInvalidLogin(true);
-                    } else if(error == AuthenticationChecker.AuthenticationError.LOGIN_TOO_SHORT) {
+                    } else if(error == AuthenticationError.LOGIN_TOO_SHORT) {
                         result.setInvalidLogin(true);
-                    } else if(error == AuthenticationChecker.AuthenticationError.INVALID_LOGIN_CHAR) {
+                    } else if(error == AuthenticationError.INVALID_LOGIN_CHAR) {
                         result.setInvalidLogin(true);
-                    } else if(error == AuthenticationChecker.AuthenticationError.PASS_TOO_SHORT) {
+                    } else if(error == AuthenticationError.PASS_TOO_SHORT) {
                         result.setInvalidPassword(true);
-                    } else if(error == AuthenticationChecker.AuthenticationError.PASS_TOO_LONG) {
+                    } else if(error == AuthenticationError.PASS_TOO_LONG) {
                         result.setInvalidPassword(true);
-                    } else if(error == AuthenticationChecker.AuthenticationError.INVALID_PASS_CHAR) {
+                    } else if(error == AuthenticationError.INVALID_PASS_CHAR) {
                         result.setInvalidPassword(true);
                     }
                 }

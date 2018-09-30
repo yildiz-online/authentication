@@ -32,6 +32,8 @@ import be.yildizgames.authentication.configuration.Configuration;
 import be.yildizgames.authentication.network.AsynchronousAuthenticationServer;
 import be.yildizgames.authentication.network.JavaMailEmailService;
 import be.yildizgames.common.exception.technical.InitializationException;
+import be.yildizgames.common.git.GitProperties;
+import be.yildizgames.common.git.GitPropertiesProvider;
 import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
