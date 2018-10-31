@@ -44,7 +44,7 @@
   <parent>
     <groupId>be.yildiz-games</groupId>
     <artifactId>parent-application</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
 
   <properties>
@@ -61,32 +61,32 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-exception</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-logging</artifactId>
-      <version>1.0.0-SNAPSHOT</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-file</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database-postgresql</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-messaging-activemq</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-git</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>com.sun.mail</groupId>
@@ -126,7 +126,7 @@
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>1.4.196</version>
+      <version>1.4.197</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
