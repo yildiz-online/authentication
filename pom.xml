@@ -30,7 +30,7 @@
   <url>https://bitbucket.org/yildiz-engine-team/authentication</url>
 
   <artifactId>authentication</artifactId>
-  <version>1.1.0-SNAPSHOT</version>
+  <version>1.1.0</version>
 
   <packaging>jar</packaging>
   <inceptionYear>2014</inceptionYear>
@@ -44,7 +44,7 @@
   <parent>
     <groupId>be.yildiz-games</groupId>
     <artifactId>parent-application</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
   </parent>
 
   <properties>
@@ -56,7 +56,7 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-authentication</artifactId>
-      <version>1.1.1</version>
+      <version>1.1.2</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
@@ -66,27 +66,27 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-logging</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-file</artifactId>
-      <version>1.0.1</version>
+      <version>2.0.0</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database-postgresql</artifactId>
-      <version>1.0.1-SNAPSHOT</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-messaging-activemq</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-git</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>com.sun.mail</groupId>
