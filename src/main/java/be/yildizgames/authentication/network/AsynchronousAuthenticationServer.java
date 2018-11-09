@@ -35,8 +35,8 @@ import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
+import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.common.logging.LogFactory;
-import be.yildizgames.common.mapping.MappingException;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.Header;
@@ -60,7 +60,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
-            } catch (MappingException e) {
+            } catch (TechnicalException e) {
                 logger.warn("Unexpected message", e);
             } catch (TemporaryAccountValidationException e) {
                 TemporaryAccountCreationResultDto result = new TemporaryAccountCreationResultDto();
@@ -89,7 +89,7 @@ public class AsynchronousAuthenticationServer {
                 Token token = authenticationManager.authenticate(r);
                 logger.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), Header.correlationId(message.getCorrelationId()));
-            } catch (MappingException e) {
+            } catch (TechnicalException e) {
                 logger.warn("Unexpected message", e);
             }
         });

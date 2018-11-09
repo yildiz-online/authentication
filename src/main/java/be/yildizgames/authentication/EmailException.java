@@ -29,7 +29,7 @@ import be.yildizgames.common.exception.technical.TechnicalException;
 /**
  * @author Grégory Van den Borre
  */
-public class EmailException extends TechnicalException {
+class EmailException extends TechnicalException {
 
     EmailException(String message, Exception cause) {
         super(message, cause);

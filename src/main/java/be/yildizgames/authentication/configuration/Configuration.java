@@ -85,7 +85,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
             throw new InitializationException("Please pass the property file as an argument when starting application");
         }
         LOGGER.info("Reading property file...");
-        Properties properties = FileProperties.getPropertiesFromFile(new File(args[0]), args);
+        Properties properties = FileProperties.getPropertiesFromFile(Paths.get(args[0]), args);
         return new Configuration(properties);
     }
 

@@ -29,7 +29,7 @@ import be.yildizgames.common.exception.technical.TechnicalException;
 /**
  * @author Grégory Van den Borre
  */
-public class PersistenceException extends TechnicalException {
+class PersistenceException extends TechnicalException {
 
     PersistenceException(String message, Exception cause) {
         super(message, cause);

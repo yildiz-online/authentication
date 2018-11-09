@@ -99,7 +99,7 @@ public final class DataBaseAuthenticator implements Authenticator {
             boolean authenticated = this.encrypting.check(results.getString("password"), credential.password);
             return new TokenVerification(PlayerId.valueOf(results.getInt("id")), authenticated);
         } catch (IllegalArgumentException | SQLException e) {
-            throw new AuthenticationException(e);
+            throw new PersistenceException(e);
         }
     }
 
