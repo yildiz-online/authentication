@@ -31,21 +31,17 @@ import be.yildizgames.authentication.DatabaseAccountCreator;
 import be.yildizgames.authentication.configuration.Configuration;
 import be.yildizgames.authentication.network.AsynchronousAuthenticationServer;
 import be.yildizgames.authentication.network.JavaMailEmailService;
-import be.yildizgames.common.exception.technical.InitializationException;
 import be.yildizgames.common.git.GitProperties;
 import be.yildizgames.common.git.GitPropertiesProvider;
 import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
-import be.yildizgames.module.database.DatabaseSystemRegisterer;
 import be.yildizgames.module.database.DatabaseUpdater;
 import be.yildizgames.module.database.LiquibaseDatabaseUpdater;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.JmsMessageProducer;
 import org.slf4j.Logger;
-
-import java.util.ServiceLoader;
 
 /**
  * Application entry point, contains the main method.
@@ -77,8 +73,6 @@ public final class EntryPoint {
 
             logger.info("Preparing the database connection...");
 
-            getDatabaseRegisterer().register();
-
             try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().createWithHighPrivilege(config)) {
                 provider.sanity();
                 DatabaseUpdater databaseUpdater = LiquibaseDatabaseUpdater.fromConfigurationPath("authentication-database-update.xml");
@@ -100,11 +94,6 @@ public final class EntryPoint {
         }
     }
 
-    private static DatabaseSystemRegisterer getDatabaseRegisterer() {
-        ServiceLoader<DatabaseSystemRegisterer> provider = ServiceLoader.load(DatabaseSystemRegisterer.class);
-        return provider
-                .findFirst()
-                .orElseThrow(() -> new InitializationException("Missing database implementation"));
-    }
+
 
 }

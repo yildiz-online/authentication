@@ -24,8 +24,8 @@
 
 package be.yildizgames.authentication.configuration;
 
-import be.yildizgames.common.exception.technical.InitializationException;
-import be.yildizgames.common.exception.technical.ResourceMissingException;
+import be.yildizgames.common.exception.initialization.InitializationException;
+import be.yildizgames.common.file.exception.FileMissingException;
 import be.yildizgames.common.util.PropertiesException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class ConfigurationTest {
 
         @Test
         void notExistingFile() {
-            assertThrows(ResourceMissingException.class, () -> Configuration.fromAppArgs(new String[] {"nowhere"}));
+            assertThrows(FileMissingException.class, () -> Configuration.fromAppArgs(new String[] {"nowhere"}));
         }
     }
 
