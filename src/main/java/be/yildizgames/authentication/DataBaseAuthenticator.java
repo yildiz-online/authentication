@@ -29,10 +29,10 @@ import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,7 +46,7 @@ import java.sql.SQLException;
  */
 public final class DataBaseAuthenticator implements Authenticator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataBaseAuthenticator.class);
+    private static final Logger LOGGER = LogFactory.getInstance().getLogger(DataBaseAuthenticator.class);
 
     /**
      * Every authentication with this key will be accepted.

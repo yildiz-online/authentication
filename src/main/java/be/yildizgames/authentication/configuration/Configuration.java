@@ -25,14 +25,14 @@
 package be.yildizgames.authentication.configuration;
 
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
-import be.yildizgames.common.exception.technical.InitializationException;
+import be.yildizgames.common.exception.initialization.InitializationException;
 import be.yildizgames.common.file.FileProperties;
+import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.common.util.PropertiesHelper;
 import be.yildizgames.module.database.DbProperties;
 import be.yildizgames.module.database.SimpleDbProperties;
 import be.yildizgames.module.messaging.BrokerProperties;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -51,7 +51,7 @@ import java.util.Properties;
  */
 public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties, EmailTemplateConfiguration {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+    private static final Logger LOGGER = LogFactory.getInstance().getLogger(Configuration.class);
 
     private final DbProperties dbProperties;
     private final String brokerDataFolder;
@@ -82,7 +82,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
      */
     public static Configuration fromAppArgs(String[] args) {
         if (args == null || args.length == 0) {
-            throw new InitializationException("Please pass the property file as an argument when starting application");
+            InitializationException.invalidConfigurationFile("Please pass the property file as an argument when starting application");
         }
         LOGGER.info("Reading property file...");
         Properties properties = FileProperties.getPropertiesFromFile(Paths.get(args[0]), args);

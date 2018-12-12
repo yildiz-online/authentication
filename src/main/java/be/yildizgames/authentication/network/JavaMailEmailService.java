@@ -25,8 +25,8 @@
 package be.yildizgames.authentication.network;
 
 import be.yildizgames.authentication.configuration.Configuration;
+import be.yildizgames.common.logging.LogFactory;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -42,7 +42,7 @@ import javax.mail.internet.MimeMessage;
  */
 public class JavaMailEmailService implements EmailService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LogFactory.getInstance().getLogger(this.getClass());
 
     private final Session session;
 
