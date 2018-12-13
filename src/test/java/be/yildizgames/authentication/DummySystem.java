@@ -27,6 +27,7 @@ package be.yildizgames.authentication;
 import be.yildizgames.module.database.DatabaseSystem;
 import be.yildizgames.module.database.DbProperties;
 import be.yildizgames.module.database.DriverProvider;
+import be.yildizgames.module.database.QueryBuilder;
 import org.h2.Driver;
 import org.jooq.SQLDialect;
 
@@ -51,5 +52,15 @@ class DummySystem implements DatabaseSystem {
     @Override
     public String getUrl(DbProperties p) {
         return "jdbc:h2:~/test";
+    }
+
+    @Override
+    public QueryBuilder createBuilder() {
+        return null;
+    }
+
+    @Override
+    public boolean requirePool() {
+        return false;
     }
 }
