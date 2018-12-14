@@ -33,7 +33,8 @@ import be.yildizgames.authentication.network.AsynchronousAuthenticationServer;
 import be.yildizgames.authentication.network.JavaMailEmailService;
 import be.yildizgames.common.git.GitProperties;
 import be.yildizgames.common.git.GitPropertiesProvider;
-import be.yildizgames.common.logging.LogFactory;
+import be.yildizgames.common.logging.LogEngine;
+import be.yildizgames.common.logging.LogEngineFactory;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
 import be.yildizgames.module.database.DatabaseUpdater;
@@ -42,6 +43,7 @@ import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.JmsMessageProducer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Application entry point, contains the main method.
@@ -62,14 +64,15 @@ public final class EntryPoint {
      * @param args Unused.
      */
     public static void main(String[] args) {
-        Logger logger = LogFactory.getInstance().getLogger(EntryPoint.class);
-        logger.info("Authentication Server.");
-        GitProperties git = GitPropertiesProvider.getGitProperties();
-        logger.info("Version:" + git.getVersion());
-        logger.info("Built at:" + git.getBuildTime());
         try {
-            logger.debug("Debug logger level enabled.");
             Configuration config = Configuration.fromAppArgs(args);
+            LogEngine logEngine = LogEngineFactory.getLogEngine();
+            logEngine.configureFromProperties(config);
+            Logger logger = LoggerFactory.getLogger(EntryPoint.class);
+            logger.info("Authentication Server.");
+            GitProperties git = GitPropertiesProvider.getGitProperties();
+            logger.info("Version:" + git.getVersion());
+            logger.info("Built at:" + git.getBuildTime());
 
             logger.info("Preparing the database connection...");
 
@@ -88,8 +91,8 @@ public final class EntryPoint {
                 logger.info("Server running");
             }
         } catch (Exception e) {
-            logger.error("An error occurred, closing the server...", e);
-            logger.info("Server closed.");
+            LoggerFactory.getLogger(EntryPoint.class).error("An error occurred, closing the server...", e);
+            LoggerFactory.getLogger(EntryPoint.class).info("Server closed.");
             System.exit(-1);
         }
     }

@@ -27,6 +27,7 @@ package be.yildizgames.authentication;
 import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -39,6 +40,32 @@ import java.util.UUID;
  * @author Grégory Van den Borre
  */
 class AccountCreationManagerTest {
+
+    @Nested
+    class Constructor {
+
+        @Test
+        void happyFlow() {
+            AccountCreationManager acm = new AccountCreationManager(givenAnAccountCreator(true, true), (m) -> {}, (l) -> Paths.get(""));
+            Assertions.assertNotNull(acm);
+        }
+
+        @Test
+        void withNullAccountCreator() {
+            Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(null, (m) -> {}, (l) -> Paths.get("")));
+        }
+
+        @Test
+        void withNullEmailService() {
+            Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), null, (l) -> Paths.get("")));
+        }
+
+        @Test
+        void withNullEmailConfiguration() {
+            Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), (m) -> {}, null));
+        }
+
+    }
 
     @Nested
     class Create {

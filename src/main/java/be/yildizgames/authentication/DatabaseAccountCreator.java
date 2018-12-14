@@ -26,11 +26,12 @@ package be.yildizgames.authentication;
 
 import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
-import be.yildizgames.common.logging.LogFactory;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.Transaction;
 import be.yildizgames.module.messaging.AsyncMessageProducer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,19 +46,31 @@ import java.util.UUID;
  */
 public class DatabaseAccountCreator implements AccountCreator {
 
-    private final Logger logger = LogFactory.getInstance().getLogger(this.getClass());
+    /**
+     * Logger.
+     */
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * To connect to the database.
+     */
     private final DataBaseConnectionProvider provider;
 
+    /**
+     * To send messages to the async message system.
+     */
     private final AsyncMessageProducer messageProducer;
 
     public DatabaseAccountCreator(DataBaseConnectionProvider provider, AsyncMessageProducer messageProducer) {
+        super();
+        ImplementationException.throwForNull(provider);
+        ImplementationException.throwForNull(messageProducer);
         this.provider = provider;
         this.messageProducer = messageProducer;
     }
 
     @Override
-    public boolean loginAlreadyExist(String login) {
+    public final boolean loginAlreadyExist(String login) {
         assert login != null;
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = this.createPreparedStatementSearchAccount(c, login);
@@ -88,7 +101,7 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     @Override
-    public boolean emailAlreadyExist(String email) {
+    public final boolean emailAlreadyExist(String email) {
         assert email != null;
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = this.createPreparedStatementSearchEmail(c, email);
@@ -105,7 +118,7 @@ public class DatabaseAccountCreator implements AccountCreator {
         }
     }
 
-    private PreparedStatement createPreparedStatementSearchEmail(Connection c, String email) throws SQLException {
+    private final PreparedStatement createPreparedStatementSearchEmail(Connection c, String email) throws SQLException {
         String query = "SELECT ID FROM ACCOUNTS WHERE EMAIL = ? AND ACTIVE = '1'";
         PreparedStatement stmt = c.prepareStatement(query);
         stmt.setString(1, email);
@@ -120,7 +133,7 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     @Override
-    public void create(TemporaryAccount dto, UUID token) {
+    public final void create(TemporaryAccount dto, UUID token) {
         assert dto != null;
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
         try (Connection c = this.provider.getConnection();

@@ -36,26 +36,28 @@ import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountMapp
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
 import be.yildizgames.common.exception.technical.TechnicalException;
-import be.yildizgames.common.logging.LogFactory;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.Header;
 import be.yildizgames.module.messaging.JmsMessageProducer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Grégory Van den Borre
  */
 public class AsynchronousAuthenticationServer {
 
-    private final Logger logger = LogFactory.getInstance().getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager, AuthenticationManager authenticationManager) {
         BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue("authentication-creation-temporary");
         BrokerMessageDestination accountCreationRequestQueue = broker.registerQueue("create-account-request");
         BrokerMessageDestination authenticationRequestQueue = broker.registerQueue("authentication-request");
         BrokerMessageDestination authenticationResponseQueue = broker.registerQueue("authentication-response");
+
         JmsMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
+
         accountCreationRequestQueue.createConsumer((message) -> {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));

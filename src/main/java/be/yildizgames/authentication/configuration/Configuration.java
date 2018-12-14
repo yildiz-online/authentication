@@ -27,12 +27,14 @@ package be.yildizgames.authentication.configuration;
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
 import be.yildizgames.common.exception.initialization.InitializationException;
 import be.yildizgames.common.file.FileProperties;
-import be.yildizgames.common.logging.LogFactory;
+import be.yildizgames.common.logging.LoggerConfiguration;
+import be.yildizgames.common.logging.LoggerLevel;
 import be.yildizgames.common.util.PropertiesHelper;
 import be.yildizgames.module.database.DbProperties;
 import be.yildizgames.module.database.SimpleDbProperties;
 import be.yildizgames.module.messaging.BrokerProperties;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -49,9 +51,9 @@ import java.util.Properties;
  * If the file cannot be loaded of if the keys are not all available, an exception is thrown.
  * @author Grégory Van den Borre
  */
-public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties, EmailTemplateConfiguration {
+public class Configuration implements LoggerConfiguration, DbProperties, AuthenticationConfiguration, BrokerProperties, EmailTemplateConfiguration {
 
-    private static final Logger LOGGER = LogFactory.getInstance().getLogger(Configuration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
     private final DbProperties dbProperties;
     private final String brokerDataFolder;
@@ -61,6 +63,13 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     private final String emailPassword;
     private final String emailTemplatePath;
     private final Properties properties;
+    private final String logPattern;
+    private final LoggerLevel logLevel;
+    private final SupportedOutput logOutput;
+    private final String logTcpHost;
+    private final int logTcpPort;
+    private final String logOutputFile;
+    private final String logConfigurationFile;
 
     private Configuration(final Properties properties) {
         super();
@@ -72,6 +81,13 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
         this.emailTemplatePath = PropertiesHelper.getValue(properties, "mail.template.path");
+        this.logPattern = PropertiesHelper.getValue(properties, "log.pattern");
+        this.logLevel = LoggerLevel.valueOf(PropertiesHelper.getValue(properties, "log.level").toUpperCase());
+        this.logOutput = SupportedOutput.valueOf(PropertiesHelper.getValue(properties, "log.output").toUpperCase());
+        this.logTcpHost = PropertiesHelper.getValue(properties, "log.tcp.host");
+        this.logTcpPort = PropertiesHelper.getIntValue(properties, "log.tcp.port");
+        this.logOutputFile = PropertiesHelper.getValue(properties, "log.output.file");
+        this.logConfigurationFile = PropertiesHelper.getValue(properties, "log.config.file");
         LOGGER.info("Property file loaded.");
     }
 
@@ -159,5 +175,40 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     public final Properties getProperties() {
         return properties;
+    }
+
+    @Override
+    public String getPattern() {
+        return this.logPattern;
+    }
+
+    @Override
+    public LoggerLevel getLevel() {
+        return this.logLevel;
+    }
+
+    @Override
+    public SupportedOutput getOutput() {
+        return this.logOutput;
+    }
+
+    @Override
+    public String getTcpHost() {
+        return this.logTcpHost;
+    }
+
+    @Override
+    public int getTcpPort() {
+        return this.logTcpPort;
+    }
+
+    @Override
+    public String getOutputFile() {
+        return this.logOutputFile;
+    }
+
+    @Override
+    public String getConfigurationFile() {
+        return this.logConfigurationFile;
     }
 }

@@ -29,9 +29,10 @@ import be.yildizgames.authentication.network.EmailService;
 import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.exception.technical.TechnicalException;
-import be.yildizgames.common.logging.LogFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -43,7 +44,7 @@ public class AccountCreationManager {
 
     private static final String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
-    private final Logger logger = LogFactory.getInstance().getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
@@ -53,13 +54,22 @@ public class AccountCreationManager {
 
     private final EmailTemplateConfiguration configuration;
 
-    public AccountCreationManager(AccountCreator accountCreator, EmailService emailService, EmailTemplateConfiguration configuration) {
+    public AccountCreationManager(final AccountCreator accountCreator, final EmailService emailService, final EmailTemplateConfiguration configuration) {
+        super();
+        ImplementationException.throwForNull(accountCreator);
+        ImplementationException.throwForNull(emailService);
+        ImplementationException.throwForNull(configuration);
         this.accountCreator = accountCreator;
         this.emailService = emailService;
         this.configuration = configuration;
     }
 
-    public TemporaryAccountCreationResultDto create(TemporaryAccount dto) {
+    /**
+     * Create and persist a temporary account.
+     * @param dto Temporary account to build.
+     * @return The created temporary account, waiting to be validated.
+     */
+    public final TemporaryAccountCreationResultDto create(TemporaryAccount dto) {
         TemporaryAccountCreationResultDto result = TemporaryAccountCreationResultDto.success();
 
         UUID token = UUID.randomUUID();
@@ -67,28 +77,28 @@ public class AccountCreationManager {
             if(dto.getEmail() == null) {
               result.setEmailMissing(true);
             } else {
-                if(!emailPattern.matcher(dto.getEmail()).matches()) {
+                if(!this.emailPattern.matcher(dto.getEmail()).matches()) {
                     result.setEmailInvalid(true);
                 }
-                if(accountCreator.emailAlreadyExist(dto.getEmail())) {
+                if(this.accountCreator.emailAlreadyExist(dto.getEmail())) {
                     result.setEmailExisting(true);
                 }
             }
-            if(accountCreator.loginAlreadyExist(dto.getLogin())) {
+            if(this.accountCreator.loginAlreadyExist(dto.getLogin())) {
                 result.setAccountExisting(true);
             }
             if(!result.hasError()) {
-                accountCreator.create(dto, token);
-                this.emailService.send(new TemporaryAccountEmail(configuration.getEmailTemplatePath(dto.getLanguage()), dto.getLogin(), dto.getEmail(), token.toString()));
+                this.accountCreator.create(dto, token);
+                this.emailService.send(new TemporaryAccountEmail(this.configuration.getEmailTemplatePath(dto.getLanguage()), dto.getLogin(), dto.getEmail(), token.toString()));
             }
         } catch (TechnicalException e) {
-            logger.error("Error while persisting temp account " + dto + ":" + token, e);
+            this.logger.error("Error while persisting temp account " + dto + ":" + token, e);
             result.setTechnicalIssue(true);
         }
         return result;
     }
 
     public void validateAccount(AccountConfirmationDto validation) {
-        accountCreator.validate(validation);
+        this.accountCreator.validate(validation);
     }
 }
