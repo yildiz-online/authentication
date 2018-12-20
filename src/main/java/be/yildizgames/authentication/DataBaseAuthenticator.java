@@ -29,6 +29,7 @@ import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import org.slf4j.Logger;
@@ -77,7 +78,7 @@ public final class DataBaseAuthenticator implements Authenticator {
      */
     DataBaseAuthenticator(final DataBaseConnectionProvider provider, final String key) {
         super();
-        assert provider != null;
+        ImplementationException.throwForNull(provider);
         this.provider = provider;
         this.key = key;
         this.encrypting = new BCryptEncryptionTool();

@@ -25,6 +25,7 @@
 package be.yildizgames.authentication;
 
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import org.junit.jupiter.api.Assertions;
@@ -89,7 +90,7 @@ class DatabaseAccountCreatorTest {
         void fromNull() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
-                Assertions.assertThrows(AssertionError.class, () -> creator.loginAlreadyExist(null));
+                Assertions.assertThrows(ImplementationException.class, () -> creator.loginAlreadyExist(null));
             }
         }
     }

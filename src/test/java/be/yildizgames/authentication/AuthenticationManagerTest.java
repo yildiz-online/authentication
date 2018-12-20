@@ -28,6 +28,7 @@ import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.model.PlayerId;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +44,7 @@ class AuthenticationManagerTest {
 
     @Test
     void withNullAuthenticator() {
-        assertThrows(AssertionError.class, () -> new AuthenticationManager(null));
+        assertThrows(ImplementationException.class, () -> new AuthenticationManager(null));
     }
 
     @Test

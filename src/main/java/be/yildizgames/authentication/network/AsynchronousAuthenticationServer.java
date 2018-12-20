@@ -58,7 +58,7 @@ public class AsynchronousAuthenticationServer {
 
         JmsMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
 
-        accountCreationRequestQueue.createConsumer((message) -> {
+        accountCreationRequestQueue.createConsumer(message -> {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
@@ -89,7 +89,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
-                logger.debug("Send authentication response message to " + token.getId() + " : " + token.getStatus());
+                logger.debug("Send authentication response message to {} : {}", token.getId(), token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), Header.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
                 logger.warn("Unexpected message", e);

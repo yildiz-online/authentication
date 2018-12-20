@@ -28,6 +28,7 @@ import be.yildizgames.common.authentication.CredentialException;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
@@ -74,7 +75,7 @@ class DatabaseAuthenticatorTest {
 
         @Test
         void withNullProvider() {
-            assertThrows(AssertionError.class, () -> new DataBaseAuthenticator(null));
+            assertThrows(ImplementationException.class, () -> new DataBaseAuthenticator(null));
         }
 
         @Test

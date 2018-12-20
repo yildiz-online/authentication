@@ -71,8 +71,8 @@ public final class EntryPoint {
             Logger logger = LoggerFactory.getLogger(EntryPoint.class);
             logger.info("Authentication Server.");
             GitProperties git = GitPropertiesProvider.getGitProperties();
-            logger.info("Version:" + git.getVersion());
-            logger.info("Built at:" + git.getBuildTime());
+            logger.info("Version: {}", git.getVersion());
+            logger.info("Built at: {}", git.getBuildTime());
 
             logger.info("Preparing the database connection...");
 

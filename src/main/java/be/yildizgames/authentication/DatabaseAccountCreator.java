@@ -71,7 +71,7 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public final boolean loginAlreadyExist(String login) {
-        assert login != null;
+        ImplementationException.throwForNull(login);
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = this.createPreparedStatementSearchAccount(c, login);
              ResultSet result = stmt.executeQuery()) {
@@ -102,7 +102,7 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public final boolean emailAlreadyExist(String email) {
-        assert email != null;
+        ImplementationException.throwForNull(email);
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = this.createPreparedStatementSearchEmail(c, email);
              ResultSet result = stmt.executeQuery()) {
@@ -118,7 +118,7 @@ public class DatabaseAccountCreator implements AccountCreator {
         }
     }
 
-    private final PreparedStatement createPreparedStatementSearchEmail(Connection c, String email) throws SQLException {
+    private PreparedStatement createPreparedStatementSearchEmail(Connection c, String email) throws SQLException {
         String query = "SELECT ID FROM ACCOUNTS WHERE EMAIL = ? AND ACTIVE = '1'";
         PreparedStatement stmt = c.prepareStatement(query);
         stmt.setString(1, email);
@@ -134,7 +134,8 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public final void create(TemporaryAccount dto, UUID token) {
-        assert dto != null;
+        ImplementationException.throwForNull(dto);
+        ImplementationException.throwForNull(token);
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = c.prepareStatement(sql)) {

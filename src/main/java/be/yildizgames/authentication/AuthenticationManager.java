@@ -32,6 +32,7 @@ import be.yildizgames.common.authentication.SimpleAuthenticationChecker;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.common.util.Util;
 
@@ -83,7 +84,7 @@ public class AuthenticationManager {
     private final Authenticator authenticator;
 
     public AuthenticationManager(Authenticator authenticator) {
-        assert authenticator != null;
+        ImplementationException.throwForNull(authenticator);
         this.authenticator = authenticator;
     }
 

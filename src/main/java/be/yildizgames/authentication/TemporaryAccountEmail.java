@@ -45,7 +45,7 @@ class TemporaryAccountEmail implements EmailTemplate {
 
     private final String email;
 
-    TemporaryAccountEmail(Path emailTemplate, String login, String email, String token) throws TechnicalException {
+    TemporaryAccountEmail(Path emailTemplate, String login, String email, String token) {
         this.email = email;
         try {
             String content = new String(Files.readAllBytes(emailTemplate), StandardCharsets.UTF_8);
