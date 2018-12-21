@@ -81,13 +81,13 @@ public class Configuration implements LoggerConfiguration, DbProperties, Authent
         this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
         this.emailTemplatePath = PropertiesHelper.getValue(properties, "mail.template.path");
-        this.logPattern = PropertiesHelper.getValue(properties, "log.pattern");
-        this.logLevel = LoggerLevel.valueOf(PropertiesHelper.getValue(properties, "log.level").toUpperCase());
-        this.logOutput = SupportedOutput.valueOf(PropertiesHelper.getValue(properties, "log.output").toUpperCase());
-        this.logTcpHost = PropertiesHelper.getValue(properties, "log.tcp.host");
-        this.logTcpPort = PropertiesHelper.getIntValue(properties, "log.tcp.port");
-        this.logOutputFile = PropertiesHelper.getValue(properties, "log.output.file");
-        this.logConfigurationFile = PropertiesHelper.getValue(properties, "log.config.file");
+        this.logPattern = PropertiesHelper.getValue(properties, "logger.pattern");
+        this.logLevel = LoggerLevel.valueOf(PropertiesHelper.getValue(properties, "logger.level").toUpperCase());
+        this.logOutput = SupportedOutput.valueOf(PropertiesHelper.getValue(properties, "logger.output").toUpperCase());
+        this.logTcpHost = PropertiesHelper.getValue(properties, "logger.tcp.host");
+        this.logTcpPort = PropertiesHelper.getIntValue(properties, "logger.tcp.port");
+        this.logOutputFile = PropertiesHelper.getValue(properties, "logger.output.file");
+        this.logConfigurationFile = PropertiesHelper.getValue(properties, "logger.config.file");
         LOGGER.info("Property file loaded.");
     }
 
