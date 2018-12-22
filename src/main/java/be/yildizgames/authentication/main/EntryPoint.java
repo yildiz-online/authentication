@@ -68,7 +68,7 @@ public final class EntryPoint {
         try {
             Configuration config = Configuration.fromAppArgs(args);
             LogEngine logEngine = LogEngineFactory.getLogEngine();
-            logEngine.configureFromProperties(config);
+            logEngine.configureFromProperties(config.getLoggerConfiguration());
             Logger logger = LoggerFactory.getLogger(EntryPoint.class);
             logger.info("Starting Authentication Server (PID:{})...", Util.getPid());
             GitProperties git = GitPropertiesProvider.getGitProperties();
