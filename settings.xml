@@ -45,7 +45,7 @@
           <releases>
             <enabled>true</enabled>
           </releases>
-          <url>http://repo.spring.io/plugins-release</url>
+          <url>http://repo.spring.io/libs-release</url>
         </repository>
         <repository>
           <id>ossrh</id>
