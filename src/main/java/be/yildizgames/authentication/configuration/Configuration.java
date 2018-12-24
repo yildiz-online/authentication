@@ -33,8 +33,6 @@ import be.yildizgames.common.util.PropertiesHelper;
 import be.yildizgames.module.database.DbProperties;
 import be.yildizgames.module.database.SimpleDbProperties;
 import be.yildizgames.module.messaging.BrokerProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -52,8 +50,6 @@ import java.util.Properties;
  * @author Grégory Van den Borre
  */
 public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties, EmailTemplateConfiguration {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
 
     private final DbProperties dbProperties;
     private final String brokerDataFolder;
@@ -76,7 +72,6 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
         this.emailTemplatePath = PropertiesHelper.getValue(properties, "mail.template.path");
         this.loggerConfig = LoggerPropertiesConfiguration.fromProperties(properties);
-        LOGGER.info("Property file loaded.");
     }
 
     /**
@@ -88,7 +83,6 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         if (args == null || args.length == 0) {
             InitializationException.invalidConfigurationFile("Please pass the property file as an argument when starting application");
         }
-        LOGGER.info("Reading property file...");
         Properties properties = FileProperties.getPropertiesFromFile(Paths.get(args[0]), args);
         return new Configuration(properties);
     }
