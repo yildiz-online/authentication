@@ -31,11 +31,7 @@ import be.yildizgames.authentication.DatabaseAccountCreator;
 import be.yildizgames.authentication.configuration.Configuration;
 import be.yildizgames.authentication.network.AsynchronousAuthenticationServer;
 import be.yildizgames.authentication.network.JavaMailEmailService;
-import be.yildizgames.common.git.GitProperties;
-import be.yildizgames.common.git.GitPropertiesProvider;
-import be.yildizgames.common.logging.LogEngine;
-import be.yildizgames.common.logging.LogEngineFactory;
-import be.yildizgames.common.util.Util;
+import be.yildizgames.common.application.Starter;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
 import be.yildizgames.module.database.DatabaseUpdater;
@@ -67,13 +63,8 @@ public final class EntryPoint {
     public static void main(String[] args) {
         try {
             Configuration config = Configuration.fromAppArgs(args);
-            LogEngine logEngine = LogEngineFactory.getLogEngine();
-            logEngine.configureFromProperties(config.getLoggerConfiguration());
+            Starter.start(config.getLoggerConfiguration(), "Authentication Server");
             Logger logger = LoggerFactory.getLogger(EntryPoint.class);
-            logger.info("Starting Authentication Server (PID:{})...", Util.getPid());
-            GitProperties git = GitPropertiesProvider.getGitProperties();
-            logger.info("Version: {}", git.getVersion());
-            logger.info("Built at: {}", git.getBuildTime());
 
             logger.info("Preparing the database connection...");
 

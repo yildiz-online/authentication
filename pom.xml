@@ -65,11 +65,6 @@
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
-      <artifactId>common-logging</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>be.yildiz-games</groupId>
       <artifactId>common-file</artifactId>
       <version>2.0.3-SNAPSHOT</version>
     </dependency>
@@ -85,8 +80,8 @@
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
-      <artifactId>common-git</artifactId>
-      <version>1.0.3-SNAPSHOT</version>
+      <artifactId>common-application</artifactId>
+      <version>1.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.sun.mail</groupId>
