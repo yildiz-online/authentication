@@ -54,14 +54,16 @@
           </snapshots>
           <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
-        <repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
           <id>spring</id>
           <releases>
             <enabled>true</enabled>
           </releases>
           <url>http://repo.spring.io/libs-release</url>
-        </repository>
-      </repositories>
+        </pluginRepository>
+      </pluginRepositories>
     </profile>
   </profiles>
 </settings>
