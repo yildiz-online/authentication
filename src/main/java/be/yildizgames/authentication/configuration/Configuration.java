@@ -60,6 +60,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     private final String emailTemplatePath;
     private final Properties properties;
     private final LoggerConfiguration loggerConfig;
+    private final boolean brokerInternal;
 
     private Configuration(final Properties properties) {
         super();
@@ -68,6 +69,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.brokerDataFolder = PropertiesHelper.getValue(properties, "broker.data");
         this.brokerHost = PropertiesHelper.getValue(properties, "broker.host");
         this.brokerPort = PropertiesHelper.getIntValue(properties, "broker.port");
+        this.brokerInternal = PropertiesHelper.getBooleanValue(properties, "broker.internal");
         this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
         this.emailTemplatePath = PropertiesHelper.getValue(properties, "mail.template.path");
@@ -130,6 +132,11 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
     @Override
     public final String getBrokerDataFolder() {
         return this.brokerDataFolder;
+    }
+
+    @Override
+    public boolean getBrokerInternal() {
+        return this.brokerInternal;
     }
 
     @Override
