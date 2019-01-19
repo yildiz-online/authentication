@@ -60,6 +60,7 @@
           <id>spring</id>
           <releases>
             <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
           </releases>
           <url>http://repo.spring.io/libs-release</url>
         </pluginRepository>
