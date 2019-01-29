@@ -30,6 +30,7 @@ import be.yildizgames.common.authentication.AuthenticationError;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.TemporaryAccountValidationException;
 import be.yildizgames.common.authentication.Token;
+import be.yildizgames.common.authentication.protocol.Queues;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
 import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountMapper;
@@ -51,10 +52,10 @@ public class AsynchronousAuthenticationServer {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager, AuthenticationManager authenticationManager) {
-        BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue("authentication-creation-temporary");
-        BrokerMessageDestination accountCreationRequestQueue = broker.registerQueue("create-account-request");
-        BrokerMessageDestination authenticationRequestQueue = broker.registerQueue("authentication-request");
-        BrokerMessageDestination authenticationResponseQueue = broker.registerQueue("authentication-response");
+        BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue(Queues.ACCOUNT_CREATION_TEMP.getName());
+        BrokerMessageDestination accountCreationRequestQueue = broker.registerQueue(Queues.CREATE_ACCOUNT_REQUEST.getName());
+        BrokerMessageDestination authenticationRequestQueue = broker.registerQueue(Queues.AUTHENTICATION_REQUEST.getName());
+        BrokerMessageDestination authenticationResponseQueue = broker.registerQueue(Queues.AUTHENTICATION_RESPONSE.getName());
 
         JmsMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
 
