@@ -48,11 +48,16 @@
   </parent>
 
   <properties>
-    <mainclass>be.yildizgames.authentication.main.EntryPoint</mainclass>
+    <mainclass>be.yildizgames.authentication.main.StandardEntryPoint</mainclass>
     <finalname>authentication-server</finalname>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>be.yildiz-games</groupId>
+      <artifactId>common-configuration</artifactId>
+      <version>1.0.1</version>
+    </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-authentication</artifactId>
@@ -91,6 +96,11 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database-postgresql</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>be.yildiz-games</groupId>
+      <artifactId>module-database-derby</artifactId>
       <version>1.0.2</version>
     </dependency>
     <dependency>

@@ -49,20 +49,13 @@ import org.slf4j.LoggerFactory;
  */
 public final class EntryPoint {
 
-
-    private EntryPoint() {
+    EntryPoint() {
         super();
     }
 
-    /**
-     * Register a new log file, the connection properties to the database from a property file, launch the 2 network servers, authentication server, and token validation server, and start listening
-     * for client requests.
-     *
-     * @param args Unused.
-     */
-    public static void main(String[] args) {
+    public void start(Configuration config) {
         try {
-            Configuration config = Configuration.fromAppArgs(args);
+            //TODO have all entry point impl an interface, pass that interface to starter, and let starter launch it.
             Starter.start(config.getLoggerConfiguration(), "Authentication Server");
             Logger logger = LoggerFactory.getLogger(EntryPoint.class);
 
@@ -88,7 +81,5 @@ public final class EntryPoint {
             System.exit(-1);
         }
     }
-
-
 
 }

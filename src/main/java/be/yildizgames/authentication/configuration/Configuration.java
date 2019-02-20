@@ -76,16 +76,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.loggerConfig = LoggerPropertiesConfiguration.fromProperties(properties);
     }
 
-    /**
-     * Load a configuration from the application provided arguments.
-     * @param args Array of arguments, 0 is expected to be the property file to use, other values can override the file content..
-     * @return The build property file.
-     */
-    public static Configuration fromAppArgs(String[] args) {
-        if (args == null || args.length == 0) {
-            InitializationException.invalidConfigurationFile("Please pass the property file as an argument when starting application");
-        }
-        Properties properties = FileProperties.getPropertiesFromFile(Paths.get(args[0]), args);
+    public static Configuration fromProperties(Properties properties) {
         return new Configuration(properties);
     }
 
