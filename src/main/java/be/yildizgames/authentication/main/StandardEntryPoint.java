@@ -28,7 +28,6 @@ package be.yildizgames.authentication.main;
 
 import be.yildizgames.authentication.configuration.Configuration;
 import be.yildizgames.authentication.configuration.DefaultConfigProperties;
-import be.yildizgames.common.application.Starter;
 import be.yildizgames.common.configuration.ConfigurationNotFoundException;
 import be.yildizgames.common.configuration.ConfigurationRetrieverFactory;
 import be.yildizgames.common.configuration.parameter.ApplicationArgs;
@@ -37,7 +36,6 @@ import be.yildizgames.common.logging.LogEngineProvider;
 import be.yildizgames.common.logging.PreLogger;
 import be.yildizgames.module.database.derby.DerbySystem;
 
-import java.io.IOException;
 import java.util.Properties;
 
 public class StandardEntryPoint {
@@ -55,11 +53,11 @@ public class StandardEntryPoint {
      *
      * @param args Unused.
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Configuration config = Configuration.fromProperties(getProperties(args));
-        Starter.start(config.getLoggerConfiguration(), "Authentication Server");
-        EntryPoint entryPoint = new EntryPoint();
-        entryPoint.start(config);
+        AuthenticationEntryPoint
+                .create()
+                .start(config);
     }
 
     private static Properties getProperties(String[] args) {

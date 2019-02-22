@@ -29,4 +29,32 @@ package be.yildizgames.authentication.configuration;
 import java.util.Properties;
 
 public class DefaultConfigProperties extends Properties {
+
+    private static final String ROOT = System.getProperty("user.home") + "/yildiz-authentication";
+
+    public DefaultConfigProperties() {
+        super();
+        this.setProperty("database.host", "localhost");
+        this.setProperty("database.port", "9000");
+        this.setProperty("database.name", "authentication");
+        this.setProperty("database.user", "sa");
+        this.setProperty("database.password", "");
+        this.setProperty("database.root.user", "sa");
+        this.setProperty("database.root.password", "");
+        this.setProperty("database.system", "derby-file");
+        this.setProperty("mail.login", "user");
+        this.setProperty("mail.password", "user");
+        this.setProperty("mail.template.path", "user");
+        this.setProperty("broker.host", "user");
+        this.setProperty("broker.port", "1");
+        this.setProperty("broker.data", ROOT + "/data/broker");
+        this.setProperty("broker.internal", "true");
+        this.setProperty("logger.pattern", "%d{HH:mm:ss.SSS} | %level | %class | %msg%n");
+        this.setProperty("logger.configuration.file", ROOT + "/config/logback.xml");
+        this.setProperty("logger.tcp.host", "localhost");
+        this.setProperty("logger.tcp.port", "60000");
+        this.setProperty("logger.level", "INFO");
+        this.setProperty("logger.output", "CONSOLE");
+        this.setProperty("logger.file.output", ROOT + "/logs/log.log");
+    }
 }

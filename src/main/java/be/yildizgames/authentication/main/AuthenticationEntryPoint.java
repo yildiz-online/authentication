@@ -47,17 +47,21 @@ import org.slf4j.LoggerFactory;
  *
  * @author Grégory Van den Borre
  */
-public final class EntryPoint {
+final class AuthenticationEntryPoint {
 
-    EntryPoint() {
+    private AuthenticationEntryPoint() {
         super();
     }
 
-    public void start(Configuration config) {
+    static AuthenticationEntryPoint create() {
+        return new AuthenticationEntryPoint();
+    }
+
+    void start(Configuration config) {
         try {
             //TODO have all entry point impl an interface, pass that interface to starter, and let starter launch it.
             Starter.start(config.getLoggerConfiguration(), "Authentication Server");
-            Logger logger = LoggerFactory.getLogger(EntryPoint.class);
+            Logger logger = LoggerFactory.getLogger(AuthenticationEntryPoint.class);
 
             logger.info("Preparing the database connection...");
 
@@ -76,8 +80,8 @@ public final class EntryPoint {
                 logger.info("Server running");
             }
         } catch (Exception e) {
-            LoggerFactory.getLogger(EntryPoint.class).error("An error occurred, closing the server...", e);
-            LoggerFactory.getLogger(EntryPoint.class).info("Server closed.");
+            LoggerFactory.getLogger(AuthenticationEntryPoint.class).error("An error occurred, closing the server...", e);
+            LoggerFactory.getLogger(AuthenticationEntryPoint.class).info("Server closed.");
             System.exit(-1);
         }
     }
