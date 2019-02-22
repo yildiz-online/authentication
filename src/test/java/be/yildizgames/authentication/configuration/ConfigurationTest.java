@@ -24,13 +24,12 @@
 
 package be.yildizgames.authentication.configuration;
 
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.exception.initialization.InitializationException;
-import be.yildizgames.common.file.exception.FileMissingException;
-import be.yildizgames.common.util.PropertiesException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -41,73 +40,54 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ConfigurationTest {
 
     @Nested
-    class FromArgs {
+    class fromProperties {
 
         @Test
         void happyFlow() {
-            Configuration.fromAppArgs(new String[] {getFile("test-happyflow.properties").getAbsolutePath()});
-        }
-
-        @Test
-        void fromIncompleteFile() {
-            assertThrows(PropertiesException.class, () -> Configuration.fromAppArgs(new String[] {getFile("test-incomplete.properties").getAbsolutePath()}));
+            Configuration.fromProperties(new DefaultConfigProperties());
         }
 
         @Test
         void fromNull() {
-            assertThrows(InitializationException.class, () -> Configuration.fromAppArgs(null));
-        }
-
-        @Test
-        void fromEmptyArgs() {
-            assertThrows(InitializationException.class, () -> Configuration.fromAppArgs(new String[] {}));
-        }
-
-        @Test
-        void notExistingFile() {
-            assertThrows(FileMissingException.class, () -> Configuration.fromAppArgs(new String[] {"nowhere"}));
+            assertThrows(ImplementationException.class, () -> Configuration.fromProperties(null));
         }
     }
 
     @Nested
     class Getter  {
 
-        Configuration c = Configuration.fromAppArgs(new String[] {getFile("test-happyflow.properties").getAbsolutePath()});
+        Configuration c = Configuration.fromProperties(new DefaultConfigProperties());
 
         @Test
         void getDatabaseUser() {
-            assertEquals("user", c.getDbUser());
+            assertEquals("sa", c.getDbUser());
         }
 
         @Test
         void getDatabasePassword() {
-            assertEquals("pwd", c.getDbPassword());
+            assertEquals("", c.getDbPassword());
         }
 
         @Test
         void getDatabaseName() {
-            assertEquals("name", c.getDbName());
+            assertEquals("authentication", c.getDbName());
         }
 
         @Test
         void getDatabaseHost() {
-            assertEquals("host", c.getDbHost());
+            assertEquals("localhost", c.getDbHost());
         }
 
         @Test
         void getDatabasePort() {
-            assertEquals(123, c.getDbPort());
+            assertEquals(9000, c.getDbPort());
         }
 
         @Test
         void getDatabaseSystem() {
-            assertEquals("sys", c.getSystem());
+            assertEquals("derby-file", c.getSystem());
         }
 
 
-    }
-
-    private static File getFile(String name) {
-        return new File(Configuration.class.getClassLoader().getResource(name).getFile()).getAbsoluteFile();
     }
 }
