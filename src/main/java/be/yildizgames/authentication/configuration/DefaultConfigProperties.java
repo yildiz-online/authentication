@@ -56,5 +56,6 @@ public class DefaultConfigProperties extends Properties {
         this.setProperty("logger.level", "INFO");
         this.setProperty("logger.output", "CONSOLE");
         this.setProperty("logger.file.output", ROOT + "/logs/log.log");
+        this.setProperty("logger.disabled", "");
     }
 }
