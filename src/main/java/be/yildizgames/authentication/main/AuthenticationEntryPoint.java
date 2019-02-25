@@ -38,7 +38,7 @@ import be.yildizgames.module.database.DatabaseUpdater;
 import be.yildizgames.module.database.LiquibaseDatabaseUpdater;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
-import be.yildizgames.module.messaging.JmsMessageProducer;
+import be.yildizgames.module.messaging.BrokerMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +71,7 @@ final class AuthenticationEntryPoint {
                 databaseUpdater.update(provider);
                 Broker broker = Broker.getBroker(config);
                 BrokerMessageDestination accountCreatedQueue = broker.registerQueue("authentication-creation");
-                JmsMessageProducer producer = accountCreatedQueue.createProducer();
+                BrokerMessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), new JavaMailEmailService(config), config);

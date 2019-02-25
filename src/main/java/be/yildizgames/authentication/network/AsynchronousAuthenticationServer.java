@@ -39,8 +39,8 @@ import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
-import be.yildizgames.module.messaging.Header;
-import be.yildizgames.module.messaging.JmsMessageProducer;
+import be.yildizgames.module.messaging.BrokerMessageHeader;
+import be.yildizgames.module.messaging.BrokerMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,12 +57,12 @@ public class AsynchronousAuthenticationServer {
         BrokerMessageDestination authenticationRequestQueue = broker.registerQueue(Queues.AUTHENTICATION_REQUEST.getName());
         BrokerMessageDestination authenticationResponseQueue = broker.registerQueue(Queues.AUTHENTICATION_RESPONSE.getName());
 
-        JmsMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
+        BrokerMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
 
         accountCreationRequestQueue.createConsumer(message -> {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
-                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
+                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
                 logger.warn("Unexpected message", e);
             } catch (TemporaryAccountValidationException e) {
@@ -82,16 +82,16 @@ public class AsynchronousAuthenticationServer {
                         result.setInvalidPassword(true);
                     }
                 }
-                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), Header.correlationId(message.getCorrelationId()));
+                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             }
         });
-        JmsMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
+        BrokerMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
         authenticationRequestQueue.createConsumer(message -> {
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
                 logger.debug("Send authentication response message to {} : {}", token.getId(), token.getStatus());
-                authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), Header.correlationId(message.getCorrelationId()));
+                authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
                 logger.warn("Unexpected message", e);
             }
