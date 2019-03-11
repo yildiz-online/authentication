@@ -24,8 +24,8 @@
 
 package be.yildizgames.authentication;
 
-import be.yildizgames.authentication.network.EmailService;
-import be.yildizgames.authentication.network.EmailTemplate;
+import be.yildizgames.authentication.infrastructure.io.mail.EmailService;
+import be.yildizgames.authentication.infrastructure.io.mail.EmailTemplate;
 
 /**
  * @author Grégory Van den Borre

@@ -24,6 +24,8 @@
 
 package be.yildizgames.authentication;
 
+import be.yildizgames.authentication.application.AuthenticationManager;
+import be.yildizgames.authentication.application.Authenticator;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.UserNotFoundException;

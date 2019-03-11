@@ -24,6 +24,7 @@
 
 package be.yildizgames.authentication;
 
+import be.yildizgames.authentication.application.AccountCreator;
 import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 

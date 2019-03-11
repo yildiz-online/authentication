@@ -24,13 +24,13 @@
 
 package be.yildizgames.authentication.main;
 
-import be.yildizgames.authentication.AccountCreationManager;
-import be.yildizgames.authentication.AuthenticationManager;
-import be.yildizgames.authentication.DataBaseAuthenticator;
-import be.yildizgames.authentication.DatabaseAccountCreator;
+import be.yildizgames.authentication.application.AccountCreationManager;
+import be.yildizgames.authentication.application.AuthenticationManager;
+import be.yildizgames.authentication.infrastructure.persistence.DataBaseAuthenticator;
+import be.yildizgames.authentication.infrastructure.persistence.DatabaseAccountCreator;
 import be.yildizgames.authentication.configuration.Configuration;
-import be.yildizgames.authentication.network.AsynchronousAuthenticationServer;
-import be.yildizgames.authentication.network.JavaMailEmailService;
+import be.yildizgames.authentication.infrastructure.AsynchronousAuthenticationServer;
+import be.yildizgames.authentication.infrastructure.io.mail.JavaMailEmailService;
 import be.yildizgames.common.application.Starter;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;

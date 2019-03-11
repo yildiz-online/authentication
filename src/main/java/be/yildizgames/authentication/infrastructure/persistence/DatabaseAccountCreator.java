@@ -1,29 +1,32 @@
 /*
+ *
  * This file is part of the Yildiz-Engine project, licenced under the MIT License  (MIT)
  *
- *  Copyright (c) 2019 Grégory Van den Borre
+ * Copyright (c) 2019 Grégory Van den Borre
  *
- *  More infos available: https://engine.yildiz-games.be
+ * More infos available: https://engine.yildiz-games.be
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
- *  documentation files (the "Software"), to deal in the Software without restriction, including without
- *  limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- *  of the Software, and to permit persons to whom the Software is furnished to do so,
- *  subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without
+ * limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included in all copies or substantial
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
  *  portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
  *  WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
- *  OR COPYRIGHT  HOLDERS BE LIABLE FOR ANY CLAIM,
+ * OR COPYRIGHT  HOLDERS BE LIABLE FOR ANY CLAIM,
  *  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  SOFTWARE.
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  SOFTWARE.
+ *
  *
  */
 
-package be.yildizgames.authentication;
+package be.yildizgames.authentication.infrastructure.persistence;
 
+import be.yildizgames.authentication.application.AccountCreator;
 import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.exception.implementation.ImplementationException;
@@ -134,6 +137,7 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public final void create(TemporaryAccount dto, UUID token) {
+        this.logger.debug("Create temporary account for {}.", dto.getLogin());
         ImplementationException.throwForNull(dto);
         ImplementationException.throwForNull(token);
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
@@ -145,6 +149,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             stmt.setString(4, token.toString());
             stmt.setTimestamp(5, Timestamp.from(Instant.now()));
             stmt.executeUpdate();
+            this.logger.debug("Create temporary account for {} successfully executed.", dto.getLogin());
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -166,14 +171,14 @@ public class DatabaseAccountCreator implements AccountCreator {
             String token = rs.getString(5);
 
             if (!token.equals(validation.getToken())) {
-                logger.warn("Invalid token received from " + login);
+                this.logger.warn("Invalid token received from " + login);
                 return;
             }
 
             insertAccount(c, login, password, email);
             deleteTemp(c, id);
             int accountId = getCreatedAccountId(c, login);
-            messageProducer.sendMessage("{login:" + login + ", id:" + accountId + "}");
+            this.messageProducer.sendMessage("{login:" + login + ", id:" + accountId + "}");
         });
     }
 
