@@ -72,6 +72,7 @@ public class AccountCreationManager {
      * @return The created temporary account, waiting to be validated.
      */
     public final TemporaryAccountCreationResultDto create(TemporaryAccount dto) {
+        this.logger.debug("Prepare creation of the temporary account for {}.", dto.getLogin());
         TemporaryAccountCreationResultDto result = TemporaryAccountCreationResultDto.success();
 
         UUID token = UUID.randomUUID();
@@ -81,13 +82,16 @@ public class AccountCreationManager {
             } else {
                 if(!this.emailPattern.matcher(dto.getEmail()).matches()) {
                     result.setEmailInvalid(true);
+                    this.logger.debug("Account for {} not created, email invalid.", dto.getLogin());
                 }
                 if(this.accountCreator.emailAlreadyExist(dto.getEmail())) {
                     result.setEmailExisting(true);
+                    this.logger.debug("Account for {} not created, email already exists.", dto.getLogin());
                 }
             }
             if(this.accountCreator.loginAlreadyExist(dto.getLogin())) {
                 result.setAccountExisting(true);
+                this.logger.debug("Account for {} not created, account already exists.", dto.getLogin());
             }
             if(!result.hasError()) {
                 this.accountCreator.create(dto, token);
