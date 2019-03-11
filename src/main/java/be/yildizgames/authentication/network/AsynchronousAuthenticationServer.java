@@ -61,6 +61,7 @@ public class AsynchronousAuthenticationServer {
 
         accountCreationRequestQueue.createConsumer(message -> {
             try {
+                logger.debug("message received in {}: {}",Queues.CREATE_ACCOUNT_REQUEST.getName(), message.getText());
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
@@ -87,6 +88,7 @@ public class AsynchronousAuthenticationServer {
         });
         BrokerMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
         authenticationRequestQueue.createConsumer(message -> {
+            logger.debug("message received in {}: {}",Queues.AUTHENTICATION_REQUEST.getName(), message.getText());
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
