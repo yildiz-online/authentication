@@ -33,6 +33,7 @@ import be.yildizgames.common.util.StringUtil;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -71,7 +72,7 @@ class TemporaryAccountEmail implements EmailTemplate {
         ImplementationException.throwForNull(token);
         this.email = email;
         try {
-            String content = Files.readString(emailTemplate, Charset.forName("UTF-8"));
+            String content = Files.readString(emailTemplate, StandardCharsets.UTF_8);
             String[] values = content.split("##");
             if (values.length < 2) {
                 throw new EmailException("Invalid content, '##' expected between the title and the body");

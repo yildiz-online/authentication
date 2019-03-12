@@ -24,24 +24,22 @@
  *
  */
 
-package be.yildizgames.authentication.application;
+package be.yildizgames.authentication.infrastructure;
 
-import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
-import be.yildizgames.common.authentication.TemporaryAccount;
-import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
+public class TemporaryAccountDto {
 
-import java.util.UUID;
+    public final String login;
 
-/**
- * @author Grégory Van den Borre
- */
-public interface AccountCreator {
-    
-    boolean loginAlreadyExist(String login);
+    public final String password;
 
-    boolean emailAlreadyExist(String email);
+    public final String email;
 
-    void create(TemporaryAccountDto dto, UUID token);
+    public final String language;
 
-    void validate(AccountConfirmationDto validation);
+    public TemporaryAccountDto(String login, String password, String email, String language) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.language = language;
+    }
 }

@@ -27,7 +27,7 @@
 package be.yildizgames.authentication.infrastructure.persistence;
 
 import be.yildizgames.authentication.application.AccountCreator;
-import be.yildizgames.common.authentication.TemporaryAccount;
+import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
@@ -136,20 +136,20 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     @Override
-    public final void create(TemporaryAccount dto, UUID token) {
-        this.logger.debug("Create temporary account for {}.", dto.getLogin());
+    public final void create(TemporaryAccountDto dto, UUID token) {
+        this.logger.debug("Create temporary account for {}.", dto.login);
         ImplementationException.throwForNull(dto);
         ImplementationException.throwForNull(token);
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = c.prepareStatement(sql)) {
-            stmt.setString(1, dto.getLogin());
-            stmt.setString(2, dto.getPassword());
-            stmt.setString(3, dto.getEmail());
+            stmt.setString(1, dto.login);
+            stmt.setString(2, dto.password);
+            stmt.setString(3, dto.email);
             stmt.setString(4, token.toString());
             stmt.setTimestamp(5, Timestamp.from(Instant.now()));
             stmt.executeUpdate();
-            this.logger.debug("Create temporary account for {} successfully executed.", dto.getLogin());
+            this.logger.debug("Create temporary account for {} successfully executed.", dto.login);
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -171,7 +171,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             String token = rs.getString(5);
 
             if (!token.equals(validation.getToken())) {
-                this.logger.warn("Invalid token received from " + login);
+                this.logger.warn("Invalid token received from {}", login);
                 return;
             }
 

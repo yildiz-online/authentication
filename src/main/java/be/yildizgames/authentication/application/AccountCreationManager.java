@@ -27,8 +27,11 @@
 package be.yildizgames.authentication.application;
 
 import be.yildizgames.authentication.configuration.EmailTemplateConfiguration;
+import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
 import be.yildizgames.authentication.infrastructure.io.mail.EmailService;
+import be.yildizgames.common.authentication.AuthenticationError;
 import be.yildizgames.common.authentication.TemporaryAccount;
+import be.yildizgames.common.authentication.TemporaryAccountValidationException;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
 import be.yildizgames.common.exception.implementation.ImplementationException;
@@ -71,37 +74,60 @@ public class AccountCreationManager {
      * @param dto Temporary account to build.
      * @return The created temporary account, waiting to be validated.
      */
-    public final TemporaryAccountCreationResultDto create(TemporaryAccount dto) {
-        this.logger.debug("Prepare creation of the temporary account for {}.", dto.getLogin());
+    public final TemporaryAccountCreationResultDto create(TemporaryAccountDto dto) {
+        this.logger.debug("Prepare creation of the temporary account for {}.", dto.login);
         TemporaryAccountCreationResultDto result = TemporaryAccountCreationResultDto.success();
-
-        UUID token = UUID.randomUUID();
         try {
-            if(dto.getEmail() == null) {
-              result.setEmailMissing(true);
-            } else {
-                if(!this.emailPattern.matcher(dto.getEmail()).matches()) {
-                    result.setEmailInvalid(true);
-                    this.logger.debug("Account for {} not created, email invalid.", dto.getLogin());
+            TemporaryAccount.create(dto.login, dto.password, dto.email, dto.language);
+        } catch (TemporaryAccountValidationException e) {
+            for (AuthenticationError error : e.getExceptions()) {
+                if (error == AuthenticationError.LOGIN_TOO_LONG) {
+                    result.setInvalidLogin(true);
+                } else if (error == AuthenticationError.LOGIN_TOO_SHORT) {
+                    result.setInvalidLogin(true);
+                } else if (error == AuthenticationError.LOGIN_EMPTY) {
+                    result.setInvalidLogin(true);
+                } else if (error == AuthenticationError.INVALID_LOGIN_CHAR) {
+                    result.setInvalidLogin(true);
+                } else if (error == AuthenticationError.PASS_EMPTY) {
+                    result.setInvalidPassword(true);
+                } else if (error == AuthenticationError.PASS_TOO_SHORT) {
+                    result.setInvalidPassword(true);
+                } else if (error == AuthenticationError.PASS_TOO_LONG) {
+                    result.setInvalidPassword(true);
+                } else if (error == AuthenticationError.INVALID_PASS_CHAR) {
+                    result.setInvalidPassword(true);
                 }
-                if(this.accountCreator.emailAlreadyExist(dto.getEmail())) {
-                    result.setEmailExisting(true);
-                    this.logger.debug("Account for {} not created, email already exists.", dto.getLogin());
-                }
             }
-            if(this.accountCreator.loginAlreadyExist(dto.getLogin())) {
-                result.setAccountExisting(true);
-                this.logger.debug("Account for {} not created, account already exists.", dto.getLogin());
-            }
-            if(!result.hasError()) {
-                this.accountCreator.create(dto, token);
-                this.emailService.send(new TemporaryAccountEmail(this.configuration.getEmailTemplatePath(dto.getLanguage()), dto.getLogin(), dto.getEmail(), token.toString()));
-            }
-        } catch (TechnicalException e) {
-            this.logger.error("Error while persisting temp account {} : {}",  dto, token, e);
-            result.setTechnicalIssue(true);
         }
-        return result;
+
+            UUID token = UUID.randomUUID();
+            try {
+                if (dto.email == null) {
+                    result.setEmailMissing(true);
+                } else {
+                    if (!this.emailPattern.matcher(dto.email).matches()) {
+                        result.setEmailInvalid(true);
+                        this.logger.debug("Account for {} not created, email invalid.", dto.login);
+                    }
+                    if (this.accountCreator.emailAlreadyExist(dto.email)) {
+                        result.setEmailExisting(true);
+                        this.logger.debug("Account for {} not created, email already exists.", dto.login);
+                    }
+                }
+                if (this.accountCreator.loginAlreadyExist(dto.login)) {
+                    result.setAccountExisting(true);
+                    this.logger.debug("Account for {} not created, account already exists.", dto.login);
+                }
+                if (!result.hasError()) {
+                    this.accountCreator.create(dto, token);
+                    this.emailService.send(new TemporaryAccountEmail(this.configuration.getEmailTemplatePath(dto.language), dto.login, dto.email, token.toString()));
+                }
+            } catch (TechnicalException e) {
+                this.logger.error("Error while persisting temp account {} : {}", dto, token, e);
+                result.setTechnicalIssue(true);
+            }
+            return result;
     }
 
     public void validateAccount(AccountConfirmationDto validation) {

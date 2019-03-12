@@ -49,7 +49,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Grégory Van den Borre
  */
-@Disabled
 @Tag("database")
 class DatabaseAuthenticatorTest {
 
@@ -103,7 +102,7 @@ class DatabaseAuthenticatorTest {
         void withNullCredentials() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DataBaseAuthenticator da = new DataBaseAuthenticator(dbcp);
-                assertThrows(AssertionError.class, () -> da.getPasswordForUser(null));
+                assertThrows(ImplementationException.class, () -> da.getPasswordForUser(null));
             }
         }
 

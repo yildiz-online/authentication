@@ -28,16 +28,14 @@ package be.yildizgames.authentication.infrastructure;
 
 import be.yildizgames.authentication.application.AccountCreationManager;
 import be.yildizgames.authentication.application.AuthenticationManager;
-import be.yildizgames.common.authentication.AuthenticationError;
 import be.yildizgames.common.authentication.Credentials;
-import be.yildizgames.common.authentication.TemporaryAccountValidationException;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.protocol.Queues;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
 import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
-import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
+import be.yildizgames.common.authentication.protocol.mapper.exception.AuthenticationMappingException;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
@@ -64,28 +62,11 @@ public class AsynchronousAuthenticationServer {
         accountCreationRequestQueue.createConsumer(message -> {
             try {
                 logger.debug("message received in {}: {}",Queues.CREATE_ACCOUNT_REQUEST.getName(), message.getText());
-                TemporaryAccountCreationResultDto result = accountCreationManager.create(TemporaryAccountMapper.getInstance().from(message.getText()));
+
+                TemporaryAccountCreationResultDto result = accountCreationManager.create(this.from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
                 logger.warn("Unexpected message", e);
-            } catch (TemporaryAccountValidationException e) {
-                TemporaryAccountCreationResultDto result = new TemporaryAccountCreationResultDto();
-                for(AuthenticationError error: e.getExceptions()) {
-                    if(error == AuthenticationError.LOGIN_TOO_LONG) {
-                        result.setInvalidLogin(true);
-                    } else if(error == AuthenticationError.LOGIN_TOO_SHORT) {
-                        result.setInvalidLogin(true);
-                    } else if(error == AuthenticationError.INVALID_LOGIN_CHAR) {
-                        result.setInvalidLogin(true);
-                    } else if(error == AuthenticationError.PASS_TOO_SHORT) {
-                        result.setInvalidPassword(true);
-                    } else if(error == AuthenticationError.PASS_TOO_LONG) {
-                        result.setInvalidPassword(true);
-                    } else if(error == AuthenticationError.INVALID_PASS_CHAR) {
-                        result.setInvalidPassword(true);
-                    }
-                }
-                tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             }
         });
         BrokerMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
@@ -102,5 +83,14 @@ public class AsynchronousAuthenticationServer {
         });
     }
 
+    public TemporaryAccountDto from(String s) {
+        assert s != null;
+        try {
+            String[] v = s.split("@@");
+            return new TemporaryAccountDto(v[0], v[1], v[2], v[3]);
+        } catch (IndexOutOfBoundsException var3) {
+            throw new AuthenticationMappingException(var3);
+        }
+    }
 
 }

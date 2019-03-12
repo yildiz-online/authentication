@@ -89,7 +89,7 @@ public final class DataBaseAuthenticator implements Authenticator {
 
     @Override
     public TokenVerification getPasswordForUser(final Credentials credential) throws UserNotFoundException {
-        assert credential != null;
+        ImplementationException.throwForNull(credential);
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = createPreparedStatement(c, credential.login);
              ResultSet results = stmt.executeQuery()) {

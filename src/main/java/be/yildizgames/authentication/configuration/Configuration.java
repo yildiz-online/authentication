@@ -25,8 +25,6 @@
 package be.yildizgames.authentication.configuration;
 
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
-import be.yildizgames.common.exception.initialization.InitializationException;
-import be.yildizgames.common.file.FileProperties;
 import be.yildizgames.common.logging.LoggerConfiguration;
 import be.yildizgames.common.logging.LoggerPropertiesConfiguration;
 import be.yildizgames.common.util.PropertiesHelper;
