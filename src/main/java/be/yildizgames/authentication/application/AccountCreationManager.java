@@ -39,19 +39,15 @@ import be.yildizgames.common.exception.technical.TechnicalException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 /**
  * @author Grégory Van den Borre
  */
 public class AccountCreationManager {
 
-    private static final String EMAIL_REGEX = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private final Pattern emailPattern = Pattern.compile(EMAIL_REGEX);
 
     private final AccountCreator accountCreator;
 
@@ -81,57 +77,57 @@ public class AccountCreationManager {
             TemporaryAccount.create(dto.login, dto.password, dto.email, dto.language);
         } catch (TemporaryAccountValidationException e) {
             this.logger.debug("Validation error for the temporary account for {}.", dto.login);
-            for (AuthenticationError error : e.getExceptions()) {
-                if (error == AuthenticationError.LOGIN_TOO_LONG) {
-                    result.setInvalidLogin(true);
-                } else if (error == AuthenticationError.LOGIN_TOO_SHORT) {
-                    result.setInvalidLogin(true);
-                } else if (error == AuthenticationError.LOGIN_EMPTY) {
-                    result.setInvalidLogin(true);
-                } else if (error == AuthenticationError.INVALID_LOGIN_CHAR) {
-                    result.setInvalidLogin(true);
-                } else if (error == AuthenticationError.PASS_EMPTY) {
-                    result.setInvalidPassword(true);
-                } else if (error == AuthenticationError.PASS_TOO_SHORT) {
-                    result.setInvalidPassword(true);
-                } else if (error == AuthenticationError.PASS_TOO_LONG) {
-                    result.setInvalidPassword(true);
-                } else if (error == AuthenticationError.INVALID_PASS_CHAR) {
-                    result.setInvalidPassword(true);
-                }
-            }
-        }
-
-            UUID token = UUID.randomUUID();
-            try {
-                if (dto.email == null) {
-                    result.setEmailMissing(true);
-                } else {
-                    if (!this.emailPattern.matcher(dto.email).matches()) {
-                        result.setEmailInvalid(true);
-                        this.logger.debug("Account for {} not created, email invalid.", dto.login);
-                    }
-                    if (this.accountCreator.emailAlreadyExist(dto.email)) {
-                        result.setEmailExisting(true);
-                        this.logger.debug("Account for {} not created, email already exists.", dto.login);
-                    }
-                }
-                if (this.accountCreator.loginAlreadyExist(dto.login)) {
-                    result.setAccountExisting(true);
-                    this.logger.debug("Account for {} not created, account already exists.", dto.login);
-                }
-                if (!result.hasError()) {
-                    this.accountCreator.create(dto, token);
-                    this.emailService.send(new TemporaryAccountEmail(this.configuration.getEmailTemplatePath(dto.language), dto.login, dto.email, token.toString()));
-                }
-            } catch (TechnicalException e) {
-                this.logger.error("Error while persisting temp account {} : {}", dto, token, e);
-                result.setTechnicalIssue(true);
-            }
+            this.handleTemporaryAccountValidationError(result, e.getExceptions());
             return result;
+        }
+        UUID token = UUID.randomUUID();
+        try {
+            if (this.accountCreator.emailAlreadyExist(dto.email)) {
+                result.setEmailExisting(true);
+                this.logger.debug("Account for {} not created, email already exists.", dto.login);
+            }
+            if (this.accountCreator.loginAlreadyExist(dto.login)) {
+                result.setAccountExisting(true);
+                this.logger.debug("Account for {} not created, account already exists.", dto.login);
+            }
+            if (!result.hasError()) {
+                this.accountCreator.create(dto, token);
+                this.emailService.send(new TemporaryAccountEmail(this.configuration.getEmailTemplatePath(dto.language), dto.login, dto.email, token.toString()));
+            }
+        } catch (TechnicalException e) {
+            this.logger.error("Error while persisting temp account {} : {}", dto, token, e);
+            result.setTechnicalIssue(true);
+        }
+        return result;
     }
 
     public void validateAccount(AccountConfirmationDto validation) {
         this.accountCreator.validate(validation);
+    }
+
+    private void handleTemporaryAccountValidationError(TemporaryAccountCreationResultDto result, List<AuthenticationError> exceptions) {
+        for (AuthenticationError error : exceptions) {
+            if (error == AuthenticationError.LOGIN_TOO_LONG) {
+                result.setInvalidLogin(true);
+            } else if (error == AuthenticationError.LOGIN_TOO_SHORT) {
+                result.setInvalidLogin(true);
+            } else if (error == AuthenticationError.LOGIN_EMPTY) {
+                result.setInvalidLogin(true);
+            } else if (error == AuthenticationError.INVALID_LOGIN_CHAR) {
+                result.setInvalidLogin(true);
+            } else if (error == AuthenticationError.PASS_EMPTY) {
+                result.setInvalidPassword(true);
+            } else if (error == AuthenticationError.PASS_TOO_SHORT) {
+                result.setInvalidPassword(true);
+            } else if (error == AuthenticationError.PASS_TOO_LONG) {
+                result.setInvalidPassword(true);
+            } else if (error == AuthenticationError.INVALID_PASS_CHAR) {
+                result.setInvalidPassword(true);
+            } else if (error == AuthenticationError.MAIL_EMPTY) {
+                result.setEmailMissing(true);
+            } else if (error == AuthenticationError.MAIL_INVALID) {
+                result.setEmailInvalid(true);
+            }
+        }
     }
 }

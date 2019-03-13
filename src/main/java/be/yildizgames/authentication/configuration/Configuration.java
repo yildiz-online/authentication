@@ -25,11 +25,12 @@
 package be.yildizgames.authentication.configuration;
 
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
+import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.logging.LoggerConfiguration;
 import be.yildizgames.common.logging.LoggerPropertiesConfiguration;
 import be.yildizgames.common.util.PropertiesHelper;
 import be.yildizgames.module.database.DbProperties;
-import be.yildizgames.module.database.SimpleDbProperties;
+import be.yildizgames.module.database.StandardDbProperties;
 import be.yildizgames.module.messaging.BrokerProperties;
 
 import java.io.File;
@@ -62,8 +63,9 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     private Configuration(final Properties properties) {
         super();
+        ImplementationException.throwForNull(properties);
         this.properties = properties;
-        this.dbProperties = new SimpleDbProperties(properties);
+        this.dbProperties = new StandardDbProperties(properties);
         this.brokerDataFolder = PropertiesHelper.getValue(properties, "broker.data");
         this.brokerHost = PropertiesHelper.getValue(properties, "broker.host");
         this.brokerPort = PropertiesHelper.getIntValue(properties, "broker.port");
@@ -74,6 +76,11 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.loggerConfig = LoggerPropertiesConfiguration.fromProperties(properties);
     }
 
+    /**
+     * Build a configuration object from properties.
+     * @param properties Properties to build from.
+     * @return The configuration object.
+     */
     public static Configuration fromProperties(Properties properties) {
         return new Configuration(properties);
     }

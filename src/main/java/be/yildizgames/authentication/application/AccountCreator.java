@@ -27,7 +27,6 @@
 package be.yildizgames.authentication.application;
 
 import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
-import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 
 import java.util.UUID;

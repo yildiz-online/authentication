@@ -30,7 +30,6 @@ import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -127,16 +126,9 @@ class DatabaseAccountCreatorTest {
             return new TestingDatabaseInit().init("test_db.xml");
         }
 
-        @Disabled
         @Test
         void happyFlow() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                String query = "SELECT * FROM ACCOUNTS";
-                PreparedStatement getTemp = dbcp.getConnection().prepareStatement(query);
-                ResultSet rs = getTemp.executeQuery();
-                rs.next();
-
-
                 Result message = new Result();
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
                 creator.validate(givenAnAccountValidationDto());
@@ -154,7 +146,6 @@ class DatabaseAccountCreatorTest {
             }
         }
 
-        @Disabled
         @Test
         void validationFails() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
@@ -163,12 +154,12 @@ class DatabaseAccountCreatorTest {
                 creator.validate(givenAWrongAccountValidationDto());
                 Assertions.assertEquals("", message.value);
                 try (Connection c = dbcp.getConnection();
-                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'existingTemp'");
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'existingTemp2'");
                      ResultSet resultSet = stmt.executeQuery()) {
                     Assertions.assertTrue(resultSet.next());
                 }
                 try (Connection c = dbcp.getConnection();
-                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM ACCOUNTS WHERE LOGIN = 'existingTemp'");
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM ACCOUNTS WHERE LOGIN = 'existingTemp2'");
                      ResultSet resultSet = stmt.executeQuery()) {
                     Assertions.assertFalse(resultSet.next());
                 }

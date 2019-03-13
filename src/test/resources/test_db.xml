@@ -59,6 +59,13 @@
       <column name="EMAIL">existingTemp@e.com</column>
     </insert>
 
+    <insert tableName="TEMP_ACCOUNTS">
+      <column name="LOGIN">existingTemp2</column>
+      <column name="PASSWORD">$2a$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
+      <column name="CHECK_VALUE">azerty</column>
+      <column name="EMAIL">existingTemp2@e.com</column>
+    </insert>
+
     <insert tableName="ACCOUNTS">
       <column name="LOGIN">existing</column>
       <column name="PASSWORD">$2a$10$C.FcoFzeaT9x5NI8ksA7PeRt1e2se53Wtp8c2NlUZipsUA6MzZQOC</column>
