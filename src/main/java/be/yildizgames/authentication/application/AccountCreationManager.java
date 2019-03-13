@@ -80,6 +80,7 @@ public class AccountCreationManager {
         try {
             TemporaryAccount.create(dto.login, dto.password, dto.email, dto.language);
         } catch (TemporaryAccountValidationException e) {
+            this.logger.debug("Validation error for the temporary account for {}.", dto.login);
             for (AuthenticationError error : e.getExceptions()) {
                 if (error == AuthenticationError.LOGIN_TOO_LONG) {
                     result.setInvalidLogin(true);
