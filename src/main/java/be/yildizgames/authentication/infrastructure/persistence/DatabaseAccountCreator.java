@@ -28,6 +28,8 @@ package be.yildizgames.authentication.infrastructure.persistence;
 
 import be.yildizgames.authentication.application.AccountCreator;
 import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
+import be.yildizgames.common.authentication.BCryptEncryptionTool;
+import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
@@ -63,6 +65,8 @@ public class DatabaseAccountCreator implements AccountCreator {
      * To send messages to the async message system.
      */
     private final AsyncMessageProducer messageProducer;
+
+    private final EncryptionTool encryptionTool = new BCryptEncryptionTool();
 
     public DatabaseAccountCreator(DataBaseConnectionProvider provider, AsyncMessageProducer messageProducer) {
         super();
@@ -144,7 +148,7 @@ public class DatabaseAccountCreator implements AccountCreator {
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = c.prepareStatement(sql)) {
             stmt.setString(1, dto.login);
-            stmt.setString(2, dto.password);
+            stmt.setString(2, this.encryptionTool.encrypt(dto.password));
             stmt.setString(3, dto.email);
             stmt.setString(4, token.toString());
             stmt.setTimestamp(5, Timestamp.from(Instant.now()));
