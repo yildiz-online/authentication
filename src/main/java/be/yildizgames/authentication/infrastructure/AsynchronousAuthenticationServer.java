@@ -39,6 +39,7 @@ import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
 import be.yildizgames.common.authentication.protocol.mapper.exception.AuthenticationMappingException;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.module.messaging.Broker;
+import be.yildizgames.module.messaging.BrokerMessage;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.BrokerMessageHeader;
 import be.yildizgames.module.messaging.BrokerMessageProducer;
@@ -63,7 +64,7 @@ public class AsynchronousAuthenticationServer {
         BrokerMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
 
         accountCreationRequestQueue.createConsumer(message -> {
-            this.logger.debug("message received in {}: {}",Queues.CREATE_ACCOUNT_REQUEST.getName(), message.getText());
+            this.logMessage(Queues.CREATE_ACCOUNT_REQUEST, message);
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(this.from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
@@ -73,7 +74,7 @@ public class AsynchronousAuthenticationServer {
         });
 
         accountCreationConfirmationRequestQueue.createConsumer(message -> {
-            this.logger.debug("message received in {}: {}", Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST.getName(), message.getText());
+            this.logMessage(Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST, message);
             try {
                 accountCreationManager.confirmAccount(AccountConfirmationMapper.getInstance().from(message.getText()));
             } catch (TechnicalException e) {
@@ -82,7 +83,7 @@ public class AsynchronousAuthenticationServer {
         });
 
         authenticationRequestQueue.createConsumer(message -> {
-            this.logger.debug("message received in {}: {}",Queues.AUTHENTICATION_REQUEST.getName(), message.getText());
+            this.logMessage(Queues.AUTHENTICATION_REQUEST, message);
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
@@ -92,6 +93,10 @@ public class AsynchronousAuthenticationServer {
                 this.logger.warn("Unexpected message in {}", Queues.AUTHENTICATION_REQUEST.getName(), e);
             }
         });
+    }
+
+    private void logMessage(Queues queue, BrokerMessage message) {
+        this.logger.debug("message received in {}: {}", queue.getName(), message.getText());
     }
 
     private TemporaryAccountDto from(String s) {
