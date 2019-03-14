@@ -32,6 +32,7 @@ import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.protocol.Queues;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
+import be.yildizgames.common.authentication.protocol.mapper.AccountConfirmationMapper;
 import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
@@ -56,6 +57,7 @@ public class AsynchronousAuthenticationServer {
         BrokerMessageDestination accountCreationRequestQueue = broker.registerQueue(Queues.CREATE_ACCOUNT_REQUEST.getName());
         BrokerMessageDestination authenticationRequestQueue = broker.registerQueue(Queues.AUTHENTICATION_REQUEST.getName());
         BrokerMessageDestination authenticationResponseQueue = broker.registerQueue(Queues.AUTHENTICATION_RESPONSE.getName());
+        BrokerMessageDestination accountCreationConfirmationRequestQueue = broker.registerQueue(Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST.getName());
 
         BrokerMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
 
@@ -69,6 +71,9 @@ public class AsynchronousAuthenticationServer {
                 logger.warn("Unexpected message", e);
             }
         });
+
+        accountCreationConfirmationRequestQueue.createConsumer(message -> accountCreationManager.validateAccount(AccountConfirmationMapper.getInstance().from(message.getText())));
+
         BrokerMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
         authenticationRequestQueue.createConsumer(message -> {
             logger.debug("message received in {}: {}",Queues.AUTHENTICATION_REQUEST.getName(), message.getText());
