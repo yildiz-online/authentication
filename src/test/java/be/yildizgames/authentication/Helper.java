@@ -34,11 +34,6 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 class Helper {
 
-    @Test
-    void t() {
-        System.out.println(BCrypt.hashpw("testtest", BCrypt.gensalt()));
-    }
-
     public static TokenVerification givenAnAuthenticatedResult(PlayerId id) {
         return new TokenVerification(id, true);
     }

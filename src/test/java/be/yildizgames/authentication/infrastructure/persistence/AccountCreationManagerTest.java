@@ -217,7 +217,7 @@ class AccountCreationManagerTest {
 
         @Test
         void emailInvalid() {
-            AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
+            AccountCreationManager m = givenAManager(givenAnAccountCreator(true, true));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "passwordok", "bademail", "en"));
             Assertions.assertTrue(dto.isInvalidEmail());
             Assertions.assertTrue(dto.hasError());
@@ -272,7 +272,7 @@ class AccountCreationManagerTest {
             }
 
             @Override
-            public void validate(AccountConfirmationDto validation) {
+            public void confirm(AccountConfirmationDto validation) {
 
             }
         };

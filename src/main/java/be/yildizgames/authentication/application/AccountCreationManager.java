@@ -47,14 +47,32 @@ import java.util.UUID;
  */
 public class AccountCreationManager {
 
+    /**
+     * Logger.
+     */
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     * To materialize the account.
+     */
     private final AccountCreator accountCreator;
 
+    /**
+     * To send emails.
+     */
     private final EmailService emailService;
 
+    /**
+     * Template of the email to send.
+     */
     private final EmailTemplateConfiguration configuration;
 
+    /**
+     * Create a new instance.
+     * @param accountCreator To materialize the account.
+     * @param emailService To send emails.
+     * @param configuration Template of the email to send.
+     */
     public AccountCreationManager(final AccountCreator accountCreator, final EmailService emailService, final EmailTemplateConfiguration configuration) {
         super();
         ImplementationException.throwForNull(accountCreator);
@@ -101,10 +119,19 @@ public class AccountCreationManager {
         return result;
     }
 
-    public void validateAccount(AccountConfirmationDto validation) {
-        this.accountCreator.validate(validation);
+    /**
+     * Confirm a temporary account.
+     * @param validation Dto containing the confirmation data.
+     */
+    public void confirmAccount(final AccountConfirmationDto validation) {
+        this.accountCreator.confirm(validation);
     }
 
+    /**
+     * Fill the temporary account validation errors
+     * @param result Result to fill.
+     * @param exceptions Validation errors.
+     */
     private void handleTemporaryAccountValidationError(TemporaryAccountCreationResultDto result, List<AuthenticationError> exceptions) {
         for (AuthenticationError error : exceptions) {
             if (error == AuthenticationError.LOGIN_TOO_LONG) {

@@ -32,6 +32,7 @@ import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
 import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.model.PlayerId;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -107,8 +108,10 @@ class AuthenticationManagerTest {
     }
 
     @Test
-    void testGetAuthenticated() {
-        //fail("Not yet implemented");
+    void testGetAuthenticatedNotFound() {
+        AuthenticationManager m = new AuthenticationManager(new AuthenticatorMock(true, false));
+        Token token = m.getAuthenticated(PlayerId.WORLD);
+        Assertions.assertEquals(Token.notFound(),token);
     }
 
     private Token givenAuthenticatedResult(final String login, final String pwd) {

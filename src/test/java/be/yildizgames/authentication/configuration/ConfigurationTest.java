@@ -26,6 +26,7 @@ package be.yildizgames.authentication.configuration;
 
 import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.exception.initialization.InitializationException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +45,8 @@ class ConfigurationTest {
 
         @Test
         void happyFlow() {
-            Configuration.fromProperties(new DefaultConfigProperties());
+            Configuration c = Configuration.fromProperties(new DefaultConfigProperties());
+            Assertions.assertNotNull(c);
         }
 
         @Test

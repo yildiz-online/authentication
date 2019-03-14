@@ -26,9 +26,12 @@
 
 package be.yildizgames.authentication.application;
 
+import be.yildizgames.authentication.infrastructure.io.mail.EmailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.discovery.UriSelector;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
@@ -39,6 +42,17 @@ public class TemporaryAccountEmailTest {
         TemporaryAccountEmail email = new TemporaryAccountEmail(Paths.get(ClassLoader.getSystemResource("mail.txt").toURI()), "testl", "testm", "testt");
         Assertions.assertEquals("Yildiz-Online account confirmation", email.getTitle());
         Assertions.assertEquals("Dear testl, Please activate your account by clicking on the following link:\\n\\nhttps:\\\\www.yildiz-games.be/api/v1/accounts/confirmation?email=testm&token=testt", email.getBody());
+        Assertions.assertEquals("testm", email.getEmail());
+    }
+
+    @Test
+    public void invalidTemplateFile() {
+        Assertions.assertThrows(EmailException.class, () -> new TemporaryAccountEmail(Paths.get(ClassLoader.getSystemResource("mail-invalid.txt").toURI()), "testl", "testm", "testt"));
+    }
+
+    @Test
+    public void notExistingTemplateFile() {
+        Assertions.assertThrows(EmailException.class, () -> new TemporaryAccountEmail(Paths.get("notExists"), "testl", "testm", "testt"));
     }
 
 }

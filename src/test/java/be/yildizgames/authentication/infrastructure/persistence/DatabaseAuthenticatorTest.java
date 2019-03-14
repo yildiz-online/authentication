@@ -26,6 +26,7 @@
 
 package be.yildizgames.authentication.infrastructure.persistence;
 
+import be.yildizgames.authentication.application.Authenticator;
 import be.yildizgames.common.authentication.CredentialException;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.UserNotFoundException;
@@ -34,6 +35,7 @@ import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -63,14 +65,16 @@ class DatabaseAuthenticatorTest {
         @Test
         void happyFlow() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                new DataBaseAuthenticator(dbcp, "blabla");
+                Authenticator authenticator = new DataBaseAuthenticator(dbcp, "blabla");
+                Assertions.assertNotNull(authenticator);
             }
         }
 
         @Test
         void withNoKey() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                new DataBaseAuthenticator(dbcp);
+                Authenticator authenticator = new DataBaseAuthenticator(dbcp);
+                Assertions.assertNotNull(authenticator);
             }
         }
 
@@ -82,7 +86,8 @@ class DatabaseAuthenticatorTest {
         @Test
         void withNullKey() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
-                new DataBaseAuthenticator(dbcp, null);
+                Authenticator authenticator = new DataBaseAuthenticator(dbcp, null);
+                Assertions.assertNotNull(authenticator);
             }
         }
     }

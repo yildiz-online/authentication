@@ -60,36 +60,41 @@ public class AsynchronousAuthenticationServer {
         BrokerMessageDestination accountCreationConfirmationRequestQueue = broker.registerQueue(Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST.getName());
 
         BrokerMessageProducer tempProducer = temporaryAccountCreatedQueue.createProducer();
+        BrokerMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
 
         accountCreationRequestQueue.createConsumer(message -> {
+            this.logger.debug("message received in {}: {}",Queues.CREATE_ACCOUNT_REQUEST.getName(), message.getText());
             try {
-                logger.debug("message received in {}: {}",Queues.CREATE_ACCOUNT_REQUEST.getName(), message.getText());
-
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(this.from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
-                logger.warn("Unexpected message", e);
+                this.logger.warn("Unexpected message in {}", Queues.CREATE_ACCOUNT_REQUEST.getName(), e);
             }
         });
 
-        accountCreationConfirmationRequestQueue.createConsumer(message -> accountCreationManager.validateAccount(AccountConfirmationMapper.getInstance().from(message.getText())));
+        accountCreationConfirmationRequestQueue.createConsumer(message -> {
+            this.logger.debug("message received in {}: {}", Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST.getName(), message.getText());
+            try {
+                accountCreationManager.confirmAccount(AccountConfirmationMapper.getInstance().from(message.getText()));
+            } catch (TechnicalException e) {
+                this.logger.warn("Unexpected message in {}", Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST.getName(), e);
+            }
+        });
 
-        BrokerMessageProducer authenticationResponseProducer = authenticationResponseQueue.createProducer();
         authenticationRequestQueue.createConsumer(message -> {
-            logger.debug("message received in {}: {}",Queues.AUTHENTICATION_REQUEST.getName(), message.getText());
+            this.logger.debug("message received in {}: {}",Queues.AUTHENTICATION_REQUEST.getName(), message.getText());
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
-                logger.debug("Send authentication response message to {} : {}", token.getId(), token.getStatus());
+                this.logger.debug("Send authentication response message to {} : {}", token.getId(), token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
-                logger.warn("Unexpected message", e);
+                this.logger.warn("Unexpected message in {}", Queues.AUTHENTICATION_REQUEST.getName(), e);
             }
         });
     }
 
-    public TemporaryAccountDto from(String s) {
-        assert s != null;
+    private TemporaryAccountDto from(String s) {
         try {
             String[] v = s.split("@@");
             return new TemporaryAccountDto(v[0], v[1], v[2], v[3]);

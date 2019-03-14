@@ -62,13 +62,16 @@ class TemporaryAccountEmail implements EmailTemplate {
      * @param emailTemplate Path to the email template file.
      * @param login Email receiver name.
      * @param email Receiver email address.
-     * @param token Unique token to validate the account.
+     * @param token Unique token to confirm the account.
      */
     TemporaryAccountEmail(final Path emailTemplate, final String login, final String email, final String token) {
         ImplementationException.throwForNull(emailTemplate);
         ImplementationException.throwForNull(login);
         ImplementationException.throwForNull(email);
         ImplementationException.throwForNull(token);
+        if(Files.notExists(emailTemplate)) {
+            throw new EmailException("Email template file " + emailTemplate.toString() +" cannot be found.");
+        }
         this.email = email;
         try {
             String content = Files.readString(emailTemplate, StandardCharsets.UTF_8);

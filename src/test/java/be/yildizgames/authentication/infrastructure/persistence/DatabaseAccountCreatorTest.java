@@ -131,7 +131,7 @@ class DatabaseAccountCreatorTest {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 Result message = new Result();
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
-                creator.validate(givenAnAccountValidationDto());
+                creator.confirm(givenAnAccountValidationDto());
                 Assertions.assertEquals("{login:existingTemp, id:4}", message.value);
                 try (Connection c = dbcp.getConnection();
                      PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'existingTemp'");
@@ -151,7 +151,7 @@ class DatabaseAccountCreatorTest {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 Result message = new Result();
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
-                creator.validate(givenAWrongAccountValidationDto());
+                creator.confirm(givenAWrongAccountValidationDto());
                 Assertions.assertEquals("", message.value);
                 try (Connection c = dbcp.getConnection();
                      PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'existingTemp2'");
@@ -167,8 +167,22 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void accountNotExisting() {
-            //TODO check for rollback
+        void accountNotExisting() throws Exception {
+            try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                Result message = new Result();
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
+                try (Connection c = dbcp.getConnection();
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'tempNotExisting'");
+                     ResultSet resultSet = stmt.executeQuery()) {
+                    Assertions.assertFalse(resultSet.next());
+                }
+                creator.confirm(givenANotExistingAccountValidationDto());
+                try (Connection c = dbcp.getConnection();
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM ACCOUNTS WHERE LOGIN = 'tempNotExisting'");
+                     ResultSet resultSet = stmt.executeQuery()) {
+                    Assertions.assertFalse(resultSet.next());
+                }
+            }
         }
 
         @Test

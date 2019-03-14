@@ -1,0 +1,1 @@
+Yildiz-Online account confirmationDear ${0}, Please activate your account by clicking on the following link:\n\nhttps:\\www.yildiz-games.be/api/v1/accounts/confirmation?email=${1}&token=${2}

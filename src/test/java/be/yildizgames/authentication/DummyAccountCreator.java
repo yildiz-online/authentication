@@ -50,7 +50,7 @@ public class DummyAccountCreator implements AccountCreator {
     }
 
     @Override
-    public void validate(AccountConfirmationDto validation) {
+    public void confirm(AccountConfirmationDto validation) {
 
     }
 }

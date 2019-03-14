@@ -156,7 +156,8 @@ public class DatabaseAccountCreator implements AccountCreator {
     }
 
     @Override
-    public void validate(AccountConfirmationDto validation) {
+    public void confirm(AccountConfirmationDto validation) {
+        ImplementationException.throwForNull(validation);
         Transaction transaction = new Transaction(this.provider);
         transaction.execute(c -> {
             String query = "SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = ?";

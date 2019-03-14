@@ -42,5 +42,5 @@ public interface AccountCreator {
 
     void create(TemporaryAccountDto dto, UUID token);
 
-    void validate(AccountConfirmationDto validation);
+    void confirm(AccountConfirmationDto validation);
 }
