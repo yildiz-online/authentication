@@ -163,7 +163,10 @@ public class DatabaseAccountCreator implements AccountCreator {
             PreparedStatement getTemp = c.prepareStatement(query);
             getTemp.setString(1, validation.getLogin());
             ResultSet rs = getTemp.executeQuery();
-            rs.next();
+            if (!rs.next()) {
+                this.logger.warn("Invalid login received from {}", validation.getLogin());
+                return;
+            }
             int id = rs.getInt(1);
             String login = rs.getString(2);
             String password = rs.getString(3);
