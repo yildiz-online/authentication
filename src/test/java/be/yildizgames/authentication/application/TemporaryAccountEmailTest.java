@@ -29,9 +29,8 @@ package be.yildizgames.authentication.application;
 import be.yildizgames.authentication.infrastructure.io.mail.EmailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.engine.discovery.UriSelector;
 
-import java.net.URI;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
@@ -53,6 +52,12 @@ public class TemporaryAccountEmailTest {
     @Test
     public void notExistingTemplateFile() {
         Assertions.assertThrows(EmailException.class, () -> new TemporaryAccountEmail(Paths.get("notExists"), "testl", "testm", "testt"));
+    }
+
+    @Test
+    public void ioExceptionTemplateFile() {
+        Exception e = Assertions.assertThrows(EmailException.class, () -> new TemporaryAccountEmail(Paths.get(ClassLoader.getSystemResource("dir").toURI()), "testl", "testm", "testt"));
+        Assertions.assertTrue(e.getCause() instanceof IOException);
     }
 
 }
