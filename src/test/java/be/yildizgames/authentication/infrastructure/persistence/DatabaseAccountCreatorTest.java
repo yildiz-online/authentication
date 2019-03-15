@@ -42,10 +42,16 @@ import java.sql.ResultSet;
  * @author Grégory Van den Borre
  */
 @Tag("database")
-class DatabaseAccountCreatorTest {
+public class DatabaseAccountCreatorTest {
 
     @Nested
-    class LoginAlreadyExists {
+    public class Create {
+
+
+    }
+
+    @Nested
+    public class LoginAlreadyExists {
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
             Thread.sleep(500);
@@ -53,7 +59,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void doesNotExistInAccountNorInTemp() throws Exception {
+        public void doesNotExistInAccountNorInTemp() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertFalse(creator.loginAlreadyExist("notexisting"));
@@ -61,7 +67,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void existsInAccountNotInTemp() throws Exception {
+        public void existsInAccountNotInTemp() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertTrue(creator.loginAlreadyExist("existing"));
@@ -69,7 +75,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void existsInTempNotInAccount() throws Exception {
+        public void existsInTempNotInAccount() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertTrue(creator.loginAlreadyExist("existingTemp"));
@@ -77,7 +83,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void fromNull() throws Exception {
+        public void fromNull() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertThrows(ImplementationException.class, () -> creator.loginAlreadyExist(null));
@@ -86,7 +92,7 @@ class DatabaseAccountCreatorTest {
     }
 
     @Nested
-    class EmailAlreadyExists {
+    public class EmailAlreadyExists {
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
             Thread.sleep(500);
@@ -94,7 +100,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void doesNotExistInAccountNorInTemp() throws Exception {
+        public void doesNotExistInAccountNorInTemp() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertFalse(creator.emailAlreadyExist("notexisting@me.com"));
@@ -102,7 +108,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void existsInAccountNotInTemp() throws Exception {
+        public void existsInAccountNotInTemp() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertTrue(creator.emailAlreadyExist("existing@e.com"));
@@ -110,7 +116,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void existsInTempNotInAccount() throws Exception {
+        public void existsInTempNotInAccount() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> {});
                 Assertions.assertTrue(creator.emailAlreadyExist("existingTemp@e.com"));
@@ -119,7 +125,7 @@ class DatabaseAccountCreatorTest {
     }
 
     @Nested
-    class Validate {
+    public class Validate {
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
             Thread.sleep(500);
@@ -127,7 +133,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void happyFlow() throws Exception {
+        public void happyFlow() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 Result message = new Result();
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
@@ -147,7 +153,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void validationFails() throws Exception {
+        public void validationFails() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 Result message = new Result();
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
@@ -167,7 +173,7 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void accountNotExisting() throws Exception {
+        public void accountNotExisting() throws Exception {
             try(DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
                 Result message = new Result();
                 DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
@@ -186,17 +192,13 @@ class DatabaseAccountCreatorTest {
         }
 
         @Test
-        void insertionFails() {
+        public void insertionFails() {
             //TODO check for rollback
         }
 
         @Test
-        void deleteFails() {
+       public void deleteFails() {
             //TODO check for rollback
-        }
-
-        AccountConfirmationDto givenAnAccountValidationDto() {
-            return new AccountConfirmationDto("existingTemp", "azerty");
         }
 
         AccountConfirmationDto givenAWrongAccountValidationDto() {
@@ -208,6 +210,10 @@ class DatabaseAccountCreatorTest {
             return new AccountConfirmationDto("tempNotExisting", "1234");
         }
 
+    }
+
+    static AccountConfirmationDto givenAnAccountValidationDto() {
+        return new AccountConfirmationDto("existingTemp", "azerty");
     }
 
     private class Result {
