@@ -47,6 +47,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
+ * Materialize the account and temporary account in the database.
  * @author Grégory Van den Borre
  */
 public class DatabaseAccountCreator implements AccountCreator {
@@ -66,6 +67,9 @@ public class DatabaseAccountCreator implements AccountCreator {
      */
     private final AsyncMessageProducer messageProducer;
 
+    /**
+     * To encrypt the passwords.
+     */
     private final EncryptionTool encryptionTool = new BCryptEncryptionTool();
 
     public DatabaseAccountCreator(DataBaseConnectionProvider provider, AsyncMessageProducer messageProducer) {

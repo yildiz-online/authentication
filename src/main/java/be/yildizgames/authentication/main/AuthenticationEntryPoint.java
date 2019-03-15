@@ -32,6 +32,7 @@ import be.yildizgames.authentication.configuration.Configuration;
 import be.yildizgames.authentication.infrastructure.AsynchronousAuthenticationServer;
 import be.yildizgames.authentication.infrastructure.io.mail.JavaMailEmailService;
 import be.yildizgames.common.application.Starter;
+import be.yildizgames.common.authentication.protocol.Queues;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
 import be.yildizgames.module.database.DatabaseUpdater;
@@ -70,7 +71,7 @@ final class AuthenticationEntryPoint {
                 DatabaseUpdater databaseUpdater = LiquibaseDatabaseUpdater.fromConfigurationPath("authentication-database-update.xml");
                 databaseUpdater.update(provider);
                 Broker broker = Broker.getBroker(config);
-                BrokerMessageDestination accountCreatedQueue = broker.registerQueue("authentication-creation");
+                BrokerMessageDestination accountCreatedQueue = broker.registerQueue(Queues.CREATE_ACCOUNT_CONFIRMATION_RESPONSE.getName());
                 BrokerMessageProducer producer = accountCreatedQueue.createProducer();
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =

@@ -27,7 +27,6 @@
 package be.yildizgames.authentication.infrastructure.persistence;
 
 import be.yildizgames.authentication.application.Authenticator;
-import be.yildizgames.common.authentication.CredentialException;
 import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
@@ -36,7 +35,6 @@ import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -99,7 +97,7 @@ class DatabaseAuthenticatorTest {
             return new TestingDatabaseInit().init("test_db.xml");
         }
 
-        private Credentials givenCredentials(String login, String password) throws CredentialException {
+        private Credentials givenCredentials(String login, String password) {
             return Credentials.unchecked(login, password);
         }
 

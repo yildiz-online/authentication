@@ -26,8 +26,12 @@
 
 package be.yildizgames.authentication.infrastructure.persistence;
 
+import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
+import be.yildizgames.common.authentication.BCryptEncryptionTool;
+import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.exception.implementation.ImplementationException;
+import be.yildizgames.common.util.Util;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
@@ -37,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.UUID;
 
 /**
  * @author Grégory Van den Borre
@@ -46,6 +51,41 @@ public class DatabaseAccountCreatorTest {
 
     @Nested
     public class Create {
+        private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
+            Thread.sleep(500);
+            return new TestingDatabaseInit().init("test_db.xml");
+        }
+
+        @Test
+        public void happyFlow() throws Exception {
+            try (DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                Result message = new Result();
+                EncryptionTool encryptionTool = new BCryptEncryptionTool();
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
+                UUID uuid = UUID.randomUUID();
+                int random = Util.getRandom();
+                creator.create(new TemporaryAccountDto("login_" + random, "passwordcreated", "email@created.com", "en"), uuid);
+                try (Connection c = dbcp.getConnection();
+                     PreparedStatement stmt = c.prepareStatement("SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = 'login_" + random + "'");
+                     ResultSet resultSet = stmt.executeQuery()) {
+                    Assertions.assertTrue(resultSet.next());
+                    Assertions.assertEquals("login_" + random, resultSet.getString(2));
+                    Assertions.assertTrue(encryptionTool.check(resultSet.getString(3), "passwordcreated" ));
+                    Assertions.assertEquals("email@created.com", resultSet.getString(4));
+                    Assertions.assertEquals(uuid.toString(), resultSet.getString(5));
+                }
+            }
+        }
+
+        @Test
+        public void sqlException() throws Exception {
+            try (DataBaseConnectionProvider dbcp = givenAConnexionProvider()) {
+                Result message = new Result();
+                DatabaseAccountCreator creator = new DatabaseAccountCreator(dbcp, (m, h) -> message.value = m);
+                UUID uuid = UUID.randomUUID();
+                Assertions.assertThrows(PersistenceException.class, () -> creator.create(new TemporaryAccountDto("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "passwordcreated", "email@created.com", "en"), uuid));
+            }
+        }
 
 
     }
