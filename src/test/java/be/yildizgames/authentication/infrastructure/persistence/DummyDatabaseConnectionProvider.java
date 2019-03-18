@@ -29,7 +29,6 @@ package be.yildizgames.authentication.infrastructure.persistence;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseSystem;
 import be.yildizgames.module.database.DbProperties;
-import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.SQLException;
