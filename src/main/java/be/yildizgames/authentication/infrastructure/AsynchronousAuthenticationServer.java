@@ -69,7 +69,7 @@ public class AsynchronousAuthenticationServer {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(this.from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
-                this.logger.warn("Unexpected message in {}", Queues.CREATE_ACCOUNT_REQUEST.getName(), e);
+                this.logException(Queues.CREATE_ACCOUNT_REQUEST, e);
             }
         });
 
@@ -78,7 +78,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 accountCreationManager.confirmAccount(AccountConfirmationMapper.getInstance().from(message.getText()));
             } catch (TechnicalException e) {
-                this.logger.warn("Unexpected message in {}", Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST.getName(), e);
+                this.logException(Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST, e);
             }
         });
 
@@ -90,13 +90,17 @@ public class AsynchronousAuthenticationServer {
                 this.logger.debug("Send authentication response message to {} : {}", token.getId(), token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
-                this.logger.warn("Unexpected message in {}", Queues.AUTHENTICATION_REQUEST.getName(), e);
+                this.logException(Queues.AUTHENTICATION_REQUEST, e);
             }
         });
     }
 
     private void logMessage(Queues queue, BrokerMessage message) {
         this.logger.debug("message received in {}: {}", queue.getName(), message.getText());
+    }
+
+    private void logException(Queues queue, TechnicalException e) {
+        this.logger.warn("Unexpected message in {}", queue.getName(), e);
     }
 
     private TemporaryAccountDto from(String s) {

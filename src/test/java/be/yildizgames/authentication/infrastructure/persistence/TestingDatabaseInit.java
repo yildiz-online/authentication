@@ -28,8 +28,10 @@ package be.yildizgames.authentication.infrastructure.persistence;
 
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
-import be.yildizgames.module.database.DbProperties;
 import be.yildizgames.module.database.LiquibaseDatabaseUpdater;
+import be.yildizgames.module.database.dummy.DummyDbProperties;
+import be.yildizgames.module.database.dummy.DummySystem;
+import org.h2.Driver;
 
 import java.sql.SQLException;
 
@@ -39,75 +41,10 @@ import java.sql.SQLException;
 public class TestingDatabaseInit {
 
     public DataBaseConnectionProvider init(final String changeLogFile) throws SQLException {
-        DatabaseConnectionProviderFactory.getInstance().addSystem("h2", new DummySystem());
+        DatabaseConnectionProviderFactory.getInstance().addSystem("h2", new DummySystem(Driver::new));
         DataBaseConnectionProvider dbcp =
-                DatabaseConnectionProviderFactory.getInstance().create(new TestingDbProperties());
+                DatabaseConnectionProviderFactory.getInstance().create(new DummyDbProperties("YILDIZDATABASE"));
         LiquibaseDatabaseUpdater.fromConfigurationPath(changeLogFile).update(dbcp);
         return dbcp;
-    }
-
-    public DataBaseConnectionProvider init(final String changeLogFile, final String databaseName) throws SQLException {
-        DatabaseConnectionProviderFactory.getInstance().addSystem("h2", new DummySystem());
-        DataBaseConnectionProvider dbcp =
-                DatabaseConnectionProviderFactory.getInstance().create(new TestingDbProperties(databaseName));
-        LiquibaseDatabaseUpdater.fromConfigurationPath(changeLogFile).update(dbcp);
-        return dbcp;
-    }
-
-
-    /**
-     * @author Grégory Van den Borre
-     */
-    static class TestingDbProperties implements DbProperties {
-
-        private final String name;
-
-        public TestingDbProperties() {
-            this("YILDIZDATABASE");
-        }
-
-         public TestingDbProperties(String databaseName) {
-             this.name = databaseName;
-         }
-
-        @Override
-        public String getDbUser() {
-            return name;
-        }
-
-        @Override
-        public int getDbPort() {
-            return 0;
-        }
-
-        @Override
-        public String getDbPassword() {
-            return "";
-        }
-
-        @Override
-        public String getDbHost() {
-            return "";
-        }
-
-        @Override
-        public String getDbName() {
-            return name;
-        }
-
-        @Override
-        public String getSystem() {
-            return "h2";
-        }
-
-        @Override
-        public String getDbRootUser() {
-            return getDbUser();
-        }
-
-        @Override
-        public String getDbRootPassword() {
-            return getDbPassword();
-        }
     }
 }
