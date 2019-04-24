@@ -9,6 +9,7 @@ module be.yildizgames.authentication {
     requires be.yildizgames.common.authentication;
     requires be.yildizgames.common.model;
     requires be.yildizgames.common.util;
+    requires be.yildizgames.common.application;
     
     requires java.sql;
     requires java.mail;
