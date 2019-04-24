@@ -43,39 +43,39 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Grégory Van den Borre
  */
-class AuthenticationManagerTest {
+public class AuthenticationManagerTest {
 
     @Test
-    void withNullAuthenticator() {
+    public void withNullAuthenticator() {
         assertThrows(ImplementationException.class, () -> new AuthenticationManager(null));
     }
 
     @Test
-    void testAuthenticate() {
+    public void testAuthenticate() {
         Token result = this.givenAuthenticatedResult("test", "test1");
         this.thenResultIsAuthenticated(result);
     }
 
     @Test
-    void testAuthenticateNot() {
+    public void testAuthenticateNot() {
         Token result = this.givenNotAuthenticatedResult("test", "test1");
         this.thenResultIsNotAuthenticated(result);
     }
 
     @Test
-    void testAuthenticateNotFound() {
+    public void testAuthenticateNotFound() {
         Token result = this.givenNotFoundResult("test", "test1");
         this.thenResultIsNotFound(result);
     }
 
     @Test
-    void testAuthenticateInvalidInput() {
+    public void testAuthenticateInvalidInput() {
         Token result = this.givenAuthenticatedResult("", "");
         this.thenResultIsNotFound(result);
     }
 
     @Test
-    void testAuthenticateBan() {
+    public void testAuthenticateBan() {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 5; i++) {
@@ -90,7 +90,7 @@ class AuthenticationManagerTest {
     }
 
     @Test
-    void testAuthenticateResetInvalidInput() {
+    public void testAuthenticateResetInvalidInput() {
         AuthenticatorMock mock = new AuthenticatorMock(false, false);
         AuthenticationManager m = new AuthenticationManager(mock);
         for (int i = 0; i < 4; i++) {
@@ -108,7 +108,7 @@ class AuthenticationManagerTest {
     }
 
     @Test
-    void testGetAuthenticatedNotFound() {
+    public void testGetAuthenticatedNotFound() {
         AuthenticationManager m = new AuthenticationManager(new AuthenticatorMock(true, false));
         Token token = m.getAuthenticated(PlayerId.WORLD);
         Assertions.assertEquals(Token.notFound(),token);
@@ -155,7 +155,7 @@ class AuthenticationManagerTest {
 
         private boolean notFound;
 
-        AuthenticatorMock(final boolean toReturn, final boolean notFound) {
+        public AuthenticatorMock(final boolean toReturn, final boolean notFound) {
             super();
             this.toReturn = toReturn;
             this.notFound = notFound;
