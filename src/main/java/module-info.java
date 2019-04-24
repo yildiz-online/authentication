@@ -11,4 +11,5 @@ module be.yildizgames.authentication {
     requires be.yildizgames.common.util;
     
     requires java.sql;
+    requires java.mail;
 }
