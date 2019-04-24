@@ -36,8 +36,6 @@ import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
 import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.exception.technical.TechnicalException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.UUID;
@@ -50,7 +48,7 @@ public class AccountCreationManager {
     /**
      * Logger.
      */
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final System.Logger logger = System.getLogger(this.getClass().toString());
 
     /**
      * To materialize the account.
@@ -89,12 +87,12 @@ public class AccountCreationManager {
      * @return The created temporary account, waiting to be validated.
      */
     public final TemporaryAccountCreationResultDto create(TemporaryAccountDto dto) {
-        this.logger.debug("Prepare creation of the temporary account for {}.", dto.login);
+        this.logger.log(System.Logger.Level.DEBUG, "Prepare creation of the temporary account for {}.", dto.login);
         TemporaryAccountCreationResultDto result = TemporaryAccountCreationResultDto.success();
         try {
             TemporaryAccount.create(dto.login, dto.password, dto.email, dto.language);
         } catch (TemporaryAccountValidationException e) {
-            this.logger.debug("Validation error for the temporary account for {}.", dto.login);
+            this.logger.log(System.Logger.Level.DEBUG, "Validation error for the temporary account for {}.", dto.login);
             this.handleTemporaryAccountValidationError(result, e.getExceptions());
             return result;
         }
@@ -102,18 +100,18 @@ public class AccountCreationManager {
         try {
             if (this.accountCreator.emailAlreadyExist(dto.email)) {
                 result.setEmailExisting(true);
-                this.logger.debug("Account for {} not created, email already exists.", dto.login);
+                this.logger.log(System.Logger.Level.DEBUG, "Account for {} not created, email already exists.", dto.login);
             }
             if (this.accountCreator.loginAlreadyExist(dto.login)) {
                 result.setAccountExisting(true);
-                this.logger.debug("Account for {} not created, account already exists.", dto.login);
+                this.logger.log(System.Logger.Level.DEBUG, "Account for {} not created, account already exists.", dto.login);
             }
             if (!result.hasError()) {
                 this.accountCreator.create(dto, token);
                 this.emailService.send(new TemporaryAccountEmail(this.configuration.getEmailTemplatePath(dto.language), dto.login, dto.email, token.toString()));
             }
         } catch (TechnicalException e) {
-            this.logger.error("Error while persisting temp account {} : {}", dto, token, e);
+            this.logger.log(System.Logger.Level.ERROR, "Error while persisting temp account {} : {}", dto, token, e);
             result.setTechnicalIssue(true);
         }
         return result;

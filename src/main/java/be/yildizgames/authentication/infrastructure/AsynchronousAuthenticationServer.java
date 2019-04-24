@@ -43,15 +43,13 @@ import be.yildizgames.module.messaging.BrokerMessage;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.BrokerMessageHeader;
 import be.yildizgames.module.messaging.BrokerMessageProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Grégory Van den Borre
  */
 public class AsynchronousAuthenticationServer {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final System.Logger logger = System.getLogger(AsynchronousAuthenticationServer.class.toString());
 
     public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager, AuthenticationManager authenticationManager) {
         BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue(Queues.ACCOUNT_CREATION_TEMP.getName());
@@ -87,7 +85,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
-                this.logger.debug("Send authentication response message to {} : {}", token.getId(), token.getStatus());
+                this.logger.log(System.Logger.Level.DEBUG, "Send authentication response message to {} : {}", token.getId(), token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (TechnicalException e) {
                 this.logException(Queues.AUTHENTICATION_REQUEST, e);
@@ -96,11 +94,11 @@ public class AsynchronousAuthenticationServer {
     }
 
     private void logMessage(Queues queue, BrokerMessage message) {
-        this.logger.debug("message received in {}: {}", queue.getName(), message.getText());
+        this.logger.log(System.Logger.Level.DEBUG, "message received in {}: {}", queue.getName(), message.getText());
     }
 
     private void logException(Queues queue, TechnicalException e) {
-        this.logger.warn("Unexpected message in {}", queue.getName(), e);
+        this.logger.log(System.Logger.Level.WARNING, "Unexpected message in {}", queue.getName(), e);
     }
 
     private TemporaryAccountDto from(String s) {

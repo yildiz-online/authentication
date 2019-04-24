@@ -50,7 +50,7 @@ import java.sql.SQLException;
  */
 public final class DataBaseAuthenticator implements Authenticator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataBaseAuthenticator.class);
+    private static final System.Logger LOGGER = System.getLogger(DataBaseAuthenticator.class.toString());
 
     /**
      * Every authentication with this key will be accepted.
@@ -97,7 +97,7 @@ public final class DataBaseAuthenticator implements Authenticator {
                 throw new UserNotFoundException();
             }
             if (credential.password.equals(this.key)) {
-                LOGGER.warn("{} connected with generic password.", credential.login);
+                LOGGER.log(System.Logger.Level.WARNING, "{} connected with generic password.", credential.login);
                 return new TokenVerification(PlayerId.valueOf(results.getInt("id")), true);
             }
             boolean authenticated = this.encrypting.check(results.getString("password"), credential.password);

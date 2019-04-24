@@ -26,11 +26,11 @@ package be.yildizgames.authentication.main;
 
 import be.yildizgames.authentication.application.AccountCreationManager;
 import be.yildizgames.authentication.application.AuthenticationManager;
-import be.yildizgames.authentication.infrastructure.persistence.DataBaseAuthenticator;
-import be.yildizgames.authentication.infrastructure.persistence.DatabaseAccountCreator;
 import be.yildizgames.authentication.configuration.Configuration;
 import be.yildizgames.authentication.infrastructure.AsynchronousAuthenticationServer;
 import be.yildizgames.authentication.infrastructure.io.mail.JavaMailEmailService;
+import be.yildizgames.authentication.infrastructure.persistence.DataBaseAuthenticator;
+import be.yildizgames.authentication.infrastructure.persistence.DatabaseAccountCreator;
 import be.yildizgames.common.application.Starter;
 import be.yildizgames.common.authentication.protocol.Queues;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
@@ -40,8 +40,6 @@ import be.yildizgames.module.database.LiquibaseDatabaseUpdater;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.BrokerMessageProducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Application entry point, contains the main method.
@@ -62,9 +60,10 @@ final class AuthenticationEntryPoint {
         try {
             //TODO have all entry point impl an interface, pass that interface to starter, and let starter launch it.
             Starter.start(config.getLoggerConfiguration(), "Authentication Server");
-            Logger logger = LoggerFactory.getLogger(AuthenticationEntryPoint.class);
+            System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
+            //Logger logger = LoggerFactory.getLogger(AuthenticationEntryPoint.class);
 
-            logger.info("Preparing the database connection...");
+            logger.log(System.Logger.Level.INFO, "Preparing the database connection...");
 
             try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().createWithHighPrivilege(config)) {
                 provider.sanity();
@@ -76,13 +75,13 @@ final class AuthenticationEntryPoint {
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), new JavaMailEmailService(config), config);
-                logger.info("Preparing the messaging system");
+                logger.log(System.Logger.Level.INFO, "Preparing the messaging system");
                 new AsynchronousAuthenticationServer(broker, accountCreationManager, manager);
-                logger.info("Server running");
+                logger.log(System.Logger.Level.INFO, "Server running");
             }
         } catch (Exception e) {
-            LoggerFactory.getLogger(AuthenticationEntryPoint.class).error("An error occurred, closing the server...", e);
-            LoggerFactory.getLogger(AuthenticationEntryPoint.class).info("Server closed.");
+            System.getLogger(AuthenticationEntryPoint.class.toString()).log(System.Logger.Level.ERROR, "An error occurred, closing the server...", e);
+            System.getLogger(AuthenticationEntryPoint.class.toString()).log(System.Logger.Level.INFO, "Server closed.");
             System.exit(-1);
         }
     }

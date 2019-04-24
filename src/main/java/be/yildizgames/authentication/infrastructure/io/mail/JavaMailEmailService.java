@@ -27,8 +27,6 @@
 package be.yildizgames.authentication.infrastructure.io.mail;
 
 import be.yildizgames.authentication.configuration.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -44,7 +42,7 @@ import javax.mail.internet.MimeMessage;
  */
 public class JavaMailEmailService implements EmailService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final System.Logger logger = System.getLogger(this.getClass().toString());
 
     private final Session session;
 
@@ -72,7 +70,7 @@ public class JavaMailEmailService implements EmailService {
             message.setText(template.getBody());
             Transport.send(message);
         } catch (MessagingException mex) {
-            this.logger.error("Error sending mail", mex);
+            this.logger.log(System.Logger.Level.ERROR, "Error sending mail", mex);
         }
     }
 }
