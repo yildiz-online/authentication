@@ -38,58 +38,56 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author Grégory Van den Borre
  */
-class ConfigurationTest {
+public class ConfigurationTest {
 
     @Nested
-    class fromProperties {
+    public class fromProperties {
 
         @Test
-        void happyFlow() {
+        public void happyFlow() {
             Configuration c = Configuration.fromProperties(new DefaultConfigProperties());
             Assertions.assertNotNull(c);
         }
 
         @Test
-        void fromNull() {
+        public void fromNull() {
             assertThrows(ImplementationException.class, () -> Configuration.fromProperties(null));
         }
     }
 
     @Nested
-    class Getter  {
+    public class Getter  {
 
         Configuration c = Configuration.fromProperties(new DefaultConfigProperties());
 
         @Test
-        void getDatabaseUser() {
+        public void getDatabaseUser() {
             assertEquals("sa", c.getDbUser());
         }
 
         @Test
-        void getDatabasePassword() {
+        public void getDatabasePassword() {
             assertEquals("", c.getDbPassword());
         }
 
         @Test
-        void getDatabaseName() {
+        public void getDatabaseName() {
             assertEquals("authentication", c.getDbName());
         }
 
         @Test
-        void getDatabaseHost() {
+        public void getDatabaseHost() {
             assertEquals("localhost", c.getDbHost());
         }
 
         @Test
-        void getDatabasePort() {
+        public void getDatabasePort() {
             assertEquals(9000, c.getDbPort());
         }
 
         @Test
-        void getDatabaseSystem() {
+        public void getDatabaseSystem() {
             assertEquals("derby-file", c.getSystem());
         }
-
-
     }
 }
