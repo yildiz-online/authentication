@@ -44,39 +44,39 @@ import java.util.UUID;
 /**
  * @author Grégory Van den Borre
  */
-class AccountCreationManagerTest {
+public class AccountCreationManagerTest {
 
     @Nested
-    class Constructor {
+    public class Constructor {
 
         @Test
-        void happyFlow() {
+        public void happyFlow() {
             AccountCreationManager acm = new AccountCreationManager(givenAnAccountCreator(true, true), (m) -> {}, (l) -> Paths.get(""));
             Assertions.assertNotNull(acm);
         }
 
         @Test
-        void withNullAccountCreator() {
+        public void withNullAccountCreator() {
             Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(null, (m) -> {}, (l) -> Paths.get("")));
         }
 
         @Test
-        void withNullEmailService() {
+        public void withNullEmailService() {
             Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), null, (l) -> Paths.get("")));
         }
 
         @Test
-        void withNullEmailConfiguration() {
+        public void withNullEmailConfiguration() {
             Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), (m) -> {}, null));
         }
 
     }
 
     @Nested
-    class Create {
+    public class Create {
 
         @Test
-        void happyFlow() {
+        public void happyFlow() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "passwordok", "me@me.com", "en"));
             Assertions.assertFalse(dto.hasError());
@@ -90,7 +90,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void loginEmpty() {
+        public void loginEmpty() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("", "passwordok", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidLogin());
@@ -104,7 +104,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void loginTooShort() {
+        public void loginTooShort() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("a", "passwordok", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidLogin());
@@ -118,7 +118,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void loginTooLong() {
+        public void loginTooLong() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("123456789012345678901234567890", "passwordok", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidLogin());
@@ -132,7 +132,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void loginInvalid() {
+        public void loginInvalid() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("|&é@-{}", "passwordok", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidLogin());
@@ -146,7 +146,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void loginExisting() {
+        public void loginExisting() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(true, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("login", "passwordok", "me@me.com", "en"));
             Assertions.assertTrue(dto.isAccountExisting());
@@ -160,7 +160,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void passwordEmpty() {
+        public void passwordEmpty() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidPassword());
@@ -174,7 +174,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void passwordTooShort() {
+        public void passwordTooShort() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "p", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidPassword());
@@ -188,7 +188,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void passwordTooLong() {
+        public void passwordTooLong() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "paaaaaaaaaaaaaaaaaaaaaaaaaaaazzzzzzzzzzzzzzzzzzzzzzzzzzzzeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidPassword());
@@ -202,7 +202,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void passwordInvalid() {
+        public void passwordInvalid() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "&é'(§§è", "me@me.com", "en"));
             Assertions.assertTrue(dto.isInvalidPassword());
@@ -216,7 +216,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void emailInvalid() {
+        public void emailInvalid() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(true, true));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "passwordok", "bademail", "en"));
             Assertions.assertTrue(dto.isInvalidEmail());
@@ -224,7 +224,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void emailMissing() {
+        public void emailMissing() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "passwordok", null, "en"));
             Assertions.assertTrue(dto.isEmailMissing());
@@ -232,7 +232,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void emailExisting() {
+        public void emailExisting() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, true));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "passwordok", "me@me.com", "en"));
             Assertions.assertTrue(dto.isEmailExisting());
@@ -240,7 +240,7 @@ class AccountCreationManagerTest {
         }
 
         @Test
-        void technicalError() {
+        public void technicalError() {
             AccountCreationManager m = givenAManager(givenAnAccountCreator(false, false, true));
             TemporaryAccountCreationResultDto dto = m.create(new TemporaryAccountDto("loginok", "passwordok", "me@me.com", "en"));
             Assertions.assertTrue(dto.isTechnicalIssue());
