@@ -36,7 +36,6 @@ import be.yildizgames.common.authentication.protocol.mapper.AccountConfirmationM
 import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
-import be.yildizgames.common.authentication.protocol.mapper.exception.AuthenticationMappingException;
 import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessage;
@@ -106,7 +105,7 @@ public class AsynchronousAuthenticationServer {
             String[] v = s.split("@@");
             return new TemporaryAccountDto(v[0], v[1], v[2], v[3]);
         } catch (IndexOutOfBoundsException var3) {
-            throw new AuthenticationMappingException(var3);
+            throw new IllegalArgumentException(var3);
         }
     }
 
