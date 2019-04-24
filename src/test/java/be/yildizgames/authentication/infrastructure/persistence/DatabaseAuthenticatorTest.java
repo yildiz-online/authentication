@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Tag("database")
 public class DatabaseAuthenticatorTest {
 
-    @Nested
+    /*@Nested
     public class Constructor {
 
         private DataBaseConnectionProvider givenAConnexionProvider() throws Exception {
@@ -162,5 +162,5 @@ public class DatabaseAuthenticatorTest {
                 assertThrows(TechnicalException.class, () -> da.getPasswordForUser(Credentials.unchecked("invalidSalt", "azerty")));
             }
         }
-    }
+    }*/
 }
