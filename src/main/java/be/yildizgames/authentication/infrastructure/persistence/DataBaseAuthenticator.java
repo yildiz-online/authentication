@@ -48,6 +48,9 @@ import java.sql.SQLException;
  */
 public final class DataBaseAuthenticator implements Authenticator {
 
+    /**
+     * Logger.
+     */
     private static final System.Logger LOGGER = System.getLogger(DataBaseAuthenticator.class.toString());
 
     /**
@@ -60,6 +63,9 @@ public final class DataBaseAuthenticator implements Authenticator {
      */
     private final DataBaseConnectionProvider provider;
 
+    /**
+     * To encrypt the password.
+     */
     private final EncryptionTool encrypting;
 
     /**
