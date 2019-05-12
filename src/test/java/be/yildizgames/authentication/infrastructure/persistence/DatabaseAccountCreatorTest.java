@@ -26,22 +26,7 @@
 
 package be.yildizgames.authentication.infrastructure.persistence;
 
-import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
-import be.yildizgames.common.authentication.BCryptEncryptionTool;
-import be.yildizgames.common.authentication.EncryptionTool;
-import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
-import be.yildizgames.common.exception.implementation.ImplementationException;
-import be.yildizgames.common.util.Util;
-import be.yildizgames.module.database.DataBaseConnectionProvider;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.UUID;
 
 /**
  * @author Grégory Van den Borre

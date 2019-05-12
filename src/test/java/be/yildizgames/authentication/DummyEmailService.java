@@ -34,6 +34,6 @@ public class DummyEmailService implements EmailService {
 
     @Override
     public void send(EmailTemplate template) {
-
+        //Does nothing.
     }
 }

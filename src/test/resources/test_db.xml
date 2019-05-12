@@ -86,7 +86,6 @@
       <column name="ACTIVE">true</column>
       <column name="EMAIL">invalidSalt@e.com</column>
     </insert>
-
   </changeSet>
 
 </databaseChangeLog>

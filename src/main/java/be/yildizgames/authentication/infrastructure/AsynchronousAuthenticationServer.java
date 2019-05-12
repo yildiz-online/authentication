@@ -48,6 +48,9 @@ import be.yildizgames.module.messaging.BrokerMessageProducer;
  */
 public class AsynchronousAuthenticationServer {
 
+    /**
+     * Logger.
+     */
     private final System.Logger logger = System.getLogger(AsynchronousAuthenticationServer.class.toString());
 
     public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager, AuthenticationManager authenticationManager) {

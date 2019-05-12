@@ -26,25 +26,7 @@
 
 package be.yildizgames.authentication.infrastructure.persistence;
 
-import be.yildizgames.authentication.application.Authenticator;
-import be.yildizgames.common.authentication.Credentials;
-import be.yildizgames.common.authentication.UserNotFoundException;
-import be.yildizgames.common.authentication.protocol.TokenVerification;
-import be.yildizgames.common.exception.implementation.ImplementationException;
-import be.yildizgames.common.exception.technical.TechnicalException;
-import be.yildizgames.common.model.PlayerId;
-import be.yildizgames.module.database.DataBaseConnectionProvider;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Grégory Van den Borre

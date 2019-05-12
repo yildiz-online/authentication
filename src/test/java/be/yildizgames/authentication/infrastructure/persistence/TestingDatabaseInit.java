@@ -40,7 +40,7 @@ import java.sql.SQLException;
  */
 public class TestingDatabaseInit {
 
-    public DataBaseConnectionProvider init(final String changeLogFile) throws SQLException {
+    public final DataBaseConnectionProvider init(final String changeLogFile) throws SQLException {
         DatabaseConnectionProviderFactory.getInstance().addSystem("h2", new DummySystem(Driver::new));
         DataBaseConnectionProvider dbcp =
                 DatabaseConnectionProviderFactory.getInstance().create(new DummyDbProperties("YILDIZDATABASE"));

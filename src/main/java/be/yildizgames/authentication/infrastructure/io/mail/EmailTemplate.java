@@ -31,6 +31,10 @@ package be.yildizgames.authentication.infrastructure.io.mail;
  */
 public interface EmailTemplate {
 
+    /**
+     * Provide the mail title.
+     * @return Mail title.
+     */
     String getTitle();
 
     String getBody();

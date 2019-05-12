@@ -46,6 +46,7 @@ import java.util.UUID;
 
 /**
  * Materialize the account and temporary account in the database.
+ *
  * @author Grégory Van den Borre
  */
 public class DatabaseAccountCreator implements AccountCreator {

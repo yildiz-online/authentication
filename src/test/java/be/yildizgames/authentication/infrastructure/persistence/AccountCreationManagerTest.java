@@ -69,7 +69,6 @@ public class AccountCreationManagerTest {
         public void withNullEmailConfiguration() {
             Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), (m) -> {}, null));
         }
-
     }
 
     @Nested

@@ -28,6 +28,9 @@ package be.yildizgames.authentication.configuration;
 
 import java.util.Properties;
 
+/**
+ * @author Grégory Van den Borre
+ */
 public class DefaultConfigProperties extends Properties {
 
     private static final String ROOT = System.getProperty("user.home") + "/yildiz-authentication";

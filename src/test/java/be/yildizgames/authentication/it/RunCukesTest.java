@@ -26,5 +26,4 @@ package be.yildizgames.authentication.it;
 
 //@RunWith(Cucumber.class)
 //@CucumberOptions(format = "pretty")
-public class RunCukesTest {
-}
+public class RunCukesTest {}

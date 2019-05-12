@@ -45,8 +45,6 @@ public interface Authenticator {
      * @return The authentication result with <code>true</code> if the password is correct for the userName.
      * @throws UserNotFoundException  If the credentials login does not exists.
      */
-    //@Requires credentials != null
-    //@Requires credentials to have been checked with an {@link AuthenticationChecker} to ensure no dangerous input is passed to the authenticator.
     TokenVerification getPasswordForUser(Credentials credentials) throws UserNotFoundException;
 
 }

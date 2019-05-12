@@ -25,12 +25,9 @@
 package be.yildizgames.authentication.configuration;
 
 import be.yildizgames.common.exception.implementation.ImplementationException;
-import be.yildizgames.common.exception.initialization.InitializationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

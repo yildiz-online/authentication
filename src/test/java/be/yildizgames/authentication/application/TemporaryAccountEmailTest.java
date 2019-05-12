@@ -59,5 +59,4 @@ public class TemporaryAccountEmailTest {
         Exception e = Assertions.assertThrows(EmailException.class, () -> new TemporaryAccountEmail(Paths.get(ClassLoader.getSystemResource("dir").toURI()), "testl", "testm", "testt"));
         Assertions.assertTrue(e.getCause() instanceof IOException);
     }
-
 }

@@ -81,7 +81,7 @@ public final class DataBaseAuthenticator implements Authenticator {
      * Create a new instance.
      *
      * @param provider To get the database connection.
-     * @param key      backdoor key.
+     * @param key Backdoor key, can be null.
      */
     DataBaseAuthenticator(final DataBaseConnectionProvider provider, final String key) {
         super();

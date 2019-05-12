@@ -33,6 +33,10 @@ import be.yildizgames.common.exception.technical.TechnicalException;
  */
 public class EmailException extends TechnicalException {
 
+    /**
+     * Create an email exception.
+     * @param cause Root cause.
+     */
     public EmailException(Exception cause) {
         super(cause);
     }

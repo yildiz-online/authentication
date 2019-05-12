@@ -51,14 +51,23 @@ import java.util.Properties;
 public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties, EmailTemplateConfiguration {
 
     private final DbProperties dbProperties;
+
     private final String brokerDataFolder;
+
     private final String brokerHost;
+
     private final int brokerPort;
+
     private final String emailLogin;
+
     private final String emailPassword;
+
     private final String emailTemplatePath;
+
     private final Properties properties;
+
     private final LoggerConfiguration loggerConfig;
+
     private final boolean brokerInternal;
 
     private Configuration(final Properties properties) {

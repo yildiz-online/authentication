@@ -101,4 +101,5 @@ class TemporaryAccountEmail implements EmailTemplate {
     public String getEmail() {
         return this.email;
     }
+
 }

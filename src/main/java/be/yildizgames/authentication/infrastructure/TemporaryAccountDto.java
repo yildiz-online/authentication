@@ -26,6 +26,9 @@
 
 package be.yildizgames.authentication.infrastructure;
 
+/**
+ * @author Grégory Van den Borre
+ */
 public class TemporaryAccountDto {
 
     public final String login;

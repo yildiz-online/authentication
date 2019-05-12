@@ -42,6 +42,9 @@ import javax.mail.internet.MimeMessage;
  */
 public class JavaMailEmailService implements EmailService {
 
+    /**
+     * Logger.
+     */
     private final System.Logger logger = System.getLogger(this.getClass().toString());
 
     private final Session session;

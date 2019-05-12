@@ -31,5 +31,6 @@ package be.yildizgames.authentication.infrastructure.io.mail;
  */
 @FunctionalInterface
 public interface EmailService {
+
     void send(EmailTemplate template);
 }

@@ -32,10 +32,17 @@ import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import java.util.UUID;
 
 /**
+ * Create a new account.
+ *
  * @author Grégory Van den Borre
  */
 public interface AccountCreator {
-    
+
+    /**
+     * Check if a login is already registered.
+     * @param login Login to check.
+     * @return True if the login is found.
+     */
     boolean loginAlreadyExist(String login);
 
     boolean emailAlreadyExist(String email);

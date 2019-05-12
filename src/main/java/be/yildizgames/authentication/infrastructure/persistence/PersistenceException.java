@@ -33,6 +33,10 @@ import be.yildizgames.common.exception.technical.TechnicalException;
  */
 class PersistenceException extends TechnicalException {
 
+    /**
+     * Exception for persistence.
+     * @param cause Root cause.
+     */
     PersistenceException(Exception cause) {
         super(cause);
     }

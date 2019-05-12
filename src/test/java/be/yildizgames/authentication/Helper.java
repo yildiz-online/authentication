@@ -34,6 +34,11 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 class Helper {
 
+    /**
+     * Provide a dummy positive authentication verification.
+     * @param id Id to associate.
+     * @return The token verification.
+     */
     public static TokenVerification givenAnAuthenticatedResult(PlayerId id) {
         return new TokenVerification(id, true);
     }

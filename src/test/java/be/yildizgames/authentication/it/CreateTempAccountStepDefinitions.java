@@ -47,5 +47,4 @@ public class CreateTempAccountStepDefinitions {
     public void closeSystem() {
         // Write code here that turns the phrase above into concrete actions
     }
-
 }

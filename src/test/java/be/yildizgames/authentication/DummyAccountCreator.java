@@ -46,11 +46,11 @@ public class DummyAccountCreator implements AccountCreator {
 
     @Override
     public void create(TemporaryAccountDto dto, UUID token) {
-
+        //Does nothing.
     }
 
     @Override
     public void confirm(AccountConfirmationDto validation) {
-
+        //Does nothing.
     }
 }
