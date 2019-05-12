@@ -28,4 +28,3 @@
  * @author Grégory Van den Borre
  */
 package be.yildizgames.authentication.configuration;
-
