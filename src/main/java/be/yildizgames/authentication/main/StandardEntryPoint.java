@@ -38,11 +38,16 @@ import be.yildizgames.module.database.derby.DerbySystem;
 
 import java.util.Properties;
 
+/**
+ * @author Grégory Van den Borre
+ */
 public class StandardEntryPoint {
 
     private static final PreLogger PRELOGGER = LogEngineProvider.getLoggerProvider().getLogEngine().getPrelogger();
 
-
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private StandardEntryPoint() {
         super();
     }

@@ -48,6 +48,9 @@ import be.yildizgames.module.messaging.BrokerMessageProducer;
  */
 final class AuthenticationEntryPoint {
 
+    /**
+     * Private constructor to prevent instantiation, use create method instead.
+     */
     private AuthenticationEntryPoint() {
         super();
     }
