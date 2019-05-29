@@ -24,10 +24,18 @@
 
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
-  <name>Yildiz Authentication</name>
+
+  <name>Yildiz-Engine Application Authentication</name>
   <description>Yildiz authentication application.</description>
-  <url>https://bitbucket.org/yildiz-engine-team/authentication</url>
+  <url>https://engine.yildiz-games.be</url>
+
+  <parent>
+    <groupId>be.yildiz-games</groupId>
+    <artifactId>parent-application</artifactId>
+    <version>1.0.7</version>
+  </parent>
 
   <artifactId>authentication</artifactId>
   <version>1.1.2-SNAPSHOT</version>
@@ -36,16 +44,10 @@
   <inceptionYear>2014</inceptionYear>
 
   <scm>
-    <connection>scm:git:https://bitbucket.org/yildiz-engine-team/authentication</connection>
-    <developerConnection>scm:git:https://bitbucket.org/yildiz-engine-team/authentication</developerConnection>
-    <url>https://bitbucket.org/yildiz-engine-team/authentication</url>
+    <connection>scm:git:https://github.com/yildiz-online/authentication</connection>
+    <developerConnection>scm:git:https://github.com/yildiz-online/authentication</developerConnection>
+    <url>https://github.com/yildiz-online/authentication</url>
   </scm>
-
-  <parent>
-    <groupId>be.yildiz-games</groupId>
-    <artifactId>parent-application</artifactId>
-    <version>1.0.7</version>
-  </parent>
 
   <properties>
     <mainclass>be.yildizgames.authentication.main.StandardEntryPoint</mainclass>
