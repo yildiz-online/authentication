@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!--
   ~ This file is part of the Yildiz-Engine project, licenced under the MIT License  (MIT)
   ~
@@ -29,7 +31,11 @@
 
   <name>Yildiz-Engine Application Authentication</name>
   <description>Yildiz authentication application.</description>
+  <inceptionYear>2014</inceptionYear>
   <url>https://engine.yildiz-games.be</url>
+
+  <artifactId>authentication</artifactId>
+  <version>1.1.2-SNAPSHOT</version>
 
   <parent>
     <groupId>be.yildiz-games</groupId>
@@ -37,11 +43,7 @@
     <version>1.0.7</version>
   </parent>
 
-  <artifactId>authentication</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
-
   <packaging>jar</packaging>
-  <inceptionYear>2014</inceptionYear>
 
   <scm>
     <connection>scm:git:https://github.com/yildiz-online/authentication</connection>
