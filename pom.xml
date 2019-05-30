@@ -30,7 +30,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <name>Yildiz-Engine Application Authentication</name>
-  <description>Yildiz authentication application.</description>
+  <description>Yildiz authentication server application.</description>
   <inceptionYear>2014</inceptionYear>
   <url>https://engine.yildiz-games.be</url>
 
