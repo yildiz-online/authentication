@@ -64,7 +64,6 @@ final class AuthenticationEntryPoint {
             //TODO have all entry point impl an interface, pass that interface to starter, and let starter launch it.
             Starter.start(config.getLoggerConfiguration(), "Authentication Server");
             System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
-            //Logger logger = LoggerFactory.getLogger(AuthenticationEntryPoint.class);
 
             logger.log(System.Logger.Level.INFO, "Preparing the database connection...");
 
