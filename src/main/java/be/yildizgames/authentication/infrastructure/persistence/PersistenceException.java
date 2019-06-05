@@ -26,12 +26,10 @@
 
 package be.yildizgames.authentication.infrastructure.persistence;
 
-import be.yildizgames.common.exception.technical.TechnicalException;
-
 /**
  * @author Grégory Van den Borre
  */
-class PersistenceException extends TechnicalException {
+class PersistenceException extends IllegalStateException {
 
     /**
      * Exception for persistence.

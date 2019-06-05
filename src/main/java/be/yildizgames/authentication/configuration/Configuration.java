@@ -25,17 +25,18 @@
 package be.yildizgames.authentication.configuration;
 
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
-import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.logging.LoggerConfiguration;
 import be.yildizgames.common.logging.LoggerPropertiesConfiguration;
 import be.yildizgames.common.util.PropertiesHelper;
 import be.yildizgames.module.database.DbProperties;
 import be.yildizgames.module.database.StandardDbProperties;
 import be.yildizgames.module.messaging.BrokerProperties;
+import be.yildizgames.module.messaging.BrokerPropertiesStandard;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 
 /**
@@ -52,12 +53,6 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     private final DbProperties dbProperties;
 
-    private final String brokerDataFolder;
-
-    private final String brokerHost;
-
-    private final int brokerPort;
-
     private final String emailLogin;
 
     private final String emailPassword;
@@ -68,17 +63,14 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     private final LoggerConfiguration loggerConfig;
 
-    private final boolean brokerInternal;
+    private final BrokerProperties brokerProperties;
 
     private Configuration(final Properties properties) {
         super();
-        ImplementationException.throwForNull(properties);
+        Objects.requireNonNull(properties);
         this.properties = properties;
         this.dbProperties = new StandardDbProperties(properties);
-        this.brokerDataFolder = PropertiesHelper.getValue(properties, "broker.data");
-        this.brokerHost = PropertiesHelper.getValue(properties, "broker.host");
-        this.brokerPort = PropertiesHelper.getIntValue(properties, "broker.port");
-        this.brokerInternal = PropertiesHelper.getBooleanValue(properties, "broker.internal");
+        this.brokerProperties = BrokerPropertiesStandard.fromProperties(properties);
         this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
         this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
         this.emailTemplatePath = PropertiesHelper.getValue(properties, "mail.template.path");
@@ -136,22 +128,22 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     @Override
     public final String getBrokerDataFolder() {
-        return this.brokerDataFolder;
+        return this.brokerProperties.getBrokerDataFolder();
     }
 
     @Override
     public boolean getBrokerInternal() {
-        return this.brokerInternal;
+        return this.brokerProperties.getBrokerInternal();
     }
 
     @Override
     public final String getBrokerHost() {
-        return this.brokerHost;
+        return this.brokerProperties.getBrokerHost();
     }
 
     @Override
     public final int getBrokerPort() {
-        return this.brokerPort;
+        return this.brokerProperties.getBrokerPort();
     }
 
     public final String getEmailLogin() {

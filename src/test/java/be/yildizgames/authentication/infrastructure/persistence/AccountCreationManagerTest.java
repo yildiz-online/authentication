@@ -31,7 +31,6 @@ import be.yildizgames.authentication.application.AccountCreator;
 import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
-import be.yildizgames.common.exception.implementation.ImplementationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -57,17 +56,17 @@ public class AccountCreationManagerTest {
 
         @Test
         public void withNullAccountCreator() {
-            Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(null, (m) -> {}, (l) -> Paths.get("")));
+            Assertions.assertThrows(NullPointerException.class, () -> new AccountCreationManager(null, (m) -> {}, (l) -> Paths.get("")));
         }
 
         @Test
         public void withNullEmailService() {
-            Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), null, (l) -> Paths.get("")));
+            Assertions.assertThrows(NullPointerException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), null, (l) -> Paths.get("")));
         }
 
         @Test
         public void withNullEmailConfiguration() {
-            Assertions.assertThrows(ImplementationException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), (m) -> {}, null));
+            Assertions.assertThrows(NullPointerException.class, () -> new AccountCreationManager(givenAnAccountCreator(true, true), (m) -> {}, null));
         }
     }
 

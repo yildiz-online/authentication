@@ -33,10 +33,9 @@ import be.yildizgames.common.authentication.TemporaryAccount;
 import be.yildizgames.common.authentication.TemporaryAccountValidationException;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
-import be.yildizgames.common.exception.implementation.ImplementationException;
-import be.yildizgames.common.exception.technical.TechnicalException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -72,9 +71,9 @@ public class AccountCreationManager {
      */
     public AccountCreationManager(final AccountCreator accountCreator, final EmailService emailService, final EmailTemplateConfiguration configuration) {
         super();
-        ImplementationException.throwForNull(accountCreator);
-        ImplementationException.throwForNull(emailService);
-        ImplementationException.throwForNull(configuration);
+        Objects.requireNonNull(accountCreator);
+        Objects.requireNonNull(emailService);
+        Objects.requireNonNull(configuration);
         this.accountCreator = accountCreator;
         this.emailService = emailService;
         this.configuration = configuration;
@@ -109,7 +108,7 @@ public class AccountCreationManager {
                 this.accountCreator.create(dto, token);
                 this.emailService.send(new TemporaryAccountEmail(this.configuration.getEmailTemplatePath(dto.language), dto.login, dto.email, token.toString()));
             }
-        } catch (TechnicalException e) {
+        } catch (IllegalStateException e) {
             this.logger.log(System.Logger.Level.ERROR, "Error while persisting temp account {} : {}", dto, token, e);
             result.setTechnicalIssue(true);
         }

@@ -31,7 +31,6 @@ import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
 import be.yildizgames.common.authentication.BCryptEncryptionTool;
 import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
-import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.Transaction;
 import be.yildizgames.module.messaging.AsyncMessageProducer;
@@ -42,6 +41,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -73,15 +73,15 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     public DatabaseAccountCreator(DataBaseConnectionProvider provider, AsyncMessageProducer messageProducer) {
         super();
-        ImplementationException.throwForNull(provider);
-        ImplementationException.throwForNull(messageProducer);
+        Objects.requireNonNull(provider);
+        Objects.requireNonNull(messageProducer);
         this.provider = provider;
         this.messageProducer = messageProducer;
     }
 
     @Override
     public final boolean loginAlreadyExist(String login) {
-        ImplementationException.throwForNull(login);
+        Objects.requireNonNull(login);
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = this.createPreparedStatementSearchAccount(c, login);
              ResultSet result = stmt.executeQuery()) {
@@ -112,7 +112,7 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public final boolean emailAlreadyExist(String email) {
-        ImplementationException.throwForNull(email);
+        Objects.requireNonNull(email);
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = this.createPreparedStatementSearchEmail(c, email);
              ResultSet result = stmt.executeQuery()) {
@@ -145,8 +145,8 @@ public class DatabaseAccountCreator implements AccountCreator {
     @Override
     public final void create(TemporaryAccountDto dto, UUID token) {
         this.logger.log(System.Logger.Level.DEBUG, "Create temporary account for {}.", dto.login);
-        ImplementationException.throwForNull(dto);
-        ImplementationException.throwForNull(token);
+        Objects.requireNonNull(dto);
+        Objects.requireNonNull(token);
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = c.prepareStatement(sql)) {
@@ -164,7 +164,7 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public void confirm(AccountConfirmationDto validation) {
-        ImplementationException.throwForNull(validation);
+        Objects.requireNonNull(validation);
         Transaction transaction = new Transaction(this.provider);
         transaction.execute(c -> {
             String query = "SELECT * FROM TEMP_ACCOUNTS WHERE LOGIN = ?";

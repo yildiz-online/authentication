@@ -32,7 +32,6 @@ import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
-import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 
@@ -40,6 +39,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * This class is an authenticator, it provide logic to connect to a database and retrieve the connecting clients credentials.
@@ -85,7 +85,7 @@ public final class DataBaseAuthenticator implements Authenticator {
      */
     DataBaseAuthenticator(final DataBaseConnectionProvider provider, final String key) {
         super();
-        ImplementationException.throwForNull(provider);
+        Objects.requireNonNull(provider);
         this.provider = provider;
         this.key = key;
         this.encrypting = new BCryptEncryptionTool();
@@ -93,7 +93,7 @@ public final class DataBaseAuthenticator implements Authenticator {
 
     @Override
     public TokenVerification getPasswordForUser(final Credentials credential) throws UserNotFoundException {
-        ImplementationException.throwForNull(credential);
+        Objects.requireNonNull(credential);
         try (Connection c = this.provider.getConnection();
              PreparedStatement stmt = createPreparedStatement(c, credential.login);
              ResultSet results = stmt.executeQuery()) {

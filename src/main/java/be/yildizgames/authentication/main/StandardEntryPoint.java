@@ -31,7 +31,6 @@ import be.yildizgames.authentication.configuration.DefaultConfigProperties;
 import be.yildizgames.common.configuration.ConfigurationNotFoundException;
 import be.yildizgames.common.configuration.ConfigurationRetrieverFactory;
 import be.yildizgames.common.configuration.parameter.ApplicationArgs;
-import be.yildizgames.common.exception.initialization.InitializationException;
 import be.yildizgames.common.logging.LogEngineProvider;
 import be.yildizgames.common.logging.PreLogger;
 import be.yildizgames.module.database.derby.DerbySystem;
@@ -71,7 +70,7 @@ public class StandardEntryPoint {
             return ConfigurationRetrieverFactory
                     .fromFile(new ConfigurationNotFoundException())
                     .retrieveFromArgs(ApplicationArgs.of(args));
-        } catch (InitializationException e) {
+        } catch (IllegalStateException e) {
             PRELOGGER.info("Loading properties failed, fallback to default values.");
             DerbySystem.support();
             return new DefaultConfigProperties();

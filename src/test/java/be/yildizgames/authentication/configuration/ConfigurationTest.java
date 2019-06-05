@@ -24,7 +24,6 @@
 
 package be.yildizgames.authentication.configuration;
 
-import be.yildizgames.common.exception.implementation.ImplementationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,7 +47,7 @@ public class ConfigurationTest {
 
         @Test
         public void fromNull() {
-            assertThrows(ImplementationException.class, () -> Configuration.fromProperties(null));
+            assertThrows(NullPointerException.class, () -> Configuration.fromProperties(null));
         }
     }
 

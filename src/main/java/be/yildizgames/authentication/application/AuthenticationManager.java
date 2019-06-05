@@ -33,7 +33,6 @@ import be.yildizgames.common.authentication.SimpleAuthenticationChecker;
 import be.yildizgames.common.authentication.Token;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
-import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.common.util.Util;
 
@@ -41,6 +40,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class handling the business logic about the authentication, it will manage the authentication itself, banned players, number of allowed failed authentications...
@@ -85,7 +85,7 @@ public class AuthenticationManager {
     private final Authenticator authenticator;
 
     public AuthenticationManager(Authenticator authenticator) {
-        ImplementationException.throwForNull(authenticator);
+        Objects.requireNonNull(authenticator);
         this.authenticator = authenticator;
     }
 

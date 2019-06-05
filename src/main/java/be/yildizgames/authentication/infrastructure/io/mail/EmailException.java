@@ -26,12 +26,10 @@
 
 package be.yildizgames.authentication.infrastructure.io.mail;
 
-import be.yildizgames.common.exception.technical.TechnicalException;
-
 /**
  * @author Grégory Van den Borre
  */
-public class EmailException extends TechnicalException {
+public class EmailException extends IllegalStateException {
 
     /**
      * Create an email exception.

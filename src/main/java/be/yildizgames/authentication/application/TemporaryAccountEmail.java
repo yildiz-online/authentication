@@ -28,13 +28,13 @@ package be.yildizgames.authentication.application;
 
 import be.yildizgames.authentication.infrastructure.io.mail.EmailException;
 import be.yildizgames.authentication.infrastructure.io.mail.EmailTemplate;
-import be.yildizgames.common.exception.implementation.ImplementationException;
 import be.yildizgames.common.util.StringUtil;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  *
@@ -65,10 +65,10 @@ class TemporaryAccountEmail implements EmailTemplate {
      * @param token Unique token to confirm the account.
      */
     TemporaryAccountEmail(final Path emailTemplate, final String login, final String email, final String token) {
-        ImplementationException.throwForNull(emailTemplate);
-        ImplementationException.throwForNull(login);
-        ImplementationException.throwForNull(email);
-        ImplementationException.throwForNull(token);
+        Objects.requireNonNull(emailTemplate);
+        Objects.requireNonNull(login);
+        Objects.requireNonNull(email);
+        Objects.requireNonNull(token);
         if(Files.notExists(emailTemplate)) {
             throw new EmailException("Email template file " + emailTemplate.toString() +" cannot be found.");
         }

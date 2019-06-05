@@ -36,7 +36,6 @@ import be.yildizgames.common.authentication.protocol.mapper.AccountConfirmationM
 import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
-import be.yildizgames.common.exception.technical.TechnicalException;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessage;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
@@ -68,7 +67,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 TemporaryAccountCreationResultDto result = accountCreationManager.create(this.from(message.getText()));
                 tempProducer.sendMessage(TemporaryAccountResultMapper.getInstance().to(result), BrokerMessageHeader.correlationId(message.getCorrelationId()));
-            } catch (TechnicalException e) {
+            } catch (IllegalStateException e) {
                 this.logException(Queues.CREATE_ACCOUNT_REQUEST, e);
             }
         });
@@ -77,7 +76,7 @@ public class AsynchronousAuthenticationServer {
             this.logMessage(Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST, message);
             try {
                 accountCreationManager.confirmAccount(AccountConfirmationMapper.getInstance().from(message.getText()));
-            } catch (TechnicalException e) {
+            } catch (IllegalStateException e) {
                 this.logException(Queues.CREATE_ACCOUNT_CONFIRMATION_REQUEST, e);
             }
         });
@@ -89,7 +88,7 @@ public class AsynchronousAuthenticationServer {
                 Token token = authenticationManager.authenticate(r);
                 this.logger.log(System.Logger.Level.DEBUG, "Send authentication response message to {} : {}", token.getId(), token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), BrokerMessageHeader.correlationId(message.getCorrelationId()));
-            } catch (TechnicalException e) {
+            } catch (IllegalStateException e) {
                 this.logException(Queues.AUTHENTICATION_REQUEST, e);
             }
         });
@@ -99,7 +98,7 @@ public class AsynchronousAuthenticationServer {
         this.logger.log(System.Logger.Level.DEBUG, "message received in {}: {}", queue.getName(), message.getText());
     }
 
-    private void logException(Queues queue, TechnicalException e) {
+    private void logException(Queues queue, IllegalStateException e) {
         this.logger.log(System.Logger.Level.WARNING, "Unexpected message in {}", queue.getName(), e);
     }
 

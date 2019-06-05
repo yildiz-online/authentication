@@ -60,12 +60,12 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-configuration</artifactId>
-      <version>1.0.4</version>
+      <version>1.0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>common-authentication</artifactId>
-      <version>1.1.6</version>
+      <version>1.1.7-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
@@ -74,13 +74,8 @@
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
-      <artifactId>common-exception</artifactId>
-      <version>1.0.4</version>
-    </dependency>
-    <dependency>
-      <groupId>be.yildiz-games</groupId>
       <artifactId>common-file</artifactId>
-      <version>2.0.4</version>
+      <version>2.0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
@@ -95,12 +90,12 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database</artifactId>
-      <version>2.0.4</version>
+      <version>2.0.5-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-messaging-activemq</artifactId>
-      <version>1.0.7</version>
+      <version>1.0.8-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
