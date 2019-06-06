@@ -25,7 +25,7 @@
 
 package be.yildizgames.authentication.application;
 
-import be.yildizgames.authentication.configuration.EmailTemplateConfiguration;
+import be.yildizgames.authentication.infrastructure.io.mail.EmailTemplateConfiguration;
 import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
 import be.yildizgames.authentication.infrastructure.io.mail.EmailService;
 import be.yildizgames.common.authentication.AuthenticationError;

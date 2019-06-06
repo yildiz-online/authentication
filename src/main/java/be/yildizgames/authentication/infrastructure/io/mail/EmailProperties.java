@@ -21,20 +21,18 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE  SOFTWARE.
  *
  */
+package be.yildizgames.authentication.infrastructure.io.mail;
 
-package be.yildizgames.authentication.configuration;
-
-import java.nio.file.Path;
+import java.util.Properties;
 
 /**
  * @author Grégory Van den Borre
  */
-public interface EmailTemplateConfiguration {
+public interface EmailProperties extends EmailTemplateConfiguration {
 
-    /**
-     * Provide the path to the email template.
-     * @param language Language to use.
-     * @return The path matching the language provided.
-     */
-    Path getEmailTemplatePath(String language);
+    String getEmailLogin();
+
+    String getEmailPassword();
+
+    Properties getProperties();
 }

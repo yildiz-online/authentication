@@ -51,7 +51,7 @@ public class JavaMailEmailService implements EmailService {
 
     private final String username;
 
-    public JavaMailEmailService(Configuration properties) {
+    public JavaMailEmailService(EmailProperties properties) {
         super();
         this.username = properties.getEmailLogin();
         this.session = Session.getInstance(properties.getProperties(), new Authenticator() {

@@ -24,18 +24,18 @@
 
 package be.yildizgames.authentication.configuration;
 
+import be.yildizgames.authentication.infrastructure.io.mail.EmailProperties;
+import be.yildizgames.authentication.infrastructure.io.mail.EmailPropertiesStandard;
+import be.yildizgames.authentication.infrastructure.io.mail.EmailTemplateConfiguration;
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
+import be.yildizgames.common.configuration.LoggerPropertiesConfiguration;
 import be.yildizgames.common.logging.LoggerConfiguration;
-import be.yildizgames.common.logging.LoggerPropertiesConfiguration;
-import be.yildizgames.common.util.PropertiesHelper;
 import be.yildizgames.module.database.DbProperties;
-import be.yildizgames.module.database.StandardDbProperties;
+import be.yildizgames.module.database.DbPropertiesStandard;
 import be.yildizgames.module.messaging.BrokerProperties;
 import be.yildizgames.module.messaging.BrokerPropertiesStandard;
 
-import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -49,15 +49,11 @@ import java.util.Properties;
  * If the file cannot be loaded of if the keys are not all available, an exception is thrown.
  * @author Grégory Van den Borre
  */
-public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties, EmailTemplateConfiguration {
+public class Configuration implements DbProperties, AuthenticationConfiguration, BrokerProperties, EmailProperties {
 
     private final DbProperties dbProperties;
 
-    private final String emailLogin;
-
-    private final String emailPassword;
-
-    private final String emailTemplatePath;
+    private final EmailProperties emailProperties;
 
     private final Properties properties;
 
@@ -69,11 +65,9 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         super();
         Objects.requireNonNull(properties);
         this.properties = properties;
-        this.dbProperties = new StandardDbProperties(properties);
+        this.dbProperties = DbPropertiesStandard.fromProperties(properties);
         this.brokerProperties = BrokerPropertiesStandard.fromProperties(properties);
-        this.emailLogin = PropertiesHelper.getValue(properties, "mail.login");
-        this.emailPassword = PropertiesHelper.getValue(properties, "mail.password");
-        this.emailTemplatePath = PropertiesHelper.getValue(properties, "mail.template.path");
+        this.emailProperties = EmailPropertiesStandard.fromProperties(properties);
         this.loggerConfig = LoggerPropertiesConfiguration.fromProperties(properties);
     }
 
@@ -146,17 +140,19 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         return this.brokerProperties.getBrokerPort();
     }
 
+    @Override
     public final String getEmailLogin() {
-        return this.emailLogin;
+        return this.emailProperties.getEmailLogin();
     }
 
+    @Override
     public final String getEmailPassword() {
-        return this.emailPassword;
+        return this.emailProperties.getEmailPassword();
     }
 
     @Override
     public final Path getEmailTemplatePath(String language) {
-        return Paths.get(this.emailTemplatePath + File.separator + language);
+        return this.emailProperties.getEmailTemplatePath(language);
     }
 
     public final Properties getProperties() {
