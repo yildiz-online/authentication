@@ -32,6 +32,7 @@ import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
 import be.yildizgames.common.authentication.protocol.TemporaryAccountCreationResultDto;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,7 @@ import java.util.UUID;
 /**
  * @author Grégory Van den Borre
  */
+@Disabled
 public class AccountCreationManagerTest {
 
     @Nested
