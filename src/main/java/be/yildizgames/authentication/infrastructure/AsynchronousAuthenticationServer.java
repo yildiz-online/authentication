@@ -86,7 +86,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
-                this.logger.log(System.Logger.Level.DEBUG, "Send authentication response message to {} : {}", token.getId(), token.getStatus());
+                this.logger.log(System.Logger.Level.DEBUG, "Send authentication response message to %s : %s", token.getId(), token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (IllegalStateException e) {
                 this.logException(Queues.AUTHENTICATION_REQUEST, e);
@@ -95,11 +95,11 @@ public class AsynchronousAuthenticationServer {
     }
 
     private void logMessage(Queues queue, BrokerMessage message) {
-        this.logger.log(System.Logger.Level.DEBUG, "message received in {}: {}", queue.getName(), message.getText());
+        this.logger.log(System.Logger.Level.DEBUG, "message received in %s: %s", queue.getName(), message.getText());
     }
 
     private void logException(Queues queue, IllegalStateException e) {
-        this.logger.log(System.Logger.Level.WARNING, "Unexpected message in {}", queue.getName(), e);
+        this.logger.log(System.Logger.Level.WARNING, "Unexpected message in %s", queue.getName(), e);
     }
 
     private TemporaryAccountDto from(String s) {
