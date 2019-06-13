@@ -80,12 +80,12 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database-postgresql</artifactId>
-      <version>1.0.4-SNAPSHOT</version>
+      <version>1.0.4</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database-derby</artifactId>
-      <version>1.0.5-SNAPSHOT</version>
+      <version>1.0.5</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
@@ -95,7 +95,7 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-messaging-activemq</artifactId>
-      <version>1.0.8-SNAPSHOT</version>
+      <version>1.0.8</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
