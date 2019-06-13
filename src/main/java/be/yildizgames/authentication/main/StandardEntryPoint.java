@@ -26,16 +26,8 @@
 
 package be.yildizgames.authentication.main;
 
-import be.yildizgames.authentication.configuration.Configuration;
-import be.yildizgames.authentication.configuration.DefaultConfigProperties;
-import be.yildizgames.common.configuration.ConfigurationNotFoundException;
-import be.yildizgames.common.configuration.ConfigurationRetrieverFactory;
-import be.yildizgames.common.configuration.parameter.ApplicationArgs;
 import be.yildizgames.common.logging.LogEngineProvider;
 import be.yildizgames.common.logging.PreLogger;
-import be.yildizgames.module.database.derby.DerbySystem;
-
-import java.util.Properties;
 
 /**
  * @author Grégory Van den Borre
@@ -58,22 +50,8 @@ public class StandardEntryPoint {
      * @param args Unused.
      */
     public static void main(String[] args) {
-        Configuration config = Configuration.fromProperties(getProperties(args));
         AuthenticationEntryPoint
                 .create()
-                .start(config);
-    }
-
-    private static Properties getProperties(String[] args) {
-        PRELOGGER.info("Loading properties.");
-        try {
-            return ConfigurationRetrieverFactory
-                    .fromFile(new ConfigurationNotFoundException())
-                    .retrieveFromArgs(ApplicationArgs.of(args));
-        } catch (IllegalStateException e) {
-            PRELOGGER.info("Loading properties failed, fallback to default values.");
-            DerbySystem.support();
-            return new DefaultConfigProperties();
-        }
+                .start(args);
     }
 }

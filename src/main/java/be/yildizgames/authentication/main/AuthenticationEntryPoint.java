@@ -27,6 +27,7 @@ package be.yildizgames.authentication.main;
 import be.yildizgames.authentication.application.AccountCreationManager;
 import be.yildizgames.authentication.application.AuthenticationManager;
 import be.yildizgames.authentication.configuration.Configuration;
+import be.yildizgames.authentication.configuration.DefaultConfigProperties;
 import be.yildizgames.authentication.infrastructure.AsynchronousAuthenticationServer;
 import be.yildizgames.authentication.infrastructure.io.mail.JavaMailEmailService;
 import be.yildizgames.authentication.infrastructure.persistence.DataBaseAuthenticator;
@@ -37,6 +38,7 @@ import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
 import be.yildizgames.module.database.DatabaseUpdater;
 import be.yildizgames.module.database.LiquibaseDatabaseUpdater;
+import be.yildizgames.module.database.derby.DerbySystem;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
 import be.yildizgames.module.messaging.BrokerMessageProducer;
@@ -59,10 +61,15 @@ final class AuthenticationEntryPoint {
         return new AuthenticationEntryPoint();
     }
 
-    void start(Configuration config) {
+    void start(String[] args) {
         try {
-            //TODO have all entry point impl an interface, pass that interface to starter, and let starter launch it.
-            Starter.start(config.getLoggerConfiguration(), "Authentication Server");
+            Starter starter = Starter
+                    .prepare("Authentication Server")
+                    .withConfiguration(args, DefaultConfigProperties.create(), DerbySystem::support)
+                    .start();
+
+            Configuration config = Configuration.fromProperties(starter.getProperties());
+
             System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
 
             logger.log(System.Logger.Level.INFO, "Preparing the database connection...");

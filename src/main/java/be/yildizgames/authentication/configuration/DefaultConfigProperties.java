@@ -35,7 +35,7 @@ public class DefaultConfigProperties extends Properties {
 
     private static final String ROOT = System.getProperty("user.home") + "/yildiz-authentication";
 
-    public DefaultConfigProperties() {
+    private DefaultConfigProperties() {
         super();
         this.setProperty("database.host", "localhost");
         this.setProperty("database.port", "9000");
@@ -60,5 +60,9 @@ public class DefaultConfigProperties extends Properties {
         this.setProperty("logger.output", "CONSOLE");
         this.setProperty("logger.file.output", ROOT + "/logs/log.log");
         this.setProperty("logger.disabled", "");
+    }
+
+    public static Properties create() {
+        return new DefaultConfigProperties();
     }
 }
