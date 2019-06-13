@@ -85,7 +85,7 @@
     <dependency>
       <groupId>be.yildiz-games</groupId>
       <artifactId>module-database-derby</artifactId>
-      <version>1.0.5-SNAPSHOT</version>
+      <version>1.0.5</version>
     </dependency>
     <dependency>
       <groupId>be.yildiz-games</groupId>
