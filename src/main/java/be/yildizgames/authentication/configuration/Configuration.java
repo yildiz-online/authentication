@@ -26,7 +26,6 @@ package be.yildizgames.authentication.configuration;
 
 import be.yildizgames.authentication.infrastructure.io.mail.EmailProperties;
 import be.yildizgames.authentication.infrastructure.io.mail.EmailPropertiesStandard;
-import be.yildizgames.authentication.infrastructure.io.mail.EmailTemplateConfiguration;
 import be.yildizgames.common.authentication.AuthenticationConfiguration;
 import be.yildizgames.common.configuration.LoggerPropertiesConfiguration;
 import be.yildizgames.common.logging.LoggerConfiguration;
@@ -61,7 +60,7 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
 
     private final BrokerProperties brokerProperties;
 
-    private Configuration(final Properties properties) {
+    public Configuration(final Properties properties) {
         super();
         Objects.requireNonNull(properties);
         this.properties = properties;
@@ -69,15 +68,6 @@ public class Configuration implements DbProperties, AuthenticationConfiguration,
         this.brokerProperties = BrokerPropertiesStandard.fromProperties(properties);
         this.emailProperties = EmailPropertiesStandard.fromProperties(properties);
         this.loggerConfig = LoggerPropertiesConfiguration.fromProperties(properties);
-    }
-
-    /**
-     * Build a configuration object from properties.
-     * @param properties Properties to build from.
-     * @return The configuration object.
-     */
-    public static Configuration fromProperties(Properties properties) {
-        return new Configuration(properties);
     }
 
     @Override
