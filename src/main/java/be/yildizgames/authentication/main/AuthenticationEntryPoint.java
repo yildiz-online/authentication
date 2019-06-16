@@ -32,7 +32,7 @@ import be.yildizgames.authentication.infrastructure.AsynchronousAuthenticationSe
 import be.yildizgames.authentication.infrastructure.io.mail.JavaMailEmailService;
 import be.yildizgames.authentication.infrastructure.persistence.DataBaseAuthenticator;
 import be.yildizgames.authentication.infrastructure.persistence.DatabaseAccountCreator;
-import be.yildizgames.common.application.Starter;
+import be.yildizgames.common.application.Application;
 import be.yildizgames.common.authentication.protocol.Queues;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
@@ -63,12 +63,12 @@ final class AuthenticationEntryPoint {
 
     void start(String[] args) {
         try {
-            Starter starter = Starter
+            Application application = Application
                     .prepare("Authentication Server")
                     .withConfiguration(args, DefaultConfigProperties.create(), DerbySystem::support)
                     .start();
 
-            Configuration config = Configuration.fromProperties(starter.getProperties());
+            Configuration config = Configuration.fromProperties(application.getProperties());
 
             System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
 
