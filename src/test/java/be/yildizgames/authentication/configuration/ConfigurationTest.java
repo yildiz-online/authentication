@@ -41,20 +41,20 @@ public class ConfigurationTest {
 
         @Test
         public void happyFlow() {
-            Configuration c = Configuration.fromProperties(DefaultConfigProperties.create());
+            Configuration c = new Configuration(DefaultConfigProperties.create());
             Assertions.assertNotNull(c);
         }
 
         @Test
         public void fromNull() {
-            assertThrows(NullPointerException.class, () -> Configuration.fromProperties(null));
+            assertThrows(NullPointerException.class, () -> new Configuration(null));
         }
     }
 
     @Nested
     public class Getter  {
 
-        Configuration c = Configuration.fromProperties(DefaultConfigProperties.create());
+        Configuration c = new Configuration(DefaultConfigProperties.create());
 
         @Test
         public void getDatabaseUser() {
