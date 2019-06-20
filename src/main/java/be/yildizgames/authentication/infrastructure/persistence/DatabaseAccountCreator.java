@@ -144,7 +144,7 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public final void create(TemporaryAccountDto dto, UUID token) {
-        this.logger.log(System.Logger.Level.DEBUG, "Create temporary account for {}.", dto.login);
+        this.logger.log(System.Logger.Level.DEBUG, "Create temporary account for %s.", dto.login);
         Objects.requireNonNull(dto);
         Objects.requireNonNull(token);
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
@@ -156,7 +156,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             stmt.setString(4, token.toString());
             stmt.setTimestamp(5, Timestamp.from(Instant.now()));
             stmt.executeUpdate();
-            this.logger.log(System.Logger.Level.DEBUG, "Create temporary account for {} successfully executed.", dto.login);
+            this.logger.log(System.Logger.Level.DEBUG, "Create temporary account for %s successfully executed.", dto.login);
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -172,7 +172,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             getTemp.setString(1, validation.getLogin());
             ResultSet rs = getTemp.executeQuery();
             if (!rs.next()) {
-                this.logger.log(System.Logger.Level.WARNING, "Invalid login received from {}", validation.getLogin());
+                this.logger.log(System.Logger.Level.WARNING, "Invalid login received from %s", validation.getLogin());
                 return;
             }
             int id = rs.getInt(1);
@@ -182,7 +182,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             String token = rs.getString(5);
 
             if (!token.equals(validation.getToken())) {
-                this.logger.log(System.Logger.Level.WARNING, "Invalid token received from {}", login);
+                this.logger.log(System.Logger.Level.WARNING, "Invalid token received from %s", login);
                 return;
             }
 

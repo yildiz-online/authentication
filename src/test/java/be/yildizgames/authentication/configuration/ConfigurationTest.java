@@ -54,7 +54,7 @@ public class ConfigurationTest {
     @Nested
     public class Getter  {
 
-        Configuration c = new Configuration(DefaultConfigProperties.create());
+        final Configuration c = new Configuration(DefaultConfigProperties.create());
 
         @Test
         public void getDatabaseUser() {

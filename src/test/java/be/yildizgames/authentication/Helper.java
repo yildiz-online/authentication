@@ -26,8 +26,6 @@ package be.yildizgames.authentication;
 
 import be.yildizgames.common.authentication.protocol.TokenVerification;
 import be.yildizgames.common.model.PlayerId;
-import org.junit.jupiter.api.Test;
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * @author Grégory Van den Borre

@@ -152,7 +152,7 @@ public class AuthenticationManagerTest {
 
         private boolean toReturn;
 
-        private boolean notFound;
+        private final boolean notFound;
 
         public AuthenticatorMock(final boolean toReturn, final boolean notFound) {
             super();

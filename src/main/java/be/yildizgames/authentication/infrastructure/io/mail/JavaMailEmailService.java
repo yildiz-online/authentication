@@ -26,8 +26,6 @@
 
 package be.yildizgames.authentication.infrastructure.io.mail;
 
-import be.yildizgames.authentication.configuration.Configuration;
-
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
