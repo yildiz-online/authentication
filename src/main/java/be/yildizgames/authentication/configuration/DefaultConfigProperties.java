@@ -26,6 +26,10 @@
 
 package be.yildizgames.authentication.configuration;
 
+import be.yildizgames.common.logging.LoggerPropertiesDefault;
+import be.yildizgames.common.properties.PropertiesMerger;
+import be.yildizgames.module.database.DatabasePropertiesDefault;
+
 import java.util.Properties;
 
 /**
@@ -37,14 +41,6 @@ public class DefaultConfigProperties extends Properties {
 
     private DefaultConfigProperties() {
         super();
-        this.setProperty("database.host", "localhost");
-        this.setProperty("database.port", "9000");
-        this.setProperty("database.name", "authentication");
-        this.setProperty("database.user", "sa");
-        this.setProperty("database.password", "");
-        this.setProperty("database.root.user", "sa");
-        this.setProperty("database.root.password", "");
-        this.setProperty("database.system", "derby-file");
         this.setProperty("mail.login", "user");
         this.setProperty("mail.password", "user");
         this.setProperty("mail.template.path", "user");
@@ -52,17 +48,9 @@ public class DefaultConfigProperties extends Properties {
         this.setProperty("broker.port", "1");
         this.setProperty("broker.data", ROOT + "/data/broker");
         this.setProperty("broker.internal", "true");
-        this.setProperty("logger.pattern", "%d{HH:mm:ss.SSS} | %level | %class | %msg%n");
-        this.setProperty("logger.configuration.file", ROOT + "/config/logback.xml");
-        this.setProperty("logger.tcp.host", "localhost");
-        this.setProperty("logger.tcp.port", "60000");
-        this.setProperty("logger.level", "INFO");
-        this.setProperty("logger.output", "CONSOLE");
-        this.setProperty("logger.file.output", ROOT + "/logs/log.log");
-        this.setProperty("logger.disabled", "");
     }
 
     public static Properties create() {
-        return new DefaultConfigProperties();
+        return PropertiesMerger.merge(new DefaultConfigProperties(), new DatabasePropertiesDefault(), new LoggerPropertiesDefault());
     }
 }
