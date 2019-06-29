@@ -24,7 +24,7 @@
 
 package be.yildizgames.authentication.infrastructure.io.mail;
 
-import be.yildizgames.common.configuration.PropertiesHelper;
+import be.yildizgames.common.properties.PropertiesHelper;
 
 import java.io.File;
 import java.nio.file.Path;
