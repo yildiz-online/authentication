@@ -63,12 +63,12 @@ public class ConfigurationTest {
 
         @Test
         public void getDatabasePassword() {
-            assertEquals("", c.getDbPassword());
+            assertEquals("sa", c.getDbPassword());
         }
 
         @Test
         public void getDatabaseName() {
-            assertEquals("authentication", c.getDbName());
+            assertEquals("database", c.getDbName());
         }
 
         @Test
