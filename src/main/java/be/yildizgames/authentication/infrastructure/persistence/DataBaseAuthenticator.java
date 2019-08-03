@@ -101,7 +101,7 @@ public final class DataBaseAuthenticator implements Authenticator {
                 throw new UserNotFoundException();
             }
             if (credential.password.equals(this.key)) {
-                LOGGER.log(System.Logger.Level.WARNING, "%s connected with generic password.", credential.login);
+                LOGGER.log(System.Logger.Level.WARNING, "{0} connected with generic password.", credential.login);
                 return new TokenVerification(PlayerId.valueOf(results.getInt("id")), true);
             }
             boolean authenticated = this.encrypting.check(results.getString("password"), credential.password);
