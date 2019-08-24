@@ -62,6 +62,7 @@ final class AuthenticationEntryPoint {
     }
 
     void start(String[] args) {
+        System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
         try {
             Application application = Application
                     .prepare("Authentication Server")
@@ -70,7 +71,7 @@ final class AuthenticationEntryPoint {
 
             Configuration config = new Configuration(application.getConfiguration());
 
-            System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
+
 
             logger.log(System.Logger.Level.INFO, "Preparing the database connection...");
 
@@ -89,8 +90,8 @@ final class AuthenticationEntryPoint {
                 logger.log(System.Logger.Level.INFO, "Server running");
             }
         } catch (Exception e) {
-            System.getLogger(AuthenticationEntryPoint.class.toString()).log(System.Logger.Level.ERROR, "An error occurred, closing the server...", e);
-            System.getLogger(AuthenticationEntryPoint.class.toString()).log(System.Logger.Level.INFO, "Server closed.");
+            logger.log(System.Logger.Level.ERROR, "An error occurred, closing the server...", e);
+            logger.log(System.Logger.Level.INFO, "Server closed.");
             System.exit(-1);
         }
     }
