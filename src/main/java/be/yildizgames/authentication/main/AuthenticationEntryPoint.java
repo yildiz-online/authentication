@@ -68,10 +68,7 @@ final class AuthenticationEntryPoint {
                     .withConfiguration(args, DefaultConfigProperties.create(), DerbySystem::support)
                     .start();
 
-            Configuration config = application.getConfiguration(Configuration.class);
-
-
-            //Configuration config = Configuration.fromProperties(application.getProperties());
+            Configuration config = new Configuration(application.getConfiguration());
 
             System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
 
