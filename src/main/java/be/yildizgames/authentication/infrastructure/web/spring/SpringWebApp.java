@@ -7,19 +7,12 @@
 
 package be.yildizgames.authentication.infrastructure.web.spring;
 
-import be.yildizgames.authentication.configuration.DefaultConfigProperties;
 import be.yildizgames.authentication.main.AuthenticationEntryPoint;
-import be.yildizgames.common.application.Application;
-import be.yildizgames.module.database.derby.DerbySystem;
 import be.yildizgames.module.webapp.WebApplication;
-import be.yildizgames.retro.rommanager.configuration.ManagerConfiguration;
-import be.yildizgames.retro.rommanager.infrastructure.persistence.CsvGameDataStore;
-import be.yildizgames.retro.rommanager.model.game.GameDataStore;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class SpringWebApp extends SpringBootServletInitializer implements WebApplication {

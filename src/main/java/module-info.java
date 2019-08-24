@@ -32,6 +32,7 @@ module be.yildizgames.authentication {
     requires be.yildizgames.common.application;
     requires be.yildizgames.common.util;
     requires be.yildizgames.common.properties;
+    requires be.yildizgames.module.webapp;
     
     requires java.sql;
     requires java.mail;
