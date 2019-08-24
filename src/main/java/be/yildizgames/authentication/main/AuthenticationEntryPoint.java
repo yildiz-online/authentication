@@ -48,7 +48,7 @@ import be.yildizgames.module.messaging.BrokerMessageProducer;
  *
  * @author Grégory Van den Borre
  */
-final class AuthenticationEntryPoint {
+public final class AuthenticationEntryPoint {
 
     /**
      * Private constructor to prevent instantiation, use create method instead.
@@ -57,11 +57,11 @@ final class AuthenticationEntryPoint {
         super();
     }
 
-    static AuthenticationEntryPoint create() {
+    public static AuthenticationEntryPoint create() {
         return new AuthenticationEntryPoint();
     }
 
-    void start(String[] args) {
+    public void start(String[] args) {
         System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
         try {
             Application application = Application
