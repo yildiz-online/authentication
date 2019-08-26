@@ -33,6 +33,8 @@ module be.yildizgames.authentication {
     requires be.yildizgames.common.util;
     requires be.yildizgames.common.properties;
     requires be.yildizgames.module.webapp;
+
+    requires org.springframework.boot;
     
     requires java.sql;
     requires java.mail;
