@@ -54,6 +54,7 @@
   <properties>
     <mainclass>be.yildizgames.authentication.main.StandardEntryPoint</mainclass>
     <finalname>authentication-server</finalname>
+    <java.version>11</java.version>
   </properties>
 
   <dependencies>
