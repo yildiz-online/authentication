@@ -27,7 +27,7 @@ public class SpringWebApp extends SpringBootServletInitializer implements WebApp
     }
 
     @Override
-    public WebApplication start() {
+    public WebApplication start(String[] args) {
         this.springApplication.run();
         return this;
     }
