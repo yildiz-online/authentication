@@ -31,6 +31,7 @@ import be.yildizgames.authentication.infrastructure.TemporaryAccountDto;
 import be.yildizgames.common.authentication.BCryptEncryptionTool;
 import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.protocol.AccountConfirmationDto;
+import be.yildizgames.common.logging.Logger;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.Transaction;
 import be.yildizgames.module.messaging.AsyncMessageProducer;
@@ -54,7 +55,7 @@ public class DatabaseAccountCreator implements AccountCreator {
     /**
      * Logger.
      */
-    private final System.Logger logger = System.getLogger(this.getClass().toString());
+    private final Logger logger = Logger.getLogger(this);
 
     /**
      * To connect to the database.
@@ -144,7 +145,7 @@ public class DatabaseAccountCreator implements AccountCreator {
 
     @Override
     public final void create(TemporaryAccountDto dto, UUID token) {
-        this.logger.log(System.Logger.Level.DEBUG, "Create temporary account for {0}.", dto.login);
+        this.logger.debug("Create temporary account for {0}.", dto.login);
         Objects.requireNonNull(dto);
         Objects.requireNonNull(token);
         String sql = "INSERT INTO TEMP_ACCOUNTS (LOGIN, PASSWORD, EMAIL, CHECK_VALUE, DATE) VALUES (?,?,?,?,?)";
@@ -156,7 +157,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             stmt.setString(4, token.toString());
             stmt.setTimestamp(5, Timestamp.from(Instant.now()));
             stmt.executeUpdate();
-            this.logger.log(System.Logger.Level.DEBUG, "Create temporary account for {0} successfully executed.", dto.login);
+            this.logger.debug("Create temporary account for {0} successfully executed.", dto.login);
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
@@ -172,7 +173,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             getTemp.setString(1, validation.getLogin());
             ResultSet rs = getTemp.executeQuery();
             if (!rs.next()) {
-                this.logger.log(System.Logger.Level.WARNING, "Invalid login received from {0}", validation.getLogin());
+                this.logger.warning("Invalid login received from {0}", validation.getLogin());
                 return;
             }
             int id = rs.getInt(1);
@@ -182,7 +183,7 @@ public class DatabaseAccountCreator implements AccountCreator {
             String token = rs.getString(5);
 
             if (!token.equals(validation.getToken())) {
-                this.logger.log(System.Logger.Level.WARNING, "Invalid token received from {0}", login);
+                this.logger.warning("Invalid token received from {0}", login);
                 return;
             }
 

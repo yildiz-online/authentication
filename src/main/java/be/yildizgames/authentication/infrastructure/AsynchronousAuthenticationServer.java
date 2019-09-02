@@ -36,6 +36,7 @@ import be.yildizgames.common.authentication.protocol.mapper.AccountConfirmationM
 import be.yildizgames.common.authentication.protocol.mapper.CredentialsMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TemporaryAccountResultMapper;
 import be.yildizgames.common.authentication.protocol.mapper.TokenMapper;
+import be.yildizgames.common.logging.Logger;
 import be.yildizgames.module.messaging.Broker;
 import be.yildizgames.module.messaging.BrokerMessage;
 import be.yildizgames.module.messaging.BrokerMessageDestination;
@@ -50,7 +51,7 @@ public class AsynchronousAuthenticationServer {
     /**
      * Logger.
      */
-    private final System.Logger logger = System.getLogger(AsynchronousAuthenticationServer.class.toString());
+    private final Logger logger = Logger.getLogger(this);
 
     public AsynchronousAuthenticationServer(Broker broker, AccountCreationManager accountCreationManager, AuthenticationManager authenticationManager) {
         BrokerMessageDestination temporaryAccountCreatedQueue = broker.registerQueue(Queues.ACCOUNT_CREATION_TEMP.getName());
@@ -86,7 +87,7 @@ public class AsynchronousAuthenticationServer {
             try {
                 Credentials r = CredentialsMapper.getInstance().from(message.getText());
                 Token token = authenticationManager.authenticate(r);
-                this.logger.log(System.Logger.Level.DEBUG, "Send authentication response message to {0} : {1}", token.getId(), token.getStatus());
+                this.logger.debug("Send authentication response message to {0} : {1}", token.getId(), token.getStatus());
                 authenticationResponseProducer.sendMessage(TokenMapper.getInstance().to(token), BrokerMessageHeader.correlationId(message.getCorrelationId()));
             } catch (IllegalStateException e) {
                 this.logException(Queues.AUTHENTICATION_REQUEST, e);
@@ -95,11 +96,11 @@ public class AsynchronousAuthenticationServer {
     }
 
     private void logMessage(Queues queue, BrokerMessage message) {
-        this.logger.log(System.Logger.Level.DEBUG, "message received in {0}: {1}", queue.getName(), message.getText());
+        this.logger.debug("message received in {0}: {1}", queue.getName(), message.getText());
     }
 
     private void logException(Queues queue, IllegalStateException e) {
-        this.logger.log(System.Logger.Level.WARNING, "Unexpected message in {0}", queue.getName(), e);
+        this.logger.warning("Unexpected message in {0}", queue.getName(), e);
     }
 
     private TemporaryAccountDto from(String s) {

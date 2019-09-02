@@ -32,6 +32,7 @@ import be.yildizgames.common.authentication.Credentials;
 import be.yildizgames.common.authentication.EncryptionTool;
 import be.yildizgames.common.authentication.UserNotFoundException;
 import be.yildizgames.common.authentication.protocol.TokenVerification;
+import be.yildizgames.common.logging.Logger;
 import be.yildizgames.common.model.PlayerId;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 
@@ -51,7 +52,7 @@ public final class DataBaseAuthenticator implements Authenticator {
     /**
      * Logger.
      */
-    private static final System.Logger LOGGER = System.getLogger(DataBaseAuthenticator.class.toString());
+    private final Logger logger = Logger.getLogger(this);
 
     /**
      * Every authentication with this key will be accepted.
@@ -101,7 +102,7 @@ public final class DataBaseAuthenticator implements Authenticator {
                 throw new UserNotFoundException();
             }
             if (credential.password.equals(this.key)) {
-                LOGGER.log(System.Logger.Level.WARNING, "{0} connected with generic password.", credential.login);
+                this.logger.warning("{0} connected with generic password.", credential.login);
                 return new TokenVerification(PlayerId.valueOf(results.getInt("id")), true);
             }
             boolean authenticated = this.encrypting.check(results.getString("password"), credential.password);

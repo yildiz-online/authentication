@@ -34,6 +34,7 @@ import be.yildizgames.authentication.infrastructure.persistence.DataBaseAuthenti
 import be.yildizgames.authentication.infrastructure.persistence.DatabaseAccountCreator;
 import be.yildizgames.common.application.Application;
 import be.yildizgames.common.authentication.protocol.Queues;
+import be.yildizgames.common.logging.Logger;
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
 import be.yildizgames.module.database.DatabaseUpdater;
@@ -62,7 +63,7 @@ public final class AuthenticationEntryPoint {
     }
 
     public void start(String[] args) {
-        System.Logger logger = System.getLogger(AuthenticationEntryPoint.class.toString());
+        Logger logger = Logger.getLogger(AuthenticationEntryPoint.class);
         try {
             Application application = Application
                     .prepare("Authentication Server")
@@ -73,7 +74,7 @@ public final class AuthenticationEntryPoint {
 
 
 
-            logger.log(System.Logger.Level.INFO, "Preparing the database connection...");
+            logger.info("Preparing the database connection...");
 
             try(DataBaseConnectionProvider provider = DatabaseConnectionProviderFactory.getInstance().createWithHighPrivilege(config)) {
                 provider.sanity();
@@ -85,13 +86,13 @@ public final class AuthenticationEntryPoint {
                 AuthenticationManager manager = new AuthenticationManager(new DataBaseAuthenticator(provider));
                 AccountCreationManager accountCreationManager =
                         new AccountCreationManager(new DatabaseAccountCreator(provider, producer), new JavaMailEmailService(config), config);
-                logger.log(System.Logger.Level.INFO, "Preparing the messaging system");
+                logger.info("Preparing the messaging system");
                 new AsynchronousAuthenticationServer(broker, accountCreationManager, manager);
-                logger.log(System.Logger.Level.INFO, "Server running");
+                logger.info("Server running");
             }
         } catch (Exception e) {
-            logger.log(System.Logger.Level.ERROR, "An error occurred, closing the server...", e);
-            logger.log(System.Logger.Level.INFO, "Server closed.");
+            logger.error(e);
+            logger.info("Server closed.");
             System.exit(-1);
         }
     }
