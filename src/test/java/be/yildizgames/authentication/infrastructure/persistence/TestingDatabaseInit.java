@@ -28,7 +28,7 @@ package be.yildizgames.authentication.infrastructure.persistence;
 
 import be.yildizgames.module.database.DataBaseConnectionProvider;
 import be.yildizgames.module.database.DatabaseConnectionProviderFactory;
-import be.yildizgames.module.database.LiquibaseDatabaseUpdater;
+import be.yildizgames.module.database.updater.LiquibaseDatabaseUpdater;
 import be.yildizgames.module.database.dummy.DummyDbProperties;
 import be.yildizgames.module.database.dummy.DummySystem;
 import org.h2.Driver;
